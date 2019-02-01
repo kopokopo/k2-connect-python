@@ -8,10 +8,10 @@ import json
 class request_authorization(object):
     """Performs requests to the Kopo Kopo API web services."""
 
-    def __init__(self, k2_api_key=None, k2_headers=None, k2_json_object=None):
+    def __init__(self, client_secret=None, k2_headers=None, k2_json_object=None):
         """
-        :param k2_api_key: Kopo Kopo API key required to interact with the KopoKopo library
-        :type k2_api_key string
+        :param client_secret: Your application's client secret
+        :type client_secret str
 
         :param k2_headers: The headers from the POST request received from the webhook's payload
         :type k2_headers: headers
@@ -21,12 +21,12 @@ class request_authorization(object):
 
         """
 
-        self.k2_api_key = k2_api_key
+        self.client_secret = client_secret
         self.k2_headers = k2_headers
         self.k2_json_object = k2_json_object
 
-        if k2_api_key is None:
-            raise ValueError("Must provide API key or enterprise credentials when creating client.")
+        if client_secret is None:
+            raise ValueError("Must provide client secret or enterprise credentials when creating client.")
 
     """Confirm JSON object is from KopoKopo"""
 
@@ -41,7 +41,7 @@ class request_authorization(object):
             message_body = json.dumps(self.k2_json_object)
 
             # generate hmac hash
-            hash_key = gen_hmac_sig(bytes(self.k2_api_key, 'utf-8'), message_body.encode('utf-8'))
+            hash_key = gen_hmac_sig(bytes(self.client_secret, 'utf-8'), message_body.encode('utf-8'))
 
             # get payload signature
             payload_sign = self.k2_headers.get(os.getenv('X-KopoKopo-Signature'))
