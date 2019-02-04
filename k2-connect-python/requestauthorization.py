@@ -5,7 +5,7 @@ import os
 import json
 
 
-class request_authorization(object):
+class requestAuthorization(object):
     """Performs requests to the Kopo Kopo API web services."""
 
     def __init__(self, client_secret=None, k2_headers=None, k2_json_object=None):

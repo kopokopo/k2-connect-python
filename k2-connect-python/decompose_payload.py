@@ -1,8 +1,8 @@
 """Handles breaking down the payload into its constituent elements of data """
-from data.transaction_model import transaction_decompose
+from data.transaction_model import transactionDecompose
 
 
-class pay_load_data(object):
+class payLoadData(object):
 
     def __init__(self, payload_json):
 
@@ -14,7 +14,7 @@ class pay_load_data(object):
 
     def decompose(self):
         # TODO: Find way to clear repetition
-        decomposer = transaction_decompose()
+        decomposer = transactionDecompose()
         decomposer.sender_first_name = self.payload_json['event']['resource']['sender_first_name']
         decomposer.sender_middle_name = self.payload_json['event']['resource']['sender_middle_name']
         decomposer.sender_last_name = self.payload_json['event']['resource']['sender_last_name']

@@ -13,7 +13,6 @@ pip install k2-connect
 ## Usage
 
 ```python
-import k2Client.request_authorization 
 
 foobar.pluralize('word') # returns 'words'
 foobar.pluralize('goose') # returns 'geese'

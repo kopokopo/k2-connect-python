@@ -1,4 +1,4 @@
-class buy_goods_transaction_decompose(object):
+class transactionDecompose(object):
     def __init__(self,
                  sender_first_name=None,
                  sender_middle_name=None,
