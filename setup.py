@@ -6,7 +6,6 @@ with open("README.md", "r") as file_header:
 setuptools.setup(
     name='k2-connect-python',
     version='0.0.1',
-    scripts=['k2-connect'],
     author='Philip Wafula',
     author_email='philipwafula2@gmail.com',
     description='A python SDK to connect to Kopo Kopo',
@@ -19,4 +18,5 @@ setuptools.setup(
         'License :: OSI Approved :: Apache License',
         'Operating System :: OS Independent',
     ],
+
 )
