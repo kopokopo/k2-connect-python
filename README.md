@@ -1,25 +1,29 @@
-<<<<<<< HEAD
-# k2_connect_python
-A python module to connect to the Kopo Kopo application
-# define app name
-auth_layer = Flask(__name__)
-
-# access credentials
-K2_sig_header_ref = os.getenv('k2_SERVER_SIGNATURE')
-
-# elements of request
-post_method = 'POST'
-
-
-def endpoint(req_endpoint):
-    url_endpoint = "/" + req_endpoint
-    return url_endpoint
-
-
-def gen_hmac_sig(api_key, msg):
-    signature = hmac.new(api_key, msg, hashlib.sha256).hexdigest()
-    return signature
-=======
 # k2-connect-python
-Python SDK to connect to the Kopo Kopo API
->>>>>>> k2-connect-python/master
+
+Foobar is a Python library for dealing with word pluralization.
+
+## Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+
+```bash
+pip install k2-connect
+```
+
+## Usage
+
+```python
+import k2Client.request_authorization 
+
+foobar.pluralize('word') # returns 'words'
+foobar.pluralize('goose') # returns 'geese'
+foobar.singularize('phenomena') # returns 'phenomenon'
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
