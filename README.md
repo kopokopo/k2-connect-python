@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # k2_connect_python
 A python module to connect to the Kopo Kopo application
 # define app name
@@ -18,3 +19,7 @@ def endpoint(req_endpoint):
 def gen_hmac_sig(api_key, msg):
     signature = hmac.new(api_key, msg, hashlib.sha256).hexdigest()
     return signature
+=======
+# k2-connect-python
+Python SDK to connect to the Kopo Kopo API
+>>>>>>> k2-connect-python/master
