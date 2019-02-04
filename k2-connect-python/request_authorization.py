@@ -30,7 +30,7 @@ class request_authorization(object):
 
     """Confirm JSON object is from KopoKopo"""
 
-    def object_authorization(self):
+    def authorize(self):
         if self.k2_json_object is None:
             raise ValueError("No JSON Object was received")
         elif self.k2_headers is None:
