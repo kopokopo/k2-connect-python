@@ -1,1 +1,0 @@
-name = 'k2-connect-python'
