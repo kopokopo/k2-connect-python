@@ -1,1 +1,1 @@
-name = "k2-connect-python"
+name = "k2-connect"
