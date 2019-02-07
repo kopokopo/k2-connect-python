@@ -50,6 +50,7 @@ class RequestAuthorization(object):
                 print(hash_key, payload_sign)
                 raise ValueError(" The object delivered is not from KopoKopo ")
             else:
+                print(self.k2_json_object)
                 return self.k2_json_object
 
 
