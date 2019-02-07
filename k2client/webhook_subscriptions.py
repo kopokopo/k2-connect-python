@@ -1,7 +1,8 @@
 """ Handles subscription to webhook services"""
 import requests
+import os
 
-default_url = 'https://433e3d31-5734-41a4-987a-79bcd990ea94.mock.pstmn.io/webhook-subscription'
+default_url = os.getenv('DEFAULT_WEBHOOK_SUBCRIPTION_URL')
 
 
 class WebhookSubscription(object):

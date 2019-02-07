@@ -1,0 +1,2 @@
+default_oauth_url = 'https://433e3d31-5734-41a4-987a-79bcd990ea94.mock.pstmn.io//oauth/v4/token'
+default_webhook_subscription_url='https://433e3d31-5734-41a4-987a-79bcd990ea94.mock.pstmn.io/webhook-subscription'

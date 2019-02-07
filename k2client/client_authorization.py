@@ -1,8 +1,9 @@
 """ Handles the client authorization using OAuth2.0 Framework """
 
 import requests
+import os
 
-default_url = 'https://433e3d31-5734-41a4-987a-79bcd990ea94.mock.pstmn.io//oauth/v4/token'
+default_url = os.getenv('DEFAULT_OAUTH_URL')
 
 
 class ClientAuthorization(object):
