@@ -2,6 +2,7 @@
 import requests
 import os
 
+# https://api-sandbox.kopokopo.com/webhook-subscription
 default_webhook_subscription_url = os.getenv('DEFAULT_WEBHOOK_SUBCRIPTION_URL')
 
 
@@ -33,18 +34,28 @@ class WebhookSubscription(object):
         elif self.event_type is None:
             raise ValueError("No event type is passed")
 
-    def subscribe(self):
+    # create webhook subscription
+    def create_subscription(self):
         # set request body
-        request_body = post_request_body_builder(self.event_type, self.url, self.secret)
+        request_body = subscription_post_request_body_builder(self.event_type, self.url, self.secret)
+
+        # perform POST request
         subscription_response = requests.post(self.url, request_body)
         return subscription_response
 
 
+# post request body builder
+def subscription_post_request_body_builder(provided_event_type, provided_url, provided_webhook_secret):
+
+    subscription_post_request_body = {
+        "event_type": provided_event_type,
+        "url": provided_url,
+        "webhook_secret": provided_webhook_secret
+    }
+    return subscription_post_request_body
+
+
+# get subscription data loctaion
 def location(response):
     subscription_data_location = response.headers.get('location')
     return subscription_data_location
-
-
-def post_request_body_builder(provided_event_type, provided_url, provided_secret):
-    req_body = "{\" event_type \": \"" + provided_event_type + "\"," "\"url""\":" + "\"" + provided_url + "\"," "\"secret" "\":" "\"" + provided_secret + "\"}"
-    return req_body

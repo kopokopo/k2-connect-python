@@ -43,6 +43,7 @@ class PayLoadData(object):
         decomposer.payment_request_metadata_reference = self.payload_json['metadata']['reference']
         decomposer.payment_request_notes = self.payload_json['metadata']['notes']
         decomposer.payment_request_status = self.payload_json['status']
+        decomposer.payment_request_id = self.payload_json['payment_request_id']
         decomposer.payment_request_error_code = self.payload_json['errors']['code']
         decomposer.payment_request_error_description = self.payload_json['errors']['description']
 

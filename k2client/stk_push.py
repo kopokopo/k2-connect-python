@@ -2,10 +2,11 @@
 import requests
 import os
 
+# https://api-sandbox.kopokopo.com/payment_requests
+default_stk_push_url = os.getenv('DEFAULT_STK_PUSH_URL')
+
 
 class StkPush(object):
-    # Default URL.
-    default_stk_push_url = os.getenv('DEFAULT_STK_PUSH_URL')
 
     def __init__(self,
                  post_url=default_stk_push_url,
@@ -21,6 +22,21 @@ class StkPush(object):
                  reference=None,
                  notes=None,
                  call_back_url=None):
+        """
+        :param post_url:
+        :param payment_channel:
+        :param till_identifier:
+        :param first_name:
+        :param last_name:
+        :param phone:
+        :param email:
+        :param currency:
+        :param value:
+        :param customer_id:
+        :param reference:
+        :param notes:
+        :param call_back_url:
+        """
         self.post_url = post_url
         self.payment_channel = payment_channel
         self.till_identifier = till_identifier
@@ -72,32 +88,61 @@ class StkPush(object):
 
 # build subscriber json object
 def subscriber_json_object_builder(provided_first_name, provided_last_name, provided_phone, provided_email):
-    subscriber_json_object = "{\"first_name\":\"" + provided_first_name + "\",""\"last_name\":\"" + provided_last_name + "\",""\"phone\":\"" + provided_phone + "\",""\"email\":\"" + provided_email + "\"}"
+
+    subscriber_json_object = {
+        "first_name": provided_first_name,
+        "last_name": provided_last_name,
+        "phone": provided_phone,
+        "email": provided_email
+    }
     return subscriber_json_object
 
 
 # build amount json object
 def amount_json_object_builder(provided_currency, provided_value):
-    amount_json_object = "{\"currency\":\"" + provided_currency + "\",""\"amount\":\"" + provided_value + "\"}"
+
+    amount_json_object = {
+        "currency": provided_currency,
+        "value": provided_value
+    }
     return amount_json_object
 
 
 # build metadata json object
 def metadata_json_object_builder(provided_customer_id, provided_reference, provided_notes):
-    metadata_json_object = "{\"customer_id\":\"" + provided_customer_id + "\",""\"reference\":\"" + provided_reference + "\",""\"notes\":\"" + provided_notes + "\"}"
+
+    metadata_json_object = {
+        "customer_id": provided_customer_id,
+        "reference": provided_reference,
+        "notes": provided_notes
+    }
     return metadata_json_object
 
 
 # build links json object
 def links_json_object_builder(provided_call_back_url):
-    links_json_object = "{\"call_back_url\":\"" + provided_call_back_url + "\"}"
+
+    links_json_object = {
+        "call_back_url": provided_call_back_url
+    }
     return links_json_object
 
 
 # build payment request json object
-def payment_request_json_object_builder(provided_payment_channel, provided_till_identifier, provided_subscriber,
-                                        provided_amount, provided_links, provided_metadata=None):
-    payment_request_json_object = "{\"payment_channel\":\"" + provided_payment_channel + "\",""\"till_identifier\":\"" + provided_till_identifier + "\",""\"subscriber\":\"" + provided_subscriber + "\",""\"amount\":\"" + provided_amount + "\",""\"metadata\":\"" + provided_metadata + "\",""\"links\":\"" + provided_links + "\"}"
+def payment_request_json_object_builder(provided_payment_channel,
+                                        provided_till_identifier,
+                                        provided_subscriber,
+                                        provided_amount,
+                                        provided_links,
+                                        provided_metadata=None):
+    payment_request_json_object = {
+        "payment_channel": provided_payment_channel,
+        "till_identifier": provided_till_identifier,
+        "subscriber": provided_subscriber,
+        "amount": provided_amount,
+        "metadata": provided_metadata,
+        "links": provided_links
+    }
     return payment_request_json_object
 
 
