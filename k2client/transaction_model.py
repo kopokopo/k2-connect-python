@@ -1,4 +1,5 @@
-""""""
+""" Handles creation of getters and setters for the decomposition of payload data fed to the library"""
+# TODO: Research on how to improve getters and setters
 
 
 class TransactionDecompose(object):
@@ -32,13 +33,12 @@ class TransactionDecompose(object):
 
                  # payment request variables
                  payment_request_status=None,
-
+                 payment_request_id=None,
                  # payment request error variables
                  payment_request_error_code=None,
                  payment_request_error_description=None):
 
         """
-
         :param sender_first_name:
         :param sender_middle_name:
         :param sender_last_name:
@@ -56,10 +56,12 @@ class TransactionDecompose(object):
         :param transfer_type:
         :param links_resource:
         :param links_self:
+        :param links_payment_request:
         :param payment_request_customer_id:
         :param payment_request_metadata_reference:
         :param payment_request_notes:
         :param payment_request_status:
+        :param payment_request_id:
         :param payment_request_error_code:
         :param payment_request_error_description:
         """
@@ -86,6 +88,7 @@ class TransactionDecompose(object):
         self._payment_request_metadata_reference = payment_request_metadata_reference
         self._payment_request_notes = payment_request_notes
         self._payment_request_status = payment_request_status
+        self._payment_request_id = payment_request_id
         self._payment_request_error_code = payment_request_error_code
         self._payment_request_error_description = payment_request_error_description
 
@@ -323,7 +326,6 @@ class TransactionDecompose(object):
     def links_payment_request(self):
         del self._links_payment_request
 
-
     # payment_request_customer_id
     @property
     def payment_request_customer_id(self):
@@ -375,6 +377,19 @@ class TransactionDecompose(object):
     @payment_request_status.deleter
     def payment_request_status(self):
         del self._payment_request_status
+
+    # payment_request_id
+    @property
+    def payment_request_id(self):
+        return self._payment_request_id
+
+    @payment_request_id.setter
+    def payment_request_id(self, value):
+        self._payment_request_id = value
+
+    @payment_request_id.deleter
+    def payment_request_id(self):
+        del self._payment_request_id
 
     # payment_request_error_code
     @property
