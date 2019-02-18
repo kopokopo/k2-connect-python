@@ -1,8 +1,9 @@
 """ Handles the client authorization using OAuth2.0 Framework """
-
+from urllib.parse import urlencode
 import requests
 import os
 
+# https://api-sandbox.kopokopo.com/oauth/v4/token
 default_url = os.getenv('DEFAULT_OAUTH_URL')
 
 
@@ -31,10 +32,11 @@ class ClientAuthorization(object):
         # set headers
         headers = {'content-type': "application/x-www-form-urlencoded"}
         # set request body
-        payload = {self.client_id, self.client_secret}
+        payload = {"client_id": self.client_id, "client_secret": self.client_secret}
+        # set url
+        url = self.access_url.format(urlencode(payload))
         # make post request
-        # TODO: Implement urlencoding from urllib
-        authorization_response = requests.post(self.access_url, headers, payload)
+        authorization_response = requests.post(url, headers)
 
         return authorization_response
 
