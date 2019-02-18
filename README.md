@@ -18,7 +18,7 @@ pip install k2-connect
 k2_client_secret = os.getenv('K2_CLIENT_SECRET')
 
 #import k2-connect modules
-from k2client.request_authorization import RequestAuthorization
+from k2client.request_authorization import RequestProcessor
 from k2client.decompose_payload import PayLoadData
 
 # define path to your endpoint for your flask app
@@ -36,12 +36,12 @@ from k2client.decompose_payload import PayLoadData
         headers = request.headers
 
         # pass parameters to validate the post request
-        my_request = RequestAuthorization(
+        my_request = RequestProcessor(
             client_secret=k2_client_secret,
             k2_json_object=json_body,
             k2_message_body=message_body,
             k2_headers=headers
-            ).authorize()
+            ).process()
 
         # decompose your request
         decomposer = PayLoadData(my_request).decompose()

@@ -3,21 +3,21 @@ import requests
 from urllib.parse import urljoin
 
 # https://api-sandbox.kopokopo.com/payment_requests
-default_query_payment_status_url = ""
+default_query_created_payment_status_url = ""
 
 
-class QueryPaymentRequestStatus(object):
+class QueryCreatedPaymentRequestStatus(object):
 
-    def __init__(self, payment_request_id=None):
+    def __init__(self, created_payment_request_id=None):
         """
-        :param payment_request_id:
+        :param created_payment_request_id:
         """
-        self.payment_request_id = payment_request_id
+        self.created_payment_request_id = created_payment_request_id
 
     def query_status(self):
 
         # pass payment request if to url as query parameter
-        url = urljoin(default_query_payment_status_url, self.payment_request_id)
+        url = urljoin(default_query_created_payment_status_url, self.created_payment_request_id)
 
         # perform GET request
         payment_request_query = requests.get(url)

@@ -37,22 +37,22 @@ class WebhookSubscription(object):
     # create webhook subscription
     def create_subscription(self):
         # set request body
-        request_body = subscription_post_request_body_builder(self.event_type, self.url, self.secret)
+        request_body = webhook_subscription_json_object_builder(self.event_type, self.url, self.secret)
 
         # perform POST request
         subscription_response = requests.post(self.url, request_body)
         return subscription_response
 
 
-# post request body builder
-def subscription_post_request_body_builder(provided_event_type, provided_url, provided_webhook_secret):
+# webhook json object builder
+def webhook_subscription_json_object_builder(provided_event_type, provided_url, provided_webhook_secret):
 
-    subscription_post_request_body = {
+    webhook_subscription_json_object = {
         "event_type": provided_event_type,
         "url": provided_url,
         "webhook_secret": provided_webhook_secret
     }
-    return subscription_post_request_body
+    return webhook_subscription_json_object
 
 
 # get subscription data loctaion
