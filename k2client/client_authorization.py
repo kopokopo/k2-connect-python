@@ -33,6 +33,7 @@ class ClientAuthorization(object):
         # set request body
         payload = {self.client_id, self.client_secret}
         # make post request
+        # TODO: Implement urlencoding from urllib
         authorization_response = requests.post(self.access_url, headers, payload)
 
         return authorization_response

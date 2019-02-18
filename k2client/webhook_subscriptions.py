@@ -2,7 +2,7 @@
 import requests
 import os
 
-default_url = os.getenv('DEFAULT_WEBHOOK_SUBCRIPTION_URL')
+default_webhook_subscription_url = os.getenv('DEFAULT_WEBHOOK_SUBCRIPTION_URL')
 
 
 class WebhookSubscription(object):
@@ -35,7 +35,7 @@ class WebhookSubscription(object):
 
     def subscribe(self):
         # set request body
-        request_body = build_request_body(self.event_type, self.url, self.secret)
+        request_body = post_request_body_builder(self.event_type, self.url, self.secret)
         subscription_response = requests.post(self.url, request_body)
         return subscription_response
 
@@ -45,6 +45,6 @@ def location(response):
     return subscription_data_location
 
 
-def build_request_body(provided_event_type, provided_url, provided_secret):
+def post_request_body_builder(provided_event_type, provided_url, provided_secret):
     req_body = "{\" event_type \": \"" + provided_event_type + "\"," "\"url""\":" + "\"" + provided_url + "\"," "\"secret" "\":" "\"" + provided_secret + "\"}"
     return req_body
