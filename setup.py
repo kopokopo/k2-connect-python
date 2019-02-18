@@ -8,7 +8,7 @@ setuptools.setup(
     version='0.0.1.dev1',
     author='Philip Wafula',
     author_email='philipwafula2@gmail.com',
-    description='A python SDK to connect to Kopo Kopo',
+    description='A python SDK to connect to Kopo Kopo API',
     long_description=long_description,
     python_requires='>=3',
     long_description_content_type='text/markdown',
