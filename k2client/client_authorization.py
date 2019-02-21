@@ -36,7 +36,7 @@ class ClientAuthorization(object):
         # set url
         url = self.access_url.format(urlencode(payload))
         # make post request
-        authorization_response = requests.post(url, headers)
+        authorization_response = requests.post(url=url, headers=headers)
 
         return authorization_response
 

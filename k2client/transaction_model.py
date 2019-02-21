@@ -1,5 +1,5 @@
 """ Handles creation of getters and setters for the decomposition of payload data fed to the library"""
-# TODO: Research on how to improve getters and setters
+# TODO: Philip - Research on how to improve getters and setters - Seperate getter and setter classes
 
 
 class TransactionDecompose(object):
@@ -24,12 +24,13 @@ class TransactionDecompose(object):
                  transfer_type=None,
                  links_resource=None,
                  links_self=None,
-                 links_payment_request=None,
+
 
                  # payment request metadata variables
                  payment_request_customer_id=None,
                  payment_request_metadata_reference=None,
                  payment_request_notes=None,
+                 links_payment_request=None,
 
                  # payment request variables
                  payment_request_status=None,

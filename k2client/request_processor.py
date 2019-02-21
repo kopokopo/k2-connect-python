@@ -4,7 +4,7 @@ import hashlib
 import json
 
 
-class RequestAuthorization(object):
+class RequestProcessor(object):
     """Performs requests to the Kopo Kopo API web services."""
 
     def __init__(self, client_secret=None, k2_json_object=None, k2_message_body=None, k2_headers=None):
@@ -30,7 +30,7 @@ class RequestAuthorization(object):
 
     """Confirm JSON object is from KopoKopo"""
 
-    def authorize(self):
+    def process(self):
         if self.k2_json_object is None:
             raise ValueError("No JSON Object was received")
         elif self.k2_headers is None:
@@ -40,7 +40,7 @@ class RequestAuthorization(object):
         else:
 
             # generate hmac hash
-            hash_key = gen_hmac_sig(bytes(self.client_secret, 'utf-8'), self.k2_message_body)
+            hash_key = generate_hmac_signature(bytes(self.client_secret, 'utf-8'), self.k2_message_body)
 
             # get payload signature
             payload_sign = self.k2_headers.get('X-KopoKopo-Signature')
@@ -59,6 +59,6 @@ Generates hmac hash to compare with the KopoKopo signature in the payload's head
 """
 
 
-def gen_hmac_sig(api_key, message):
+def generate_hmac_signature(api_key, message):
     signature = hmac.new(api_key, message, hashlib.sha256).hexdigest()
     return signature
