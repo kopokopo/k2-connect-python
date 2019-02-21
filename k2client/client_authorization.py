@@ -1,13 +1,17 @@
 """ Handles the client authorization using OAuth2.0 Framework """
-
+from urllib.parse import urlencode
 import requests
+import os
+
+# https://api-sandbox.kopokopo.com/oauth/v4/token
+default_url = os.getenv('DEFAULT_OAUTH_URL')
 
 
 class ClientAuthorization(object):
     def __init__(self,
                  client_id=None,
                  client_secret=None,
-                 access_url="https://api.kopokopo.com/oauth/v4/token"):
+                 access_url=default_url):
         """
         :param client_id: Your application's client ID
         :type client_id: str
@@ -28,18 +32,23 @@ class ClientAuthorization(object):
         # set headers
         headers = {'content-type': "application/x-www-form-urlencoded"}
         # set request body
-        request_body = build_request_body(self.client_id, self.client_secret)
+        payload = {"client_id": self.client_id, "client_secret": self.client_secret}
+        # set url
+        url = self.access_url.format(urlencode(payload))
         # make post request
-        authorization_request = requests.post(self.access_url, headers, json=request_body)
+        authorization_response = requests.post(url, headers)
 
-        return authorization_request
-
-    def access_token(self):
-        request = self.request_access()
-        request_access_token = request.json().get("access_token")
-        return request_access_token
+        return authorization_response
 
 
-def build_request_body(provided_id, provided_secret):
-    req_body = "{\"grant_type\":\"client_credentials\",\"client_id\":" "\"" + provided_id + "\"" ",\"client_secret\":"" \"" + provided_secret + "\"" "}"
-    return req_body
+def access_token(response):
+    response_access_token = response.json().get('access_token')
+    return response_access_token
+
+
+def token_expiry_time(response):
+    response_expiry_time = response.json().get('expires_in')
+    return response_expiry_time
+
+
+
