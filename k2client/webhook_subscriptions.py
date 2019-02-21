@@ -45,7 +45,9 @@ class WebhookSubscription(object):
 
 
 # webhook json object builder
-def webhook_subscription_json_object_builder(provided_event_type, provided_url, provided_webhook_secret):
+def webhook_subscription_json_object_builder(provided_event_type,
+                                             provided_url,
+                                             provided_webhook_secret):
 
     webhook_subscription_json_object = {
         "event_type": provided_event_type,

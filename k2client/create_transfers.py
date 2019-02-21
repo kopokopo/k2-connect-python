@@ -22,21 +22,21 @@ class CreateTransfers(object):
 
     def create_transfer(self):
         # define amount json object
-        amount = transfer_amount_json_object_builder(self.transfer_currency,
-                                                     self.transfer_value)
+        amount = transfer_amount_json_object_builder(provided_currency=self.transfer_currency,
+                                                     provided_value=self.transfer_value)
         # perform create transfer post request
         if self.transfer_destination is not None:
             transfer_json_object = {
                 "amount": amount,
                 "destination": self.transfer_destination
             }
-            create_targeted_transfer_post_request = requests.post(default_transfers_url, json=transfer_json_object)
+            create_targeted_transfer_post_request = requests.post(url=default_transfers_url, json=transfer_json_object)
             return create_targeted_transfer_post_request
         else:
             transfer_json_object = {
                 "amount": amount
             }
-            create_blind_transfer_post_request = requests.post(default_transfers_url, json=transfer_json_object)
+            create_blind_transfer_post_request = requests.post(url=default_transfers_url, json=transfer_json_object)
             return create_blind_transfer_post_request
 
 

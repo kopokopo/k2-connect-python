@@ -32,20 +32,23 @@ class CreatePayment(object):
 
     def create_payment(self):
         # define amount json object
-        amount = payment_amount_json_object_builder(self.currency, self.value)
+        amount = payment_amount_json_object_builder(provided_currency=self.currency, provided_value=self.value)
 
         # define metadata json object
-        metadata = payment_metadata_json_object_builder(self.customer_id,
-                                                        self.notes)
+        metadata = payment_metadata_json_object_builder(provided_customer_id=self.customer_id,
+                                                        provided_notes=self.notes)
 
         # define links json object
         links = payment_links_json_object_builder(self.callback_url)
 
         # define payment json object for POST request
-        payment_json_object = payment_json_object_builder(self.destination, amount, metadata, links)
+        payment_json_object = payment_json_object_builder(provided_destination=self.destination,
+                                                          provided_amount=amount,
+                                                          provided_metadata=metadata,
+                                                          provided_links=links)
 
         # perform POST request to create payment
-        create_payment_request = requests.post(default_create_payments_url, payment_json_object)
+        create_payment_request = requests.post(url=default_create_payments_url, json=payment_json_object)
 
         return create_payment_request
 
