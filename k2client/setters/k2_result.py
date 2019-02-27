@@ -1,11 +1,12 @@
 """ Handles creation of getters and setters for the decomposition of transaction payloads"""
-from .k2_metadata import Metadata
-from .k2_links import Links
-from .k2_errors import Errors
-from .pay import PAY
-from .payment_result import PaymentResult
-from .buygoods import BuyGoods
-from .settlement import SettlementTransfer
+
+from k2client.setters.k2_metadata import Metadata
+from k2client.setters.k2_links import Links
+from k2client.setters.k2_errors import Errors
+from k2client.setters.pay import PAY
+from k2client.setters.payment_result import PaymentResult
+from k2client.setters.buygoods import BuyGoods
+from k2client.setters.settlement import SettlementTransfer
 
 
 class Result(Errors, PAY, BuyGoods, SettlementTransfer, Metadata, Links):

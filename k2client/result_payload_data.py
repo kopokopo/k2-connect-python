@@ -1,7 +1,6 @@
 """Handles breaking down transaction payloads into their constituent elements of data """
-
-from .properties_setters.k2_result import Result
-
+# from .setters.k2_result import Result
+from k2client.setters.k2_result import Result
 # define result type space
 buygoods_transaction_received = 'buygoods_transaction_received'
 buygoods_transaction_reversed = 'buygoods_transaction_reversed'
@@ -121,6 +120,4 @@ data = {
     }
 }
 
-values = ResultPayload(data).decompose_result()
-
-print(values.payment_request)
+print(ResultPayload(data).decompose_result().payment_request)
