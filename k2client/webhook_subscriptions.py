@@ -2,8 +2,10 @@
 import requests
 import os
 
+from .json_builder import webhook_subscription
+
 # https://api-sandbox.kopokopo.com/webhook-subscription
-default_webhook_subscription_url = os.getenv('DEFAULT_WEBHOOK_SUBCRIPTION_URL')
+default_webhook_subscription_url = ""
 
 
 class WebhookSubscription(object):
@@ -37,24 +39,13 @@ class WebhookSubscription(object):
     # create webhook subscription
     def create_subscription(self):
         # set request body
-        request_body = webhook_subscription_json_object_builder(self.event_type, self.url, self.secret)
+        payload = webhook_subscription(provided_event_type=self.event_type,
+                                       provided_url=self.url,
+                                       provided_webhook_secret=self.secret)
 
         # perform POST request
-        subscription_response = requests.post(self.url, request_body)
+        subscription_response = requests.post(url=self.url, payload=payload)
         return subscription_response
-
-
-# webhook json object builder
-def webhook_subscription_json_object_builder(provided_event_type,
-                                             provided_url,
-                                             provided_webhook_secret):
-
-    webhook_subscription_json_object = {
-        "event_type": provided_event_type,
-        "url": provided_url,
-        "webhook_secret": provided_webhook_secret
-    }
-    return webhook_subscription_json_object
 
 
 # get subscription data loctaion
