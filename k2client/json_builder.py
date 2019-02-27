@@ -1,11 +1,10 @@
 """Handles building json objects across the library """
 import requests
 
-
 """Build JSON objects responsible for creating PAY recipients"""
+
+
 # build bank account pay recipient json object
-
-
 def bank_account_recipient(provided_name,
                            provided_account_name,
                            provided_bank_id,
@@ -58,7 +57,6 @@ def subscriber(provided_first_name,
                provided_last_name,
                provided_phone,
                provided_email):
-
     subscriber_object = {
         "first_name": provided_first_name,
         "last_name": provided_last_name,
@@ -70,7 +68,6 @@ def subscriber(provided_first_name,
 
 # build amount json object
 def amount(provided_currency, provided_value):
-
     amount_object = {
         "currency": provided_currency,
         "value": provided_value
@@ -79,19 +76,13 @@ def amount(provided_currency, provided_value):
 
 
 # build metadata json object
-def metadata(provided_customer_id, provided_reference, provided_notes=None):
-
-    metadata_object = {
-        "customer_id": provided_customer_id,
-        "reference": provided_reference,
-        "notes": provided_notes
-    }
+def metadata(**kwargs):
+    metadata_object = kwargs
     return metadata_object
 
 
 # build links json object
 def links(provided_call_back_url):
-
     links_object = {
         "call_back_url": provided_call_back_url
     }
@@ -105,7 +96,7 @@ def payment_request(provided_payment_channel,
                     provided_amount,
                     provided_links,
                     provided_metadata=None):
-    payment_request_json_object = {
+    payment_object = {
         "payment_channel": provided_payment_channel,
         "till_identifier": provided_till_identifier,
         "subscriber": provided_subscriber,
@@ -113,4 +104,19 @@ def payment_request(provided_payment_channel,
         "metadata": provided_metadata,
         "links": provided_links
     }
-    return payment_request_json_object
+    return payment_object
+
+
+"""Build JSON Objects for cretaing webhook subscriptions"""
+
+
+# webhook json object builder
+def webhook_subscription(provided_event_type,
+                         provided_url,
+                         provided_webhook_secret):
+    webhook_subscription_object = {
+        "event_type": provided_event_type,
+        "url": provided_url,
+        "webhook_secret": provided_webhook_secret
+    }
+    return webhook_subscription_object

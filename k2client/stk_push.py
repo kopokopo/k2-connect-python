@@ -2,7 +2,7 @@
 import requests
 import os
 
-from .json_builder import subscriber, amount, links, metadata
+from .json_builder import subscriber, amount, links, metadata, payment_request
 
 # https://api-sandbox.kopokopo.com/payment_requests
 default_stk_push_url = ""
@@ -52,28 +52,28 @@ class StkPush(object):
 
     def payment_post_requst(self):
         # define subscriber json object
-        subscriber = subscriber(provided_first_name=self.first_name,
-                                provided_last_name=self.last_name,
-                                provided_phone=self.phone,
-                                provided_email=self.email)
+        payment_subscriber = subscriber(provided_first_name=self.first_name,
+                                        provided_last_name=self.last_name,
+                                        provided_phone=self.phone,
+                                        provided_email=self.email)
         # define amount json object
-        amount = amount(self.currency, self.value)
+        payment_amount = amount(self.currency, self.value)
 
         # define metadata json object (optional)
-        metadata = metadata(provided_customer_id=self.customer_id,
-                            provided_reference=self.reference,
-                            provided_notes=self.notes)
+        payment_metadata = metadata(provided_customer_id=self.customer_id,
+                                    provided_reference=self.reference,
+                                    provided_notes=self.notes)
 
         # define links json object
-        links = links(self.call_back_url)
+        payment_links = links(self.call_back_url)
 
         # define payment request json object
-        payload = payment_request_json_object_builder(provided_payment_channel=self.payment_channel,
-                                                      provided_till_identifier=self.till_identifier,
-                                                      provided_subscriber=subscriber,
-                                                      provided_amount=amount,
-                                                      provided_links=links,
-                                                      provided_metadata=metadata)
+        payload = payment_request(provided_payment_channel=self.payment_channel,
+                                  provided_till_identifier=self.till_identifier,
+                                  provided_subscriber=payment_subscriber,
+                                  provided_amount=payment_amount,
+                                  provided_links=payment_links,
+                                  provided_metadata=payment_metadata)
 
         # define headers
         headers = {'content-type': 'application/vnd.kopokopo.v4.hal+json',
