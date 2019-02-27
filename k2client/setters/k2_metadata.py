@@ -4,10 +4,10 @@
 class Metadata(object):
     def __init__(self,
                  customer_id=None,
-                 reference=None,
+                 metadata_reference=None,
                  notes=None):
         self._customer_id = customer_id
-        self._reference = reference
+        self._metadata_reference = metadata_reference
         self._notes = notes
 
     # customer_id
@@ -19,14 +19,14 @@ class Metadata(object):
     def customer_id(self, value):
         self._customer_id = value
 
-    # reference
+    # metadata_reference
     @property
-    def reference(self):
-        return self._reference
+    def metadata_reference(self):
+        return self._metadata_reference
 
-    @reference.setter
-    def reference(self, value):
-        self._reference = value
+    @metadata_reference.setter
+    def metadata_reference(self, value):
+        self._metadata_reference = value
 
     # notes
     @property
