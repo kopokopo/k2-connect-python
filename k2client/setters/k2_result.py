@@ -9,7 +9,7 @@ from k2client.setters.buygoods import BuyGoods
 from k2client.setters.settlement import SettlementTransfer
 
 
-class Result(Errors, PAY, BuyGoods, SettlementTransfer, Metadata, Links):
+class Result(Errors, PAY, BuyGoods, SettlementTransfer, Metadata, Links, PaymentResult):
 
     def __init__(self, first_name=None, middle_name=None, last_name=None, amount=None, currency=None, status=None,
                  reference=None, orgn_time=None, msisdn=None):
