@@ -1,35 +1,56 @@
 """ Handles subscription to webhook services"""
-import requests
 import os
+from k2client import exceptions
 
 from .json_builder import webhook_subscription
+from .service import Service
 
+# for sandbox:
 # https://api-sandbox.kopokopo.com/webhook-subscription
-default_webhook_subscription_url = ""
+# for production:
+# https://api.kopokopo.com/webhook-subscription
+webhook_subscription_path = "webhook-subscription"
 
 
-# check for values
-if self.secret is None:
-    raise ValueError("No webhook_sectret is passed")
-elif self.url is None:
-    raise ValueError("No url is passed")
-elif self.event_type is None:
-    raise ValueError("No event type is passed")
+class WebhookService(Service):
+    def __init__(self, event_type, callback_url, webhook_secret):
+        """
+        :param event_type:
+        :param callback_url:
+        :param webhook_secret:
+        """
+        super(WebhookService).__init__()
+        self.event_type = event_type
+        self.callback_url = callback_url
+        self.webhook_secret = webhook_secret
+
+    # create webhook subscription
+    def create_subscription(self, event_type, callback_url, webhook_secret):
+        # event types
+        event_types_to_check = ['buygoods_transaction_received',
+                                'buygoods_transaction_reversed',
+                                'settlement_transfer_completed',
+                                'customer_created']
+
+        if event_type or callback_url or webhook_secret is None:
+            raise exceptions.ValueEmptyError
+        elif not any(check in event_type for check in event_types_to_check):
+            raise exceptions.InvalidEventTypeError
+        elif not callable(callback_url):
+            raise exceptions.InvalidCallbackURL
+        else:
+            try:
+                # set request body
+                payload = webhook_subscription(self.event_type,
+                                               self.callback_url,
+                                               self.webhook_secret)
+                # build url
+                url = self.make_url(webhook_subscription_path)
+            except exceptions.InvalidEventTypeError:
+                print("Enter a valid event type")
+            else:
+                # perform POST request
+                subscription_response = self.make_requests(headers=self._headers, method='POST', url=url, payload=payload)
+                return subscription_response
 
 
-# create webhook subscription
-def create_subscription(self):
-    # set request body
-    payload = webhook_subscription(provided_event_type=self.event_type,
-                                   provided_url=self.url,
-                                   provided_webhook_secret=self.secret)
-
-    # perform POST request
-    subscription_response = requests.post(url=self.url, payload=payload)
-    return subscription_response
-
-
-# get subscription data loctaion
-def location(response):
-    subscription_data_location = response.headers.get('location')
-    return subscription_data_location
