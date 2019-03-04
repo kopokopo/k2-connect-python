@@ -9,7 +9,7 @@ settlement_transfer_completed = 'settlement_transfer_completed'
 customer_created = 'customer_created'
 recieve_payments = 'payment_request'
 # revisit for topic
-create_payment = 'create_payment'
+create_payment = 'send_pay'
 
 
 class ResultPayload(object):
