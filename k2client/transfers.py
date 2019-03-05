@@ -2,8 +2,18 @@
 import requests
 from k2client.json_builder import amount, transfer_object
 
+# for sandbox:
 # https://api-sandbox.kopokopo.com/transfers
-default_transfers_url = ""
+# https://api-sandbox.kopokopo.com/merchant_bank_accounts
+# for production:
+# https://api.kopokopo.com/transfers
+# https://api.kopokopo.com/merchant_bank_accounts
+
+transfers_path = ""
+settlement_accounts_path = "merchant_bank_accounts"
+
+
+class 
 
 
 def settle(transfer_currency,
