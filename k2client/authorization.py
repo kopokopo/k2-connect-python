@@ -10,11 +10,11 @@ from .service import Service
 # for production:
 # https://api.kopokopo.com/oauth/v4/token
 
-url_path = 'oauth/v4/token'
+authorization_path = 'oauth/v4/token'
 
 
 class AuthorizationService(Service):
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, custom_base_url=None):
 
         """
         :param client_id: Your application's client ID
@@ -23,14 +23,18 @@ class AuthorizationService(Service):
         :param client_secret: Your application's client secret (used for Oauth requests)
         :type client_secret : str
 
+        :param custom_base_url: Domain to send requests to if for some reason you want to send your request to something other
+                than "https://api.kopokopo.com/oauth/v4/token"
+        :type custom_base_url: str
         """
         super(AuthorizationService, self).__init__(client_id, client_secret)
         self.client_id = client_id
         self.client_secret = client_secret
+        self.access_url = custom_base_url
 
     def request_access(self):
         # define url
-        url = self.make_url(url_path)
+        url = self.build_url(authorization_path)
 
         # define custom headers
         headers = dict(self._headers)
