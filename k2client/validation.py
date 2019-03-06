@@ -5,6 +5,11 @@ from k2client import exceptions
 
 
 def validate_email(email):
+    """
+    :param email: An email address
+    :type email: str
+    :return: True
+    """
     validated_email = re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', email, re.I)
     if validated_email is not None:
         return True
@@ -13,6 +18,11 @@ def validate_email(email):
 
 
 def validate_phone_number(phone_number):
+    """
+    :param phone_number: A phone number
+    :type phone_number: str
+    :return: True
+    """
     validated_phone_number = re.search('^\+\d{1,3}\d{3,}$', phone_number)
     if validated_phone_number is not None:
         return True
