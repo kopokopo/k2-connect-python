@@ -1,7 +1,7 @@
 """Handles creating an outgoing payment to a third party."""
 import requests
 from .service import Service
-from .json_builder import amount, metadata, links, payment_object
+from .json_builder import amount, metadata, links, pay_recipient
 
 # for sandbox:
 # https://api-sandbox.kopokopo.com/payments
