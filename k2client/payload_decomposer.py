@@ -35,7 +35,9 @@ class PayloadDecomposer(object):
         links_payload_nest = self.result_payload['_links']
 
         # decompose all values that are similar in webhooks
-        if result_type is buygoods_transaction_received or buygoods_transaction_reversed or receive_payments:
+        if result_type is buygoods_transaction_received\
+                or result_type is buygoods_transaction_reversed \
+                or result_type is receive_payments:
 
             decomposer.first_name = resource_payload_nest['sender_first_name']
             decomposer.middle_name = resource_payload_nest['sender_middle_name']
@@ -48,20 +50,20 @@ class PayloadDecomposer(object):
             decomposer.origination_time = resource_payload_nest['origination_time']
 
         # decompose all values that have similar metadata structures
-        elif result_type is receive_payments or create_payment:
+        elif result_type is receive_payments or result_type is create_payment:
             decomposer.metadata_customer_id = metadata_payload_nest['customer_id']
             decomposer.metadata_reference = metadata_payload_nest['reference']
 
         # decompose all values that have similar links structures
         elif result_type is buygoods_transaction_reversed \
-                or buygoods_transaction_received \
-                or settlement_transfer_completed \
-                or customer_created:
+                or result_type is buygoods_transaction_received \
+                or result_type is settlement_transfer_completed \
+                or result_type is customer_created:
             decomposer.links_self = links_payload_nest['self']
             decomposer.links_resource = links_payload_nest['resource']
 
         # decompose all values that are common to buygoods transactions
-        elif result_type is buygoods_transaction_reversed or buygoods_transaction_received:
+        elif result_type is buygoods_transaction_reversed or result_type is buygoods_transaction_received:
             decomposer.till_number = resource_payload_nest['till_number']
             decomposer.system = resource_payload_nest['system']
 
