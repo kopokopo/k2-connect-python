@@ -18,8 +18,8 @@ class PayService(Service):
                  bearer_token,
                  recipient_type):
         """
-        :param bearer_token:
-        :param recipient_type:
+        :param bearer_token: Access token to be used to make calls to the Kopo Kopo API
+        :type  bearer_token: str
         """
         super(PayService, self).__init__(client_id=self._client_id, client_secret=self._client_id)
         self._bearer_token = bearer_token
