@@ -17,7 +17,8 @@ settlement_accounts_path = "merchant_bank_accounts"
 class TransferService(Service):
     def __init__(self, bearer_token):
         """
-        :param bearer_token:
+        :param bearer_token: Access token to be used to make calls to the Kopo Kopo API
+        :type  bearer_token: str
         """
         super(TransferService, self).__init__(client_id=self._client_id, client_secret=self._client_secret)
         self._bearer_token = bearer_token
@@ -32,11 +33,15 @@ class TransferService(Service):
                                bank_branch_ref,
                                account_number):
         """
-        :param account_name:
-        :param bank_ref:
-        :param bank_branch_ref:
-        :param account_number:
-        :return:
+        :param account_name: The name as indicated on the bank account name
+        :type account_name: str
+        :param bank_ref: An identifier identifying the destination bank
+        :type bank_ref: str
+        :param bank_branch_ref: An identifier identifying the destination bank branch
+        :type bank_branch_ref: str
+        :param account_number: The bank account number
+        :type account_number: str
+        :return: A JSON object containing settlement account information
         """
 
         # build add transfer path
@@ -51,10 +56,13 @@ class TransferService(Service):
 
     def settle_funds(self, transfer_currency, transfer_value, transfer_destination=None):
         """
-        :param transfer_currency:
+        :param transfer_currency: Currency of amount being transacted
+        :type transfer_currency: str
         :param transfer_value:
-        :param transfer_destination:
-        :return:
+        :type transfer_value:Value of money to be sent (child of amount JSON)
+        :param transfer_destination: str
+        :type transfer_destination: ID of the destination of funds (bank account)
+        :return:A Http response object
         """
 
         # build url for settle funds
