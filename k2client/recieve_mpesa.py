@@ -23,23 +23,35 @@ class ReceiveMpesaPaymentsService(Service):
                  last_name,
                  phone,
                  payment_channel,
-                 till_identifier,
+                 till_number,
                  callback_url,
                  value,
                  currency="KES",
                  email=None,
                  **kwargs):
         """
-        :param first_name:
-        :param last_name:
-        :param phone:
-        :param payment_channel:
-        :param till_identifier:
+        :param bearer_token: Access token to be used to make calls to the Kopo Kopo API
+        :type  bearer_token: str
+        :param first_name: First name of the subscriber
+        :type  first_name: str
+        :param last_name: Last name of the subscriber
+        :type  last_name: str
+        :param phone: The phone number of the subscriber from which the payment will be made
+        :type  phone: str
+        :param payment_channel: The payment channel to be used eg. MPESA
+        :type payment_channel: str
+        :param till_number: The till to which the payment will be made
+        :type  till_number: str
         :param callback_url:
-        :param value:
-        :param currency:
-        :param email:
-        :param kwargs:
+        :type  callback_url: str
+        :param value: Value of money to be received (child of amount JSON)
+        :type value: str
+        :param currency: Currency of amount being transacted
+        :type currency: str
+        :param email: E-mail address of the subscriber - optional
+        :type email: str
+        :param kwargs: Key worded arguments to populate metadata
+        :type kwargs: kwargs
         """
         super(ReceiveMpesaPaymentsService, self).__init__(client_id=self._client_id, client_secret=self._client_secret)
         self._bearer_token = bearer_token
@@ -47,7 +59,7 @@ class ReceiveMpesaPaymentsService(Service):
         self.last_name = last_name
         self.phone = phone
         self.payment_channel = payment_channel
-        self.till_identifier = till_identifier
+        self.till_number = till_number
         self.callback_url = callback_url
         self.email = email
         self.currency = currency
@@ -81,7 +93,7 @@ class ReceiveMpesaPaymentsService(Service):
 
             # define payment request json object
             payload = stk_request(payment_channel=self.payment_channel,
-                                  till_identifier=self.till_identifier,
+                                  till_number=self.till_number,
                                   stk_subscriber=payment_subscriber,
                                   stk_amount=payment_amount,
                                   stk_links=payment_links,
