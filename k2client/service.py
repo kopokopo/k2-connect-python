@@ -18,7 +18,7 @@ class Service(Requests):
                 than "https://api.kopokopo.com/oauth/v4/token"
         :type custom_base_url: str
         """
-        super(Service, self).__init__(bearer_token=None)
+        super(Service, self).__init__(bearer_token=self._bearer_token)
 
         if client_id is None or client_secret is None:
             raise exceptions.ValueEmptyError
@@ -47,6 +47,11 @@ class Service(Requests):
 
     # build a url
     def build_url(self, url_path):
+        """
+        :param url_path: Path pointing to the target of a base url
+        :type url_path: str
+        :return: str
+        """
         if self.is_sandbox():
             return self.sandbox_baseurl + url_path
         elif self.is_production():
