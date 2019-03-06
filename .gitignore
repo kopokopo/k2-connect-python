@@ -7,3 +7,5 @@ contrib
 k2_connect.egg-info
 config.py
 TODOs
+k2client/__pycache__/
+__pycache__/
