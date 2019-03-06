@@ -34,7 +34,7 @@ class Result(Errors, PAY, BuyGoods, SettlementTransfer, Metadata, Links, Payment
         self._currency = currency
         self._status = status
         self._reference = reference
-        self._orgn_time = orgn_time
+        self._origination_time = orgn_time
         self._msisdn = msisdn
 
     # first name
@@ -102,12 +102,12 @@ class Result(Errors, PAY, BuyGoods, SettlementTransfer, Metadata, Links, Payment
 
     # transaction origination time
     @property
-    def orgn_time(self):
-        return self._orgn_time
+    def origination_time(self):
+        return self._origination_time
 
-    @orgn_time.setter
-    def orgn_time(self, value):
-        self._orgn_time = value
+    @origination_time.setter
+    def origination_time(self, value):
+        self._origination_time = value
 
     # msisdn
     @property

@@ -5,9 +5,11 @@ import json
 
 
 class RequestProcessor(object):
-    """Performs requests to the Kopo Kopo API web services."""
-
-    def __init__(self, client_secret=None, k2_json_object=None, k2_message_body=None, k2_headers=None):
+    def __init__(self,
+                 client_secret=None,
+                 k2_json_object=None,
+                 k2_message_body=None,
+                 k2_headers=None):
         """
         :param client_secret: Your application's client secret
         :type client_secret str
@@ -28,7 +30,7 @@ class RequestProcessor(object):
         if client_secret is None:
             raise ValueError("Must provide client secret or enterprise credentials when creating client.")
 
-    """Confirm JSON object is from KopoKopo"""
+    # Confirm JSON object is from KopoKopo
 
     def process(self):
         if self.k2_json_object is None:
@@ -54,9 +56,7 @@ class RequestProcessor(object):
                 return self.k2_json_object
 
 
-"""
-Generates hmac hash to compare with the KopoKopo signature in the payload's header file
-"""
+# Generates hmac hash to compare with the KopoKopo signature in the payload's header file
 
 
 def generate_hmac_signature(api_key, message):

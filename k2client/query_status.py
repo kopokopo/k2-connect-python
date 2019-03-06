@@ -1,11 +1,16 @@
 """Handles sending a query to get payment status"""
-import requests
-from urllib.parse import urljoin
+from k2client.requests import Requests
 
 
-def query_status(payment_request_link):
+class QueryStatus(Requests):
+    def __init__(self, bearer_token):
+        """
+        :param bearer_token:
+        """
+        self._bearer_token = bearer_token
+        super(QueryStatus, self).__init__(bearer_token=self._bearer_token)
 
-    # perform GET request
-    payment_request_query_resposne = requests.get(url=payment_request_link)
+    def query_transaction_status(self, url):
+        query_response = self.make_requests(url=url, method='GET', headers=self._headers)
+        return query_response
 
-    return payment_request_query_resposne
