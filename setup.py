@@ -5,16 +5,16 @@ with open("README.md", "r") as file_header:
 
 setuptools.setup(
     name='k2-connect',
-    version='0.0.2.dev1',
+    version='0.0.7.dev2',
     author='Philip Wafula',
     author_email='philipwafula2@gmail.com',
     description='A python SDK to connect to Kopo Kopo API',
     long_description=long_description,
     python_requires='>=3',
     long_description_content_type='text/markdown',
-    url='https://github.com/ThePhilosopherCodes/k2-connect-python',
+    url='https://github.com/kopokopo/k2-connect-python',
     license='MIT',
-    packages=setuptools.find_packages(exclude=['docs', 'tests*']),
+    packages=setuptools.find_packages(exclude=['docs', 'tests*', 'example']),
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
