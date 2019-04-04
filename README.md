@@ -2,7 +2,7 @@
 
 k2-connect is a Python library for accessing the Kopo Kopo APIs.
 
-#DISCLAIMER
+# DISCLAIMER
 This library is still in development. To connect to kopokopo's current api check out it's documentation on https://app.kopokopo.com/push_api
 
 ## Installation
@@ -14,7 +14,7 @@ pip install k2connect
 ```
 
 ## Usage
-###Initialization
+### Initialization
 The library is initialized once then all services maybe accessed by creating different instances for specific services.
 The `BASE_URL` is a custom value and any url maybe passed provided it is secured and should only be accessible over TLS (HTTPS) and your server should have a valid certificate.
 Initialization requires the following arguments:
@@ -50,7 +50,7 @@ One can access the following k2connect services:
 - [TransferService](#transfers-service)
 - [WebhookService](#webhook-service)
 
-####Token service
+#### Token service
 The token service allows you to request access tokens that you will use in order to communicate with the Kopo Kopo APIs.
 The token service avails the option for you to implement token refresh mechanism by providing the duration within which
 the token will expire.
@@ -72,7 +72,7 @@ access_token = token_service.get_access_token(access_token_request)
 token_expiry_duration = token_service.get_token_expiry_duration(access_token_request)
 ```
 
-####Pay service
+#### Pay service
 The pay service enables you to add external entities (recipients) as destinations for payments made withe the pay service. 
 It also enables you to make payments and check for a payment's status.
 
@@ -158,7 +158,7 @@ pay_transaction_location = pay_service.pay_transaction_location(send_pay_transac
 pay_transaction_status = pay_service.pay_transaction_status(pay_transaction_location)
 ```
 
-####Receive payments service
+#### Receive payments service
 The receive payments service allows you to create requests for payments over a specific channel and receive the payments 
 to your account. You can also check the status of your payment requests and access the payment request through a URL.
 
@@ -218,7 +218,7 @@ mpesa_payment_location = receive_payments_service.payment_request_location(mpesa
 payment_request_status = receive_payments_service.payment_request_status(mpesa_payment_location)
 ```
 
-####Transfers service
+#### Transfers service
 The transfer service enables you to create verified settlement bank accounts using the `add_settlement_account()` method. The method takes the following arguments:
 
 * bearer_token `REQUIRED`
@@ -272,7 +272,7 @@ transfer_transaction_location = transfer_service.transfer_transaction_location(t
 transfer_transaction_status = transfer_service.transfer_transaction_status(transfer_transaction_location)
 ```
 
-####Webhook service
+#### Webhook service
 The webhook service allows you to create subscriptions to events that occur on the KopoKopo application. The `create_subscription()` method is used, 
 it takes the following arguments:
 
@@ -306,7 +306,7 @@ customer_created_subscription = webhook_service.create_subscription(bearer_token
                                                                     webhook_secret=WEBHOOK_SECRET)
 ```
 
-####Result processor 
+#### Result processor 
 Results (inclusive of webhook results and results posted to callback URLs asynchronously) sent from KopoKopo have to be processed before payloads can 
 be accessed. The result processor can be used to accomplish this using the `process()` method.
 
@@ -318,7 +318,7 @@ result_handler = k2connect.ResultHandler
 processed_payload = result_handler.process(some_result)
 ```
 
-####Payload decomposer
+#### Payload decomposer
 Once a result is processed an a payload has been returned, it can be decomposed into its constituent result data using the payload decomposer.
 The payload decomposer achieves this using the `decompose()` method.
 
@@ -332,13 +332,13 @@ decomposer = payload_decomposer.decompose(processed_payload)
 first_name = decomposer.first_name
 ```
 
-###Author
+### Author
 This library was written by [PhilipWafula](https://github.com/PhilipWafula)
 
-###Contributing
+### Contributing
 Bug reports and pull requests are welcome. Feel free raise issues on our [issues tracker](https://github.com/kopokopo/k2-connect-python/issues)
 
-###License
+### License
 k2connect-python is [MIT](https://github.com/kopokopo/k2-connect-python/blob/master/LICENSE) Licensed.
 
-###Changelog
+### Changelog
