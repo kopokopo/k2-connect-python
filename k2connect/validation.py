@@ -1,7 +1,7 @@
 """Handles validation of expected user inputs"""
 import re
 from urllib.parse import urlparse
-from k2client import exceptions
+from k2connect import exceptions
 
 
 def validate_email(email):
@@ -35,7 +35,25 @@ def validate_url(url):
     # check url format
     if validated_url.scheme is "" or validated_url.netloc is "":
         raise exceptions.InvalidArgumentError('The url format passed is invalid (should be : https://domain.com)')
-    elif validated_url.scheme is not "" and not validated_url.scheme == 'https':
+    if validated_url.scheme is not "" and not validated_url.scheme == 'https':
         raise exceptions.InvalidArgumentError('Provide a url with a valid certificate => (https://)')
     else:
         return True
+
+
+def validate_string_arguments(*args):
+    for arg in args:
+        if arg is None or arg == '':
+            raise exceptions.InvalidArgumentError('Invalid/empty argument')
+        if not isinstance(arg, str):
+            raise exceptions.InvalidArgumentError('Argument must be of type str.')
+        pass
+
+
+def validate_dictionary_arguments(*args):
+    for arg in args:
+        if arg is None or arg == {}:
+            raise exceptions.InvalidArgumentError('Invalid argument passed.'
+                                                  'Expects dict object')
+        if not isinstance(arg, dict):
+            raise exceptions.InvalidArgumentError('Argument must be of type dict.')
