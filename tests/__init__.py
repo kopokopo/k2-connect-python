@@ -1,0 +1,9 @@
+SAMPLE_CLIENT_ID = '123456'
+SAMPLE_CLIENT_SECRET = 'xWcor7ZxtGP9hflkH8y6gZfiLiQKZDAs1XVeVfZIQO5oHiQG1AzJN6A5'
+SAMPLE_BASE_URL = 'https://somepostman-url.com/'
+SAMPLE_BEARER_TOKEN = '0Sn0W6kzNicvoWhDbQcVSKLRUpGjIdlPSEYyrHqrDDoRnQwE7Q'
+SAMPLE_AUTHORIZATION_PATH = 'testing/oauth/v4/token'
+SAMPLE_DICTIONARY = {
+    'amount': '50,000',
+    'currency': 'KSh'
+}
