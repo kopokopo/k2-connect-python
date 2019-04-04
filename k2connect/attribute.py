@@ -1,20 +1,21 @@
 """
-"attribute.py" creates simple python properties for attributes
-passed to the attribute(key=value) function in a class.
+"attribute.py" creates simple python properties, getters
+and setters functionality for  for attributes passed to the
+attribute(key=value) function in a class.
 A property name as well as private variable __name is created
 and made available of instances of that class
---------------------------------------------------------------
-:Example:
-    >>>from k2client.attribute import *
-    >>>class MyClass:
-        ...attribute(name='John Snow')
 
-    >>>instance_of_my_class = MyClass()
-    >>>instance_of_my_class.name
-    'John Doe'
-    >>>instance_of_my_class.name = 'Changing name to : Arya Stark'
-    >>>instance_of_my_class.name
-    'Changing name to : Arya Stark'
+    Example::
+        >>>from k2connect.attribute import attribute
+        >>>class WinterIsComing:
+            ...attribute(name='John Snow')
+
+        >>>instance_of_my_class = WinterIsComing()
+        >>>instance_of_my_class.name
+        'John Doe'
+        >>>instance_of_my_class.name = 'Changing name to : Arya Stark'
+        >>>instance_of_my_class.name
+        'Changing name to : Arya Stark'
 """
 
 import sys
