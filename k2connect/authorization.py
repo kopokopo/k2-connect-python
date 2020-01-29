@@ -57,11 +57,15 @@ class TokenService(service.Service):
         Returns response object with payload containing access token and
         expiry time.
         """
+
+        print("Printing to Console.")
         # build URL for token request
         url = self._build_url(AUTHORIZATION_PATH)
+        print("The URL: " + url)
 
         # redefine headers for token request
         headers = dict(self._headers)
+        print("The Headers: " + headers)
 
         # add content-type
         headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -73,14 +77,19 @@ class TokenService(service.Service):
             'grant-type': 'client-credentials',
         }
 
+        print("The Payload: " + client_credentials_payload.__str__())
+
         # url-encode payload
         data = urlencode(client_credentials_payload)
+        print("The Encoded Payload: " + data)
 
         # request access token and expiry duration
         access_token_request = self._make_requests(data=data,
                                                    headers=headers,
                                                    method='POST',
                                                    url=url)
+
+        print("The Request: " + access_token_request)
 
         return access_token_request
 

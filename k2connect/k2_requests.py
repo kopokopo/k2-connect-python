@@ -63,12 +63,17 @@ class Requests:
         object to send in the body of the :class:`Request`.
         :return: 'requests.models.Response'
         """
+
         response = requests.post(
             headers=headers,
             json=payload,
             data=data,
             url=url,
         )
+        # print("The Request: " + requests.)
+        print("The Response Headers: " + response.headers)
+        print("The Response request: " + response.request)
+        print("The Response JSON: " + response.json())
         return response
 
     def _make_requests(self,
