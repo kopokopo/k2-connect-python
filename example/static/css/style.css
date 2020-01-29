@@ -1,0 +1,195 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import "https://fonts.googleapis.com/css?family=Tangerine:700";
+body {
+	font-family: 'Poppins', sans-serif;
+	font-size: 15px;
+	background: #fafafa;
+	margin: 0;
+	padding: 0;
+}
+p {
+	font-family: 'Poppins', sans-serif;
+	font-size: 1.1em;
+	font-weight: 300;
+	line-height: 1.7em;
+	color: dimgrey;
+}
+#sidebar-wrapper a {
+	color: #A2A2A2;
+}
+a:hover, a:focus {
+	color: floralwhite;
+	text-decoration: none;
+	transition: all 0.3s;
+}
+#wrapper {
+	padding-left: 0;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+#wrapper.toggled {
+	padding-left: 250px;
+}
+#sidebar-wrapper {
+	z-index: 1000;
+	position: fixed;
+	left: 250px;
+	width: 0;
+	height: 100%;
+	margin-left: -250px;
+	overflow-y: auto;
+	background: #04151F;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+#wrapper.toggled #sidebar-wrapper {
+	width: 250px;
+}
+#page-content-wrapper {
+	width: 100%;
+	position: absolute;
+	padding: 15px;
+}
+#wrapper.toggled #page-content-wrapper {
+	position: absolute;
+	margin-right: -250px;
+}
+
+.muffin-section{
+    margin-bottom: 2.75em;
+}
+
+.section-header{
+    padding-top: 1.5em;
+    padding-bottom: 3em;
+}
+
+.sub-section-header{
+    padding-bottom: .5em;
+}
+
+.table-container{
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+
+
+/*Hamburger */
+#hamburger {
+	padding-bottom: 20px;
+	position: fixed;
+    z-index: 5;
+}
+/* Sidebar */
+
+#sidebar-wrapper .sidebar-header {
+	padding: 20px;
+}
+#sidebar-wrapper ul.components {
+	padding: 20px 0;
+	border-bottom: 1px solid #47748b;
+}
+#sidebar-wrapper ul li a {
+	padding: 10px;
+	font-size: 1.1em;
+	display: block;
+}
+#sidebar-wrapper ul li a:hover {
+	color: #FFFFFF;
+	background: #1A2A33;
+}
+#sidebar-wrapper ul li.active>a, a[aria-expanded="true"] {
+	color: #FFFFFF;
+	background: #1A2A33;
+}
+/*Welcome section*/
+
+#welcome-section {
+	display: flex;
+	min-height: 90vh;
+	flex-direction: column;
+	justify-content: center;
+}
+#welcome-section a:hover {
+	color: #04151F;
+}
+#welcome-section img {
+	display: block;
+	margin: auto;
+}
+
+.landing-page-header h1 {
+	text-align: center;
+	font-size: 6em;
+	padding-top: .5em;
+	padding-bottom: .75em;
+	font-family: Tangerine, cursive;
+}
+
+/* token section*/
+#token-section{
+    display: flex;
+	min-height: 90vh;
+	flex-direction: column;
+}
+
+/*bills section*/
+.recipient-form{
+    display: none;
+}
+
+@media(min-width:768px) {
+	#wrapper {
+		padding-left: 250px;
+	}
+	#wrapper.toggled {
+		padding-left: 0;
+	}
+	#sidebar-wrapper {
+		width: 250px;
+	}
+	#wrapper.toggled #sidebar-wrapper {
+		width: 0;
+	}
+	#page-content-wrapper {
+		padding: 20px;
+		position: relative;
+	}
+	#wrapper.toggled #page-content-wrapper {
+		position: relative;
+		margin-right: 0;
+	}
+}
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+	#welcome-section {
+		text-align: center;
+	}
+	#welcome-section img {
+		display: none;
+		width: 150px;
+		height: 150px;
+	}
+	.landing-page-header h1 {
+		text-align: center;
+		font-size: 3.5em;
+        padding-top: 2em;
+		font-family: Tangerine, cursive;
+	}
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+
+@media only screen and (min-width: 600px) {}
+/* Medium devices (landscape tablets, 768px and up) */
+
+@media only screen and (min-width: 768px) {}
+/* Large devices (laptops/desktops, 992px and up) */
+
+@media only screen and (min-width: 992px) {}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+
+@media only screen and (min-width: 1200px) {}

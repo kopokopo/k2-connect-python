@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--metadata-->
+	<meta charset="UTF-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!--website logo-->
+	<link href="../static/img/muffin.png" rel="icon">
+    <!--title-->
+	<title>Muffin</title>
+    <!--bootstrap css-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--custom css-->
+	<link href="../static/css/style.css" rel="stylesheet">
+    <!--jquery for menu animation-->
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!--clipboard js for copy to clipboard feature-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+
+    <script>
+        /*change recipient forms*/
+            $(document).ready(function(){
+            $("#select-recipient-type-form").change(function(){
+                $(this).find("option:selected").each(function(){
+                    let optionValue = $(this).attr("value");
+                    if(optionValue){
+                        $(".recipient-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else{
+                        $(".recipient-form").hide();
+                    }
+                });
+            }).change();
+        });
+    </script>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- Sidebar -->
+		<div id="sidebar-wrapper">
+			<!--dashboard logo-->
+			<div class="sidebar-header">
+				<a href="#"><img alt="" height="75" src="../static/img/muffin.png" width="75"></a>
+			</div>
+			<ul class="sidebar-nav components">
+				<!--welcome-->
+				<li>
+					<a href="#welcome-section">Welcome</a>
+				</li>
+                <!--authentication-->
+				<li>
+					<a href="#token-section">Tokens</a>
+				</li>
+                <!--bills-->
+				<li>
+					<a href="#bills-section">Bills</a>
+				</li>
+                <!--payments-->
+				<li>
+					<a href="#">Payments</a>
+				</li>
+                <!--settlements-->
+				<li>
+					<a href="#">Settlements</a>
+				</li>
+                <!--webhooks-->
+				<li>
+					<a href="#">Webhooks</a>
+				</li>
+			</ul>
+		</div>
+        <!-- page content -->
+		<div id="page-content-wrapper">
+			<!--hamburger button-->
+			<div class="col-lg-12" id="hamburger">
+				<a href="#menu-toggle" id="menu-toggle">
+				 <img alt="" height="50" src="../static/img/menu-icon.png" style="color: #04151F" width="50"></a>
+			</div>
+
+            <!--welcome section-->
+			<section class="muffin-section" id="welcome-section">
+				<div class="container main">
+					<div class="landing-page-header">
+						<h1>Muffin Pastry Shop</h1>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+                            <img alt="An image of a muffin" height="220" src="../static/img/muffin.png" width="230">
+                        </div>
+						<div class="col-lg-8">
+							<p>Hello ! Welcome to Muffin, Kopo Kopo's sample application for integrating with our <a href="https://github.com/kopokopo/k2-connect-python" target="_blank">python library</a>. We are happy to have you here.<br>
+							Muffin is a pastry shop that uses this sample application to manage its payments to suppliers, receive payments from customers, track financial transactions on the Kopo Kopo app and settle their money.<br>
+							<i>In this sample application you will be able to see all of Kopo Kopo's API services as would be run in a sandbox environment. To see examples of these implementations of the python library please navigate using the navigation panel on the left side.</i></p>
+						</div>
+					</div>
+				</div>
+			</section>
+            <!--close welcome section-->
+
+            <!--tokens section-->
+            <section class="muffin-section" id="token-section">
+                <div class="container">
+                    <!--section header-->
+                    <div class="section-header">
+                        <h2>Tokens</h2>
+                    </div>
+                    <!--close section header-->
+
+                    <!--token request row-->
+                    <div class="row">
+                        <!--request access token column-->
+                        <div class="col-lg-6">
+                            <label for="current-api-key">API Key</label>
+                            <!--current API key form input-->
+                            <div class="input-group mb-3">
+                                <input aria-describedby="custom-add-on" aria-label="" class="form-control" id="current-api-key" placeholder="API Key" readonly type="text" value="sVbPMyEOQgDqe13wSkLw4ZaL0CreluGLIXxCrpnoIWRWRbPV5NIOLkZCYR3uWmhoHZeP6Nxb">
+                                <div class="input-group-append">
+                                    <button class="btn btn-info copy-button" data-clipboard-target="#current-api-key" type="button"><i class="fas fa-clipboard"></i></button>
+                                </div>
+                            </div>
+                            <!--form to request access token-->
+                            <form action="{{ url_for('request_token') }}" method="post">
+                                <!--client ID-->
+                                <div class="form-group">
+                                    <label for="client-id">Client ID</label> <input class="form-control" id="client-id" name="client-id" placeholder="Your ID" type="text">
+                                </div>
+                                <!--client secret-->
+                                <div class="form-group">
+                                    <label for="client-secret">Client secret</label> <input class="form-control" id="client-secret" name="client-secret" placeholder="Your client secret" type="password">
+                                </div>
+                                <!--request access token-->
+                                <button class="btn btn-info" id="request-access-token-button" type="submit">Request Access Token</button>
+                            </form>
+                            <div class="table-container table-responsive table-striped">
+                                <!--access token table-->
+                                <table class="table">
+                                    <thead style="background: #17a2b8; color: white">
+                                        <tr>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Access Token</th>
+                                            <th scope="col">Expiry Date</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Bearer Token</td>
+                                            <td>z07xifdnSbJ2LnfvOfQxNlbAjLm</td>
+                                            <td>Tue, 11/04/2019 21:36</td>
+                                            <td>Valid</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bearer Token</td>
+                                            <td>z07xifdnSbJ2LnfvOXxO1psAjLm</td>
+                                            <td>Tue, 09/04/2019 21:36</td>
+                                            <td>Expired</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--close request access token column-->
+
+                        <!--custom refresh mechanism-->
+                        <div class="col-lg-6">
+
+                            <label>Refresh Mechanisms</label>
+
+                            <!--current expiry time-->
+                            <div class="card border-secondary mb-3">
+                                <div class="card-header">Expires on:</div>
+                                <p class="card-text" style="padding: 0.5em;">Tue, 11/04/2019 21:36</p>
+                            </div>
+
+                            <!--form for token refresh-->
+                            <form>
+                                <label class="my-1 mr-2" for="refresh-time">Refresh __ before expiry:</label>
+                                <div class="form-group">
+                                    <select class="custom-select" id="refresh-time" style="width: 100%">
+                                        <option selected>Choose...</option>
+                                        <option value="1">15 Minutes</option>
+                                        <option value="2">5 Minutes</option>
+                                        <option value="3">1 Minute</option>
+                                    </select>
+                                </div>
+
+                                <label  class="my-1 mr-2" for="refresh-token">Valid token to refresh:</label>
+                                <div class="form-group">
+                                    <select class="custom-select " id="refresh-token" style="width: 100%">
+                                        <option selected>Choose...</option>
+                                        <option value="1">z07xifdnSbJ2LnfvOfQxNlbAjLm</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-info" id="refresh-access-token-button" type="button">Refresh Access Token</button>
+                            </form>
+
+                            <!--table of refresh methods-->
+                            <div class="table-container table-responsive table-striped">
+                                <!--access token table-->
+                                <table class="table">
+                                    <thead style="background: #17a2b8; color: white">
+                                        <tr>
+                                            <th scope="col">Access Token</th>
+                                            <th scope="col">Expiry Date</th>
+                                            <th scope="col">Scheduled Refresh</th>
+                                            <th scope="col">Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>z07xifdnSbJ2LnfvOfQxNlbAjLm</td>
+                                            <td>Tue, 11/04/2019 21:36</td>
+                                            <td>Tue, 11/04/2019 21:06</td>
+                                            <td><i class="fas fa-edit"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--close custom refresh mechanism-->
+                    </div>
+                    <!--close token request row-->
+                </div>
+            </section>
+            <!--close tokens section-->
+
+            <!--bills section-->
+            <section class="muffin-section" id="bills-section">
+                <div class="container">
+
+                    <!--bills sections header-->
+                    <div class="section-header">
+                        <h2>Bills</h2>
+                    </div>
+                    <!--close bills sections header-->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <!--supplier sub-section-header-->
+                            <div class="sub-section-header">
+                                <h5>Suppliers</h5>
+                            </div>
+                        <!--close supplier sub-section-header-->
+                            <!--suppliers table-->
+                            <div class="table-responsive table-striped">
+                                <table class="table">
+                                    <thead style="background: #17a2b8; color: white">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>ID</th>
+                                            <th>Recipient type</th>
+                                        </tr>
+                                    </thead>
+                                    <tr>
+                                        <td>Exe Unga Mills</td>
+                                        <td>466199FBJX5487</td>
+                                        <td>Bank account</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jamo's Eggs and Poultry Prods.</td>
+                                        <td>597451JGDF9875</td>
+                                        <td>Bank account</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ufuta Suppliers</td>
+                                        <td>+254712345678</td>
+                                        <td>Mobile Wallet</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!--close suppliers table-->
+
+                            <div class="sub-section-header">
+                                <h5>Add Recipients</h5>
+                            </div>
+
+                            <!--select pay recipients-->
+                            <form id="select-recipient-type-form">
+                                <div class="form-group">
+                                    <label for="select-recipient-type"> Recipient Type: </label>
+                                    <select class="custom-select " id="select-recipient-type" style="width: 100%">
+                                        <option selected>Select recipient type...</option>
+                                        <option value="bank-account-recipient-form">Bank Account</option>
+                                        <option value="mobile-wallet-recipient-form">Mobile Wallet</option>
+                                    </select>
+                                </div>
+                            </form>
+                            <!--select pay recipients-->
+
+                            <!--bank account recipient form-->
+                            <form id="bank-account-recipient-form" class="recipient-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="bank-account-number">*Account Number:</label>
+                                        <input type="number" id="bank-account-number" class="form-control" placeholder="Account number">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="bank-account-name">*Account Name:</label>
+                                        <input type="text" id="bank-account-name" class="form-control" placeholder="Account name">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="bank-branch-id">*Bank Branch ID:</label>
+                                        <input type="number" id="bank-branch-id" class="form-control" placeholder="Bank branch ID">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="bank-id">*Bank ID:</label>
+                                        <input type="number" id="bank-id" class="form-control" placeholder="Bank ID">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="bank-account-recipient-name">*Name:</label>
+                                        <input type="text" id="bank-account-recipient-name" class="form-control" placeholder="Name">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="bank-account-recipient-email">Email:</label>
+                                        <input type="text" id="bank-account-recipient-email" class="form-control" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="bank-account-recipient-phone">Phone:</label>
+                                        <input type="text" id="bank-account-recipient-phone" class="form-control" placeholder="Phone">
+                                    </div>
+                                </div>
+
+                            </form>
+                            <!--close bank account recipient form-->
+
+                            <!--mobile wallet recipient form-->
+                            <form id="mobile-wallet-recipient-form" class="recipient-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="mobile-wallet-first-name">*First Name:</label>
+                                        <input type="number" id="mobile-wallet-first-name" class="form-control" placeholder="First name">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="mobile-wallet-last-name">*Last Name:</label>
+                                        <input type="text" id="mobile-wallet-last-name" class="form-control" placeholder="Last name">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="mobile-wallet-network">*Network:</label>
+                                        <input type="text" id="mobile-wallet-network" class="form-control" placeholder="Network">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="mobile-wallet-phone">*Phone:</label>
+                                        <input type="text" id="mobile-wallet-phone" class="form-control" placeholder="Phone">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="mobile-wallet-email">Email:</label>
+                                        <input type="text" id="mobile-wallet-email" class="form-control" placeholder="Email">
+                                    </div>
+                                </div>
+
+                            </form>
+                            <!--close mobile wallet recipient form-->
+
+                            <button type="button" class="btn btn-info">Add Recipient</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--close bills section-->
+		</div>
+	</div>
+    <!--javascript-->
+	<script>
+            /*handle menu toggle*/
+	         $("#menu-toggle").click(function(e) {
+	             e.preventDefault();
+	             $("#wrapper").toggleClass("toggled");
+	         });
+
+	         /* copy to clipboard*/
+	         let clipboard = new ClipboardJS(".copy-button");
+	         clipboard.initialize();
+	         clipboard.destroy();
+
+	</script>
+    <!--solid js fontawesome lib-->
+	<script defer src="https://use.fontawesome.com/releases/v5.8.1/js/solid.js"></script>
+    <!--fontawesome js for icons-->
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/fontawesome.js"></script>
+    <!--bootstrap js-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -10,7 +10,7 @@ from k2connect import service
 from k2connect import validation
 
 # path for authorization requests
-AUTHORIZATION_PATH = 'oauth/v4/token'
+AUTHORIZATION_PATH = 'oauth/token'
 
 
 class TokenService(service.Service):
