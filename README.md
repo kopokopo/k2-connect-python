@@ -28,7 +28,7 @@ import k2connect
 
 CLIENT_ID = 'my_client_id'
 CLIENT_SECRET = os.getenv('MY_CLIENT_SECRET')
-BASE_URL = 'https://127.0.0.1:3000/'
+BASE_URL = 'https://Changed_from_localhost:3000/'
 
 #initialize the library
 k2connect.initialize(BASE_URL, CLIENT_ID, CLIENT_SECRET)
