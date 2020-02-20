@@ -5,6 +5,7 @@ k2-connect services. Furthermore, it handles the access of specific
 resources contained in responses of HTTP requests.
 """
 import requests
+from urllib.parse import urlparse
 from k2connect import exceptions
 from k2connect import validation
 
@@ -24,8 +25,8 @@ class Requests:
         :type  bearer_token: str
         """
         self._headers = {
-            'Accept': 'application/vnd.kopokopo.v4.hal + json',
-            'Content-Type': 'application/vnd.kopokopo.v4.hal + json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
 
     @staticmethod
@@ -70,10 +71,7 @@ class Requests:
             data=data,
             url=url,
         )
-        # print("The Request: " + requests.)
-        print("The Response Headers: " + response.headers)
-        print("The Response request: " + response.request)
-        print("The Response JSON: " + response.json())
+
         return response
 
     def _make_requests(self,
@@ -99,7 +97,6 @@ class Requests:
         :type params: str (JSON)
         :return: str (JSON)
         """
-
         if validation.validate_url(url) is True:
             if method == 'GET':
                 response = self.__get_request(url=url,
@@ -116,8 +113,11 @@ class Requests:
             status_code = response.status_code
 
             if 200 <= status_code <= 300:
-                response_payload = response.json()
-                return response_payload
+                # FIXME: This is a HACK.
+                if urlparse(url).path == '/oauth/token':
+                    return response.json()
+                response_location = response.headers.get('location')
+                return response_location
             return response.reason
         return exceptions.K2Error
 
@@ -156,5 +156,5 @@ def get_location(response):
     :type response: requests.models.Response
     :return: str
     """
-    resource_location = response.headers('Location')
+    resource_location = response.headers('location')
     return resource_location

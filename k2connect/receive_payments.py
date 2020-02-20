@@ -11,7 +11,7 @@ from k2connect import k2_requests
 from k2connect import service
 from k2connect import validation
 
-CREATE_RECEIVE_MPESA_PAYMENT_PATH = 'api/v1/payment_requests'
+CREATE_RECEIVE_MPESA_PAYMENT_PATH = 'api/v1/incoming_payments'
 
 
 class ReceivePaymentsService(service.Service):
@@ -101,7 +101,7 @@ class ReceivePaymentsService(service.Service):
             email = 'Null'
 
         # define headers
-        headers = dict(self.headers)
+        headers = dict(self._headers)
 
         # validate bearer_token
         validation.validate_string_arguments(bearer_token)
@@ -120,8 +120,11 @@ class ReceivePaymentsService(service.Service):
         mpesa_payment_request_links = json_builder.links(callback_url=callback_url)
 
         # define metadata JSON object
-        mpesa_payment_metadata = json_builder.metadata(', '.join(['{}={}'.format(k, v)
-                                                                  for k, v in kwargs.items()]))
+        # mpesa_payment_metadata = json_builder.metadata(', '.join(['{}={}'.format(k, v)
+        #                                                           for k, v in kwargs.items()]))
+        mpesa_payment_metadata = kwargs
+        if kwargs is not None or kwargs != {}:
+            mpesa_payment_metadata = json_builder.metadata(**kwargs)
 
         # define subscriber JSON object
         mpesa_payment_subscriber = json_builder.subscriber(first_name=first_name,

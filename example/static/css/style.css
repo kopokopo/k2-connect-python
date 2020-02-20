@@ -130,13 +130,6 @@ a:hover, a:focus {
 	font-family: Tangerine, cursive;
 }
 
-/* token section*/
-#token-section{
-    display: flex;
-	min-height: 90vh;
-	flex-direction: column;
-}
-
 /*bills section*/
 .recipient-form{
     display: none;

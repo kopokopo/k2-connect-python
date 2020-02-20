@@ -20,12 +20,13 @@ class ResultProcessor(service.Service):
         >>> k2-connect.RequestProcessor
         >>> k2-connect.process(result)
     """
-    def __init__(self, base_url):
+    def __init__(self, base_url, client_secret):
         """
         Initialize processor service with client id and client secret values for
         encryption with sha-256.
         """
         super(ResultProcessor, self).__init__(base_url)
+        self._client_secret = client_secret
 
     def process(self, result):
         """
@@ -41,19 +42,18 @@ class ResultProcessor(service.Service):
             raise exceptions.InvalidArgumentError('Response cannot be empty')
 
         # define result body
-        result_body = result.content
+        result_body = result.get_data()
 
         # define X-KopoKopo-Signature
         x_kopo_kopo_signature = result.headers.get('X-KopoKopo-Signature')
 
         # define hmac signature
-        hmac_signature = generate_hmac_signature(bytes(self._client_secret, 'utf-8'),
-                                                 result_body)
+        hmac_signature = generate_hmac_signature(bytes(self._client_secret, 'utf-8'), result_body)
 
         # compare signatures
         if hmac.compare_digest(hmac_signature, x_kopo_kopo_signature) is False:
             raise exceptions.InvalidArgumentError('Invalid result passed')
-        return result.json
+        return json.dumps(result.get_json(), sort_keys=True)
 
 
 def generate_hmac_signature(client_secret, result_body):

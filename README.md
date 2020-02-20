@@ -115,7 +115,7 @@ The pay service also enables you to check the status of a transaction by queryin
 `pay_transaction_status()`.
 
 
- The URL may be obtained by using the `pay_transaction_location()` which takes a http response object as an argument.
+ The Resource Location URL is returned by the either of the methods.
 
  ```python
 # create an instance of the pay service
@@ -126,7 +126,7 @@ BANK_ACCOUNT = 'bank_account'
 MOBILE_WALLET = 'mobile_wallet'
 
 # create bank account pay recipient
-pay_transaction_recipient = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
+bank_pay_location = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
                                                           recipient_type=BANK_ACCOUNT,
                                                           account_name='Jon Snow', 
                                                           account_number='12345678912',
@@ -135,7 +135,7 @@ pay_transaction_recipient = pay_service.add_pay_recipient(bearer_token=BEARER_TO
                                                           name='Aegon Targeryan')
 
 # create mobile wallet pay recipient
-pay_transaction_recipient_2 = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
+mobile_pay_location = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
                                                             recipient_type=MOBILE_WALLET,
                                                             first_name='Jon',
                                                             last_name='Snow',
@@ -143,19 +143,13 @@ pay_transaction_recipient_2 = pay_service.add_pay_recipient(bearer_token=BEARER_
                                                             network='Safaricom')
                                                                 
 # send pay transaction
-send_pay_transaction = pay_service.send_pay(bearer_token=BEARER_TOKEN,
+create_pay_location = pay_service.send_pay(bearer_token=BEARER_TOKEN,
                                             callback_url='https://myawesomeapp.com/',
                                             destination='7894571548',
                                             value='2650',
                                             # optional metadata values
                                             purpose='Loan repayment',
                                             repayment_status='complete')
-
-# get pay transaction location
-pay_transaction_location = pay_service.pay_transaction_location(send_pay_transaction)
-
-# get pay transaction status
-pay_transaction_status = pay_service.pay_transaction_status(pay_transaction_location)
 ```
 
 #### Receive payments service
@@ -251,7 +245,7 @@ The `transfer_transaction_status()` method is then used to check a transfer tran
 transfer_service = k2connect.Transfers
 
 # create verified settlement account
-settlement_account = transfer_service.add_settlement_account(bearer_token=BEARER_TOKEN,
+settlement_account = transfer_service.add_bank_settlement_account(bearer_token=BEARER_TOKEN,
                                                              account_name='Jon Snow',
                                                              account_number='4578124578556',
                                                              bank_ref='7814548785',

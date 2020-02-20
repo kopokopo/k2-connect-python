@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--metadata-->
+	<meta charset="UTF-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!--website logo-->
+	<link href="../static/img/muffin.png" rel="icon">
+    <!--title-->
+	<title>Muffin</title>
+    <!--bootstrap css-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--custom css-->
+	<link href="../static/css/style.css" rel="stylesheet">
+    <!--jquery for menu animation-->
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!--clipboard js for copy to clipboard feature-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+
+    <script>
+        /*change recipient forms*/
+            $(document).ready(function(){
+            $("#select-recipient-type-form").change(function(){
+                $(this).find("option:selected").each(function(){
+                    let optionValue = $(this).attr("value");
+                    if(optionValue){
+                        $(".recipient-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else{
+                        $(".recipient-form").hide();
+                    }
+                });
+            }).change();
+        });
+    </script>
+</head>
+
+<body>
+
+<div class="container">
+    <!--bills sections header-->
+    <div class="section-header">
+        <h2>Pay Recipients</h2>
+    </div>
+    <!--close bills sections header-->
+    <div class="row">
+        <div class="col-lg-9">
+        <!--supplier sub-section-header-->
+        <div class="sub-section-header">
+            <h5>Suppliers</h5>
+        </div>
+        <!--close supplier sub-section-header-->
+        <!--suppliers table-->
+        <div class="table-responsive table-striped">
+            <table class="table">
+                <thead style="background: #17a2b8; color: white">
+                <tr>
+                    <th>Resource Locat
+                </tr>
+                </thead>
+                <tr>
+                    <td>{{ pay_object.mobile_wallet_first_name + " " + pay_object.mobile_wallet_last_name }}</td>
+                    <td>{{ pay_object.mobile_wallet_phone }}</td>
+                    <td>{{ pay_object.mobile_wallet_email }}</td>
+                </tr>
+
+            </table>
+        </div>
+        <!--close suppliers table-->
+    </div>
+    </div>
+</div>
+
+<script>
+            /*handle menu toggle*/
+	         $("#menu-toggle").click(function(e) {
+	             e.preventDefault();
+	             $("#wrapper").toggleClass("toggled");
+	         });
+
+	         /* copy to clipboard*/
+	         let clipboard = new ClipboardJS(".copy-button");
+	         clipboard.initialize();
+	         clipboard.destroy();
+
+	</script>
+    <!--solid js fontawesome lib-->
+	<script defer src="https://use.fontawesome.com/releases/v5.8.1/js/solid.js"></script>
+    <!--fontawesome js for icons-->
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/fontawesome.js"></script>
+    <!--bootstrap js-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>

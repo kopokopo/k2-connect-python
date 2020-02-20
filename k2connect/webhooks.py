@@ -7,7 +7,7 @@ from k2connect import json_builder
 from k2connect import service
 from k2connect import validation
 
-WEBHOOK_SUBSCRIPTION_PATH = 'api/v1/webhook-subscription'
+WEBHOOK_SUBSCRIPTION_PATH = 'api/v1/webhook_subscriptions'
 
 
 class WebhookService(service.Service):
@@ -55,7 +55,7 @@ class WebhookService(service.Service):
         event_types_to_check = ['b2b_transaction_received',
                                 'buygoods_transaction_received',
                                 'buygoods_transaction_reversed',
-                                'merchant_to_merchant_transaction_received',
+                                'm2m_transaction_received',
                                 'settlement_transfer_completed',
                                 'customer_created'
                                 ]
@@ -63,7 +63,7 @@ class WebhookService(service.Service):
         subscription_url = self._build_url(WEBHOOK_SUBSCRIPTION_PATH)
 
         # define headers
-        headers = dict(self.headers)
+        headers = dict(self._headers)
 
         # validate string arguments
         validation.validate_string_arguments(bearer_token,

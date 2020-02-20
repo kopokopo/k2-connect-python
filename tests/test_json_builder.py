@@ -167,23 +167,23 @@ class BankSettlementAccountTestCase(unittest.TestCase):
     def test_bank_settlement_account_method_with_all_required_arguments_succeeds(self):
         bank_settlement_account_json = json_builder.bank_settlement_account(account_name='Stanis Baratheon',
                                                                             account_number='IRNBNK0056',
-                                                                            bank_ref='78456',
-                                                                            bank_branch_ref='IRNBNKBRAVOS875')
+                                                                            bank_id='78456',
+                                                                            bank_branch_id='IRNBNKBRAVOS875')
         self.assertIsNotNone(bank_settlement_account_json)
 
     def test_bank_settlement_account_method_without_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
             json_builder.bank_settlement_account(account_name=None,
                                                  account_number=None,
-                                                 bank_ref=None,
-                                                 bank_branch_ref=None)
+                                                 bank_id=None,
+                                                 bank_branch_id=None)
 
     def test_bank_settlement_account_method_with_non_str_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
             json_builder.bank_settlement_account(account_name=456987,
                                                  account_number=456987,
-                                                 bank_ref=456987,
-                                                 bank_branch_ref=456987)
+                                                 bank_id=456987,
+                                                 bank_branch_id=456987)
 
 
 class MobileWalletMethodTestCase(unittest.TestCase):
@@ -257,19 +257,35 @@ class MpesaPaymentMethodTestCase(unittest.TestCase):
 
     def test_mpesa_payment_method_without_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.mpesa_payment(mpesa_links=None,
-                                       mpesa_payment_amount=None,
-                                       mpesa_payment_subscriber=None,
-                                       payment_channel=None,
-                                       till_number=None)
+            mpesa_payment_amount = json_builder.amount(currency=None,
+                                                               value=None)
+            mpesa_links = json_builder.links(callback_url=None)
+            mpesa_payment_metadata = json_builder.metadata(**{None: None})
+            mpesa_payment_subscriber = json_builder.subscriber(first_name=None,
+                                                               last_name=None,
+                                                               phone=None,
+                                                               email=None)
+            json_builder.mpesa_payment(mpesa_links,
+                                       mpesa_payment_amount,
+                                       mpesa_payment_subscriber,
+                                       None,
+                                       None)
 
     def test_mpesa_payment_method_with_non_str_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.mpesa_payment(mpesa_links=15462,
-                                       mpesa_payment_amount=15462,
-                                       mpesa_payment_subscriber=15462,
-                                       payment_channel=15462,
-                                       till_number=15462)
+            mpesa_payment_amount = json_builder.amount(currency=15462,
+                                                               value=15462)
+            mpesa_links = json_builder.links(callback_url=15462)
+            mpesa_payment_metadata = json_builder.metadata(**{15462: 15462})
+            mpesa_payment_subscriber = json_builder.subscriber(first_name=15462,
+                                                               last_name=15462,
+                                                               phone=15462,
+                                                               email=15462)
+            json_builder.mpesa_payment(mpesa_links,
+                                       mpesa_payment_amount,
+                                       mpesa_payment_subscriber,
+                                       15462,
+                                       15462)
 
 
 class WebhookSubscriptionMethodTestCase(unittest.TestCase):
@@ -302,31 +318,46 @@ class PayMethodTestCase(unittest.TestCase):
 
     def test_pay_method_without_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.pay(payment_destination=None,
-                             payment_amount=None,
-                             payment_metadata=None,
-                             payment_links=None)
+            payment_amount = json_builder.amount(currency=None,
+                                                 value=None)
+            payment_metadata = json_builder.metadata(**{12457: None})
+            payment_links = json_builder.links(callback_url=None)
+            json_builder.pay(None,
+                             payment_amount,
+                             payment_metadata,
+                             payment_links)
 
     def test_pay_method_with_non_str_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.pay(payment_destination=12457,
-                             payment_amount=12457,
-                             payment_metadata=12457,
-                             payment_links=12457)
+            payment_amount = json_builder.amount(currency=12457,
+                                                 value=12457)
+            payment_metadata = json_builder.metadata(**{12457: 12457})
+            payment_links = json_builder.links(callback_url=12457)
+            json_builder.pay(12457,
+                             payment_amount,
+                             payment_metadata,
+                             payment_links)
 
 
 class TransfersMethodTestCase(unittest.TestCase):
     def test_transfers_method_with_all_required_arguments_succeeds(self):
-        transfers_json = json_builder.transfers(transfers_amount='sample_transfers_amount')
+        transfers_json = json_builder.transfers(transfer_links='sample_transfer_links',
+                                                transfers_amount='sample_transfers_amount')
         self.assertIsNotNone(transfers_json)
 
     def test_transfers_method_without_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.transfers(transfers_amount=None)
+            transfers_amount = json_builder.amount(currency=None,
+                                                  value=None)
+            transfer_links = json_builder.links(callback_url=None)
+            json_builder.transfers(transfer_links, transfers_amount)
 
     def test_transfers_method_with_non_str_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.transfers(transfers_amount=145524)
+            transfers_amount = json_builder.amount(currency=145524,
+                                                  value=145524)
+            transfer_links = json_builder.links(callback_url=145524)
+            json_builder.transfers(transfer_links, transfers_amount)
 
 
 if __name__ == '__main__':

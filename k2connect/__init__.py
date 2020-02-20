@@ -39,7 +39,6 @@ def initialize(client_id, client_secret, base_url):
     validation.validate_string_arguments(client_id,
                                          client_secret,
                                          base_url)
-    raise exceptions.InvalidArgumentError('Client ID: ' + client_id)
 
     # initialize  token service
     globals()['Tokens'] = TokenService(client_id=client_id,
@@ -59,4 +58,5 @@ def initialize(client_id, client_secret, base_url):
     globals()['Webhooks'] = WebhookService(base_url=base_url)
 
     # initialize response processor
-    globals()['ResultHandler'] = ResultProcessor(base_url=base_url)
+    globals()['ResultHandler'] = ResultProcessor(base_url=base_url,
+                                                 client_secret=client_secret)

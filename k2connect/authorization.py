@@ -58,14 +58,11 @@ class TokenService(service.Service):
         expiry time.
         """
 
-        print("Printing to Console.")
         # build URL for token request
         url = self._build_url(AUTHORIZATION_PATH)
-        print("The URL: " + url)
 
         # redefine headers for token request
         headers = dict(self._headers)
-        print("The Headers: " + headers)
 
         # add content-type
         headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -74,22 +71,14 @@ class TokenService(service.Service):
         client_credentials_payload = {
             'client_id': self._client_id,
             'client_secret': self._client_secret,
-            'grant-type': 'client-credentials',
+            'grant_type': 'client_credentials',
         }
-
-        print("The Payload: " + client_credentials_payload.__str__())
 
         # url-encode payload
         data = urlencode(client_credentials_payload)
-        print("The Encoded Payload: " + data)
 
         # request access token and expiry duration
-        access_token_request = self._make_requests(data=data,
-                                                   headers=headers,
-                                                   method='POST',
-                                                   url=url)
-
-        print("The Request: " + access_token_request)
+        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
 
         return access_token_request
 
@@ -97,7 +86,7 @@ class TokenService(service.Service):
     def get_access_token(response):
         """Returns a str containing access token"""
         # get access toke value
-        access_token = response.json().get('access_token')
+        access_token = response.get('access_token')
         return access_token
 
     @staticmethod

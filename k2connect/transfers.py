@@ -10,7 +10,8 @@ from k2connect import service
 from k2connect import validation
 
 TRANSFER_PATH = 'api/v1/transfers'
-SETTLEMENT_ACCOUNTS_PATH = 'api/v1/merchant_bank_accounts'
+SETTLEMENT_BANK_ACCOUNTS_PATH = 'api/v1/merchant_bank_accounts'
+SETTLEMENT_MOBILE_ACCOUNTS_PATH = 'api/v1/merchant_wallets'
 
 
 class TransferService(service.Service):
@@ -19,7 +20,7 @@ class TransferService(service.Service):
     Example:
         # initialize transfer service
         >>> k2connect.TransferService
-        >>> k2connect.add_settlement_account('Arya Stark',
+        >>> k2connect.add_bank_settlement_account('Arya Stark',
         >>>.....................................'45164-IRON BANK',
         >>>.....................................'78491631254523',
         >>>.....................................'564123456987845')
@@ -36,12 +37,13 @@ class TransferService(service.Service):
         """
         super(TransferService, self).__init__(base_url)
 
-    def add_settlement_account(self,
-                               bearer_token,
-                               account_name,
-                               account_number,
-                               bank_ref,
-                               bank_branch_ref):
+    def add_bank_settlement_account(self,
+                                    bearer_token,
+                                    account_name,
+                                    account_number,
+                                    bank_id,
+                                    bank_branch_id
+                                    ):
         """
         Creates a verified settlement bank account.
         Returns a request response object < class, 'requests.models.Response'>
@@ -49,39 +51,79 @@ class TransferService(service.Service):
         :type bearer_token: str
         :param account_name: The name as indicated on the bank account name
         :type account_name: str
-        :param bank_ref: An identifier identifying the destination bank
-        :type bank_ref: str
-        :param bank_branch_ref: An identifier identifying the destination bank branch
-        :type bank_branch_ref: str
+        :param bank_id: An identifier identifying the destination bank
+        :type bank_id: str
+        :param bank_branch_id: An identifier identifying the destination bank branch
+        :type bank_branch_id: str
         :param account_number: The bank account number
         :type account_number: str
         :return: requests.models.Response
         """
         # build url
-        create_settlement_account_url = self._build_url(SETTLEMENT_ACCOUNTS_PATH)
+        create_bank_settlement_account_url = self._build_url(SETTLEMENT_BANK_ACCOUNTS_PATH)
+
+        # define headers
+        headers = dict(self._headers)
 
         # validate string arguments
         validation.validate_string_arguments(bearer_token,
                                              account_name,
-                                             bank_ref,
-                                             bank_branch_ref,
+                                             bank_id,
+                                             bank_branch_id,
                                              account_number)
 
         # add authorization to headers
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
-
-        # define create settlement account payload
-        create_settlement_account_payload = json_builder.bank_settlement_account(account_name=account_name,
-                                                                                 account_number=account_number,
-                                                                                 bank_branch_ref=bank_branch_ref,
-                                                                                 bank_ref=bank_ref)
+        # define create bank settlement account payload
+        create_bank_settlement_account_payload = json_builder.bank_settlement_account(account_name=account_name,
+                                                                                      account_number=account_number,
+                                                                                      bank_branch_id=bank_branch_id,
+                                                                                      bank_id=bank_id)
         return self._make_requests(headers=headers,
                                    method='POST',
-                                   url=create_settlement_account_url,
-                                   payload=create_settlement_account_payload)
+                                   url=create_bank_settlement_account_url,
+                                   payload=create_bank_settlement_account_payload)
+
+    def add_mobile_wallet_settlement_account(self,
+                                             bearer_token,
+                                             msisdn,
+                                             network
+                                             ):
+        """
+        Creates a verified settlement bank account.
+        Returns a request response object < class, 'requests.models.Response'>
+        :param bearer_token
+        :type bearer_token: str
+        :param msisdn: The name as indicated on the MSISDN (Phone Number)
+        :type msisdn: str
+        :param network: The name as indicated on the Network type
+        :type network: str
+        :return: requests.models.Response
+        """
+        # build url
+        create_mobile_wallet_settlement_account_url = self._build_url(SETTLEMENT_MOBILE_ACCOUNTS_PATH)
+
+        # define headers
+        headers = dict(self._headers)
+
+        # validate string arguments
+        validation.validate_string_arguments(bearer_token,
+                                             msisdn,
+                                             network)
+
+        # add authorization to headers
+        headers['Authorization'] = 'Bearer ' + bearer_token + ''
+        # define create mobile settlement account payload
+        create_mobile_settlement_account_payload = json_builder.mobile_settlement_account(msisdn=msisdn,
+                                                                                          network=network)
+        return self._make_requests(headers=headers,
+                                   method='POST',
+                                   url=create_mobile_wallet_settlement_account_url,
+                                   payload=create_mobile_settlement_account_payload)
 
     def settle_funds(self,
                      bearer_token,
+                     callback_url,
                      transfer_value,
                      transfer_currency='KES',
                      transfer_destination=None):
@@ -91,6 +133,8 @@ class TransferService(service.Service):
         :param bearer_token: Access token to be used to make calls to
         the Kopo Kopo API
         :type bearer_token: str
+        :param callback_url: Callback URL
+        :type callback_url: str
         :param transfer_currency: Currency of amount being transacted
         :type transfer_currency: str
         :param transfer_value:
@@ -103,7 +147,7 @@ class TransferService(service.Service):
         settle_funds_url = self._build_url(TRANSFER_PATH)
 
         # define headers
-        headers = dict(self.headers)
+        headers = dict(self._headers)
 
         # check bearer token
         validation.validate_string_arguments(bearer_token,
@@ -117,10 +161,15 @@ class TransferService(service.Service):
         transfer_amount = json_builder.amount(currency=transfer_currency,
                                               value=transfer_value)
 
+        # create links json object
+        transfer_links = json_builder.links(callback_url=callback_url)
+
         if transfer_destination is None:
-            settle_funds_payload = json_builder.transfers(transfers_amount=transfer_amount)
+            settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
+                                                          transfers_amount=transfer_amount)
         else:
-            settle_funds_payload = json_builder.transfers(transfers_amount=transfer_amount,
+            settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
+                                                          transfers_amount=transfer_amount,
                                                           transfer_destination=transfer_destination)
         return self._make_requests(headers=headers,
                                    method='POST',

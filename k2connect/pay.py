@@ -89,7 +89,7 @@ class PayService(service.Service):
         validation.validate_string_arguments(bearer_token)
 
         # add bearer token
-        headers['Authorization'] = 'Bearer ' + bearer_token + ''
+        headers['Authorization'] = 'Bearer ' + bearer_token
 
         # build url
         add_pay_url = self._build_url(url_path=ADD_PAY_PATH)
@@ -103,22 +103,25 @@ class PayService(service.Service):
         # ['account_name', 'account_number',
         # 'bank_branch_id','bank_id', name']
         if recipient_type == BANK_ACCOUNT_RECIPIENT_TYPE:
-            if 'account_name' not in kwargs or \
-                    'account_number' not in kwargs or \
-                    'bank_branch_id' not in kwargs or \
+            if 'first_name' not in kwargs or \
+                    'last_name' not in kwargs or \
+                    'account_name' not in kwargs or \
                     'bank_id' not in kwargs or \
-                    'name' not in kwargs:
+                    'bank_branch_id' not in kwargs or \
+                    'account_number' not in kwargs or \
+                    'phone' not in kwargs or \
+                    'email' not in kwargs:
                 raise exceptions.InvalidArgumentError('Invalid arguments for bank account')
 
             # build recipient json object
-            recipient_object = json_builder.bank_account(account_name=str(kwargs['account_name']),
-                                                         account_number=str(kwargs['account_number']),
-                                                         bank_branch_id=str(kwargs['bank_branch_id']),
+            recipient_object = json_builder.bank_account(first_name=str(kwargs['first_name']),
+                                                         last_name=str(kwargs['last_name']),
+                                                         account_name=str(kwargs['account_name']),
                                                          bank_id=str(kwargs['bank_id']),
-                                                         name=str(kwargs['name']),
-                                                         email=None,
-                                                         phone=None)
-
+                                                         bank_branch_id=str(kwargs['bank_branch_id']),
+                                                         account_number=str(kwargs['account_number']),
+                                                         email=str(kwargs['email']),
+                                                         phone=str(kwargs['phone']))
             # build bank payment recipient json object
             payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
                                                                   recipient=recipient_object)
@@ -138,7 +141,7 @@ class PayService(service.Service):
                                                           last_name=str(kwargs['last_name']),
                                                           phone=str(kwargs['phone']),
                                                           network=str(kwargs['network']),
-                                                          email=None)
+                                                          email=str(kwargs['email']))
 
             # create mobile wallet recipient json object
             payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
@@ -148,8 +151,8 @@ class PayService(service.Service):
 
         return self._make_requests(headers=headers,
                                    method='POST',
-                                   payload=payment_recipient_object,
-                                   url=add_pay_url, )
+                                   url=add_pay_url,
+                                   payload=payment_recipient_object)
 
     def send_pay(self,
                  bearer_token,
@@ -184,7 +187,7 @@ class PayService(service.Service):
         send_pay_url = self._build_url(SEND_PAY_PATH)
 
         # define headers
-        headers = dict(self.headers)
+        headers = dict(self._headers)
 
         # check bearer token
         validation.validate_string_arguments(bearer_token)
@@ -197,8 +200,9 @@ class PayService(service.Service):
                                          value=value)
 
         # create metadata json object
-        pay_metadata = json_builder.metadata(', '.join(['{}={}'.format(k, v)
-                                                        for k, v in kwargs.items()]))
+        pay_metadata = kwargs
+        if kwargs is not None or kwargs != {}:
+            pay_metadata = json_builder.metadata(**kwargs)
 
         # create links json object
         pay_links = json_builder.links(callback_url=callback_url)
