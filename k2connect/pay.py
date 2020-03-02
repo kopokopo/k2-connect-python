@@ -57,7 +57,6 @@ class PayService(service.Service):
 
     def __init__(self, base_url):
         """
-
         :param base_url: The domain to use in the library.
         :type base_url: str
         """

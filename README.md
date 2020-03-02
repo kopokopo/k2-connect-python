@@ -244,27 +244,40 @@ The `transfer_transaction_status()` method is then used to check a transfer tran
 # initialize the transfer service
 transfer_service = k2connect.Transfers
 
-# create verified settlement account
+# create verified settlement bank account
 settlement_account = transfer_service.add_bank_settlement_account(bearer_token=BEARER_TOKEN,
                                                              account_name='Jon Snow',
                                                              account_number='4578124578556',
                                                              bank_ref='7814548785',
                                                              bank_branch_ref='87456874464')
+# create verified settlement mobile account
+settlement_account = transfer_service.add_mobile_wallet_settlement_account(bearer_token=BEARER_TOKEN,
+                                                             msisdn='254712345678',
+                                                             network='Safaricom')
 
 # settle funds (blind transfer)
 transfer_transaction = transfer_service.settle_funds(bearer_token=BEARER_TOKEN,
                                                      transfer_value='26000')
                                                      
-# settle funds (targeted transfer)
-transfer_transaction_2 = transfer_service.settle_funds(bearer_token=BEARER_TOKEN,
-                                                       transfer_destination='457126554788',
+# settle funds (targeted transfer to a merchant_wallet)
+transfer_transaction_2 = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
+                                                       destination_type='merchant_wallet',
+                                                       destination_reference='457126554788',
                                                        transfer_value='26000')
+# settle funds (targeted transfer to a merchant_wallet)
+transfer_transaction_2 = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
+                                                       destination_type='merchant_bank_account',
+                                                       destination_reference='457126554788',
+                                                       transfer_value='26000')
+
 # get transfer transaction location
 transfer_transaction_location = transfer_service.transfer_transaction_location(transfer_transaction)
 
 # get transfer transaction status
 transfer_transaction_status = transfer_service.transfer_transaction_status(transfer_transaction_location)
 ```
+
+##### The destination_reference number corresponding to a settlement account must exist before you can settle_funds to it. 
 
 #### Webhook service
 The webhook service allows you to create subscriptions to events that occur on the KopoKopo application. The `create_subscription()` method is used, 

@@ -134,20 +134,21 @@ def blind_transfer():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
     transfer_service = k2connect.Transfers
     transfer_location_url = transfer_service.settle_funds(environ.get('ACCESS_TOKEN'),
-                                                          'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+                                                          'http://127.0.0.1:5000/result/payment/transfer',
                                                           blind_transfer_amount)
     return render_template('transfers.html', resource_location_url=transfer_location_url)
 
 
 @app.route('/target_transfer', methods=['POST'])
 def target_transfer():
-    transfer_destination = request.form['transfer-destination']
+    destination_type = request.form['destination-type']
+    destination_reference = request.form['destination-reference']
     transfer_amount = request.form['transfer-amount']
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
     transfer_service = k2connect.Transfers
     transfer_location_url = transfer_service.settle_funds(environ.get('ACCESS_TOKEN'),
-                                                          'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                                                          transfer_amount, 'KES', transfer_destination)
+                                                          'http://127.0.0.1:5000/result/payment/transfer',
+                                                          transfer_amount, destination_type, destination_reference)
     return render_template('transfers.html', resource_location_url=transfer_location_url)
 
 
@@ -176,6 +177,10 @@ def process_webhook():
         print("First Name: ", decomposed_result.first_name)
     elif decomposed_result.topic == "m2m_transaction_received":
         print("Sending Merchant: ", decomposed_result.sending_merchant)
+    elif decomposed_result.topic == "customer_created":
+        print("First Name: ", decomposed_result.first_name)
+    elif decomposed_result.topic == "settlement_transfer_completed":
+        print("Destination Type: ", decomposed_result.destination_type)
     decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
     print("Decomposed Object: ", decomposed_result_hash)
     return decomposed_result_hash
@@ -187,9 +192,8 @@ def process_pay():
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
-    # get callback url
-    print("The Callback URL: ", decomposed_result.callback_url)
     decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
+    print("Destination: ", decomposed_result.destination)
     print("Decomposed Object: ", decomposed_result_hash)
     return decomposed_result_hash
 
@@ -201,9 +205,8 @@ def process_stk():
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
     decomposed_result = json.dumps(decomposed_result.__dict__)
-    # get callback url
-    # print("The Callback URL: ", decomposed_result.callback_url)
     decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
+    print("Transaction Reference: ", decomposed_result.transaction_ref)
     print("Decomposed Object: ", decomposed_result_hash)
     return decomposed_result_hash
 
@@ -215,6 +218,7 @@ def process_transfer():
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
     decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
+    print("Destination Type: ", decomposed_result.destination_type)
     print("Decomposed Object: ", decomposed_result_hash)
     return decomposed_result_hash
 

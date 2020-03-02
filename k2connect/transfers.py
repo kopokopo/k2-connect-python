@@ -111,6 +111,8 @@ class TransferService(service.Service):
                                              msisdn,
                                              network)
 
+        validation.validate_phone_number(msisdn)
+
         # add authorization to headers
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
         # define create mobile settlement account payload
@@ -125,8 +127,9 @@ class TransferService(service.Service):
                      bearer_token,
                      callback_url,
                      transfer_value,
-                     transfer_currency='KES',
-                     transfer_destination=None):
+                     destination_type,
+                     destination_reference=None,
+                     transfer_currency='KES'):
         """
         Creates a transfer from merchant account to a different settlement account.
         Returns a request response object < class, 'requests.models.Response'>
@@ -139,8 +142,10 @@ class TransferService(service.Service):
         :type transfer_currency: str
         :param transfer_value:
         :type transfer_value:Value of money to be sent.
-        :param transfer_destination: str
-        :type transfer_destination: ID of the destination of funds
+        :param destination_type: str
+        :type destination_type: Type of settlement account to be settled into
+        :param destination_reference: str
+        :type destination_reference: ID of the destination of funds
         :return: requests.models.Response
         """
         # build settle funds url
@@ -164,13 +169,14 @@ class TransferService(service.Service):
         # create links json object
         transfer_links = json_builder.links(callback_url=callback_url)
 
-        if transfer_destination is None:
+        if destination_reference is None:
             settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
                                                           transfers_amount=transfer_amount)
         else:
             settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
                                                           transfers_amount=transfer_amount,
-                                                          transfer_destination=transfer_destination)
+                                                          destination_type=destination_type,
+                                                          destination_reference=destination_reference)
         return self._make_requests(headers=headers,
                                    method='POST',
                                    url=settle_funds_url,

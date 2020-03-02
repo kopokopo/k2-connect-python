@@ -111,44 +111,54 @@ class AmountMethodTestCase(unittest.TestCase):
 class BankAccountMethodTestCase(unittest.TestCase):
 
     def test_bank_account_method_with_all_required_arguments_succeeds(self):
-        bank_account_json = json_builder.bank_account(account_name='Stanis Baratheon',
+        bank_account_json = json_builder.bank_account(first_name='Stannis',
+                                                      last_name='Baratheon',
+                                                      account_name='Stannis Baratheon',
                                                       account_number='IRNBNK0056',
                                                       bank_branch_id='IRNBNKBRAVOS875',
                                                       bank_id='78456',
-                                                      name='Stanis Baratheon')
+                                                      name='Stannis Baratheon')
         self.assertIsNotNone(bank_account_json)
 
     def test_bank_account_method_with_all_required_arguments_plus_permitted_kwargs_succeeds(self):
-        bank_account_json = json_builder.bank_account(account_name='Stanis Baratheon',
+        bank_account_json = json_builder.bank_account(first_name='Stannis',
+                                                      last_name='Baratheon',
+                                                      account_name='Stannis Baratheon',
                                                       account_number='IRNBNK0056',
                                                       bank_branch_id='IRNBNKBRAVOS875',
                                                       bank_id='78456',
-                                                      name='Stanis Baratheon',
-                                                      email='stanis@irn.com',
+                                                      name='Stannis Baratheon',
+                                                      email='Stannis@irn.com',
                                                       phone='+87546214588')
         self.assertIsNotNone(bank_account_json)
 
     def test_bank_account_method_with_all_required_arguments_plus_email_succeeds(self):
-        bank_account_json = json_builder.bank_account(account_name='Stanis Baratheon',
+        bank_account_json = json_builder.bank_account(first_name='Stannis',
+                                                      last_name='Baratheon',
+                                                      account_name='Stannis Baratheon',
                                                       account_number='IRNBNK0056',
                                                       bank_branch_id='IRNBNKBRAVOS875',
                                                       bank_id='78456',
-                                                      name='Stanis Baratheon',
-                                                      email='stanis@irn.com')
+                                                      name='Stannis Baratheon',
+                                                      email='Stannis@irn.com')
         self.assertIsNotNone(bank_account_json)
 
     def test_bank_account_method_with_all_required_arguments_plus_phone_succeeds(self):
-        bank_account_json = json_builder.bank_account(account_name='Stanis Baratheon',
+        bank_account_json = json_builder.bank_account(first_name='Stannis',
+                                                      last_name='Baratheon',
+                                                      account_name='Stannis Baratheon',
                                                       account_number='IRNBNK0056',
                                                       bank_branch_id='IRNBNKBRAVOS875',
                                                       bank_id='78456',
-                                                      name='Stanis Baratheon',
+                                                      name='Stannis Baratheon',
                                                       phone='+87546214588')
         self.assertIsNotNone(bank_account_json)
 
     def test_bank_account_method_without_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.bank_account(account_name=None,
+            json_builder.bank_account(first_name=None,
+                                      last_name=None,
+                                      account_name=None,
                                       account_number=None,
                                       bank_branch_id=None,
                                       bank_id=None,
@@ -156,7 +166,9 @@ class BankAccountMethodTestCase(unittest.TestCase):
 
     def test_bank_account_method_with_non_str_required_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            json_builder.bank_account(account_name=1547,
+            json_builder.bank_account(first_name='Stannis',
+                                      last_name='Baratheon',
+                                      account_name=1547,
                                       account_number={'Arya Strak': 'The North remembers'},
                                       bank_branch_id=('Father', 'Smith', 'Warrior'),
                                       bank_id=['Mother', 'Maiden', 'Crone'],
@@ -165,7 +177,7 @@ class BankAccountMethodTestCase(unittest.TestCase):
 
 class BankSettlementAccountTestCase(unittest.TestCase):
     def test_bank_settlement_account_method_with_all_required_arguments_succeeds(self):
-        bank_settlement_account_json = json_builder.bank_settlement_account(account_name='Stanis Baratheon',
+        bank_settlement_account_json = json_builder.bank_settlement_account(account_name='Stannis Baratheon',
                                                                             account_number='IRNBNK0056',
                                                                             bank_id='78456',
                                                                             bank_branch_id='IRNBNKBRAVOS875')
@@ -212,7 +224,7 @@ class MobileWalletMethodTestCase(unittest.TestCase):
 class PayRecipientMethodTestCase(unittest.TestCase):
     def test_pay_recipient_method_with_all_required_arguments_succeeds(self):
         pay_recipient_json = json_builder.pay_recipient(recipient_type='mobile wallet',
-                                                        recipient='{"name": "Stanis Baratheo"}')
+                                                        recipient='{"name": "Stannis Baratheon "}')
         self.assertIsNotNone(pay_recipient_json)
 
     def test_pay_recipient_method_without_required_arguments_fails(self):

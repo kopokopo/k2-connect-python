@@ -239,6 +239,7 @@ def pay_recipient(recipient_type, recipient):
 def subscriber(first_name,
                last_name,
                phone,
+               email,
                **kwargs):
     """
     Returns JSON formatted str containing subscriber information
@@ -249,6 +250,8 @@ def subscriber(first_name,
     :param phone: Phone number of the subscriber from which the
     pay will be made
     :type phone: str
+    :param email: Email of the subscriber
+    :type email: str
     :param kwargs: Provision for optional 'email' information.
     :type kwargs: str
     :return: str
@@ -257,10 +260,13 @@ def subscriber(first_name,
     validation.validate_string_arguments(first_name,
                                          last_name,
                                          phone)
-    if 'email' not in kwargs:
-        email = 'Null'
-    else:
-        email = kwargs['email']
+    if email != "Null":
+        validation.validate_email(email)
+
+    # if 'email' not in kwargs:
+    #     email = 'Null'
+    # else:
+    #     email = kwargs['email']
 
     subscriber_object = {'first_name': first_name,
                          'last_name': last_name,
@@ -394,13 +400,14 @@ def transfers(transfer_links, transfers_amount,
     # validate string arguments
     validation.validate_string_arguments(*transfer_links, *transfers_amount)
 
-    if 'transfer_destination' not in kwargs:
-        destination = None
+    if 'destination_reference' not in kwargs:
+        destination_reference = None
     else:
-        destination = kwargs['transfer_destination']
+        destination_reference = kwargs['destination_reference']
 
     transfers_object = {'amount': transfers_amount,
-                        'destination': destination,
+                        'destination_reference': destination_reference,
+                        'destination_type': kwargs['destination_type'],
                         '_links': transfer_links
                         }
     return transfers_object
