@@ -157,7 +157,7 @@ def subscription():
     webhook_event = request.form['select-webhook-type']
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
     webhook_service = k2connect.Webhooks
-    webhook_sub = webhook_service.create_subscription(environ.get('ACCESS_TOKEN'), webhook_event, 'http://127.0.0.1:5000/result/webhook', environ.get('CLIENT_SECRET'))
+    webhook_sub = webhook_service.create_suzbscription(environ.get('ACCESS_TOKEN'), webhook_event, 'http://127.0.0.1:5000/result/webhook', environ.get('CLIENT_SECRET'))
     return render_template('webhook_subscription.html', webhook=webhook_sub)
 
 
@@ -182,7 +182,7 @@ def process_webhook():
     elif decomposed_result.topic == "settlement_transfer_completed":
         print("Destination Type: ", decomposed_result.destination_type)
     decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
-    print("Decomposed Object: ", decomposed_result_hash)
+    # print("Decomposed Object: ", decomposed_result_hash)
     return decomposed_result_hash
 
 
@@ -192,10 +192,8 @@ def process_pay():
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
-    decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
-    print("Destination: ", decomposed_result.destination)
-    print("Decomposed Object: ", decomposed_result_hash)
-    return decomposed_result_hash
+    # print("Destination: ", decomposed_result.destination)
+    return json.dumps(decomposed_result, default=lambda o: o.__dict__)
 
 
 @app.route('/result/payment/incoming', methods=['POST'])
@@ -204,11 +202,8 @@ def process_stk():
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
-    decomposed_result = json.dumps(decomposed_result.__dict__)
-    decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
-    print("Transaction Reference: ", decomposed_result.transaction_ref)
-    print("Decomposed Object: ", decomposed_result_hash)
-    return decomposed_result_hash
+    # print("Transaction Reference: ", decomposed_result.transaction_ref)
+    return json.dumps(decomposed_result, default=lambda o: o.__dict__)
 
 
 @app.route('/result/payment/transfer', methods=['POST'])
@@ -219,7 +214,7 @@ def process_transfer():
     decomposed_result = payload_decomposer.decompose(processed_payload)
     decomposed_result_hash = json.dumps(decomposed_result, default=lambda o: o.__dict__)
     print("Destination Type: ", decomposed_result.destination_type)
-    print("Decomposed Object: ", decomposed_result_hash)
+    # print("Decomposed Object: ", decomposed_result_hash)
     return decomposed_result_hash
 
 

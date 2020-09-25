@@ -9,7 +9,7 @@ from k2connect import json_builder
 from k2connect import service
 from k2connect import validation
 
-TRANSFER_PATH = 'api/v1/transfers'
+TRANSFER_PATH = 'api/v1/settlement_transfers'
 SETTLEMENT_BANK_ACCOUNTS_PATH = 'api/v1/merchant_bank_accounts'
 SETTLEMENT_MOBILE_ACCOUNTS_PATH = 'api/v1/merchant_wallets'
 
@@ -127,7 +127,7 @@ class TransferService(service.Service):
                      bearer_token,
                      callback_url,
                      transfer_value,
-                     destination_type,
+                     destination_type=None,
                      destination_reference=None,
                      transfer_currency='KES'):
         """
@@ -169,7 +169,7 @@ class TransferService(service.Service):
         # create links json object
         transfer_links = json_builder.links(callback_url=callback_url)
 
-        if destination_reference is None:
+        if destination_reference is None and destination_type is None:
             settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
                                                           transfers_amount=transfer_amount)
         else:

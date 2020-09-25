@@ -31,7 +31,7 @@ CLIENT_SECRET = os.getenv('MY_CLIENT_SECRET')
 BASE_URL = 'https://Changed_from_localhost:3000/'
 
 #initialize the library
-k2connect.initialize(BASE_URL, CLIENT_ID, CLIENT_SECRET)
+k2connect.initialize(CLIENT_ID, CLIENT_SECRET, BASE_URL)
 ```
 
 ### k2connect services
@@ -81,23 +81,21 @@ To add pay recipients the `add_pay_recipient()` method is used. The currently su
 `mobile_wallet` the method then takes a set of key worded arguments required to create a recipient of either type. The accepted 
 key worded arguments are as follows:
 
+Common for both types:
+* first_name `REQUIRED`
+* last_name `REQUIRED`
+* phone `REQUIRED`
+* email `REQUIRED`
 
 For `bank_account` recipient:  
 * account_name `REQUIRED`
 * account_number `REQUIRED`
 * bank_branch_id `REQUIRED`
 * bank_id `REQUIRED`
-* name `REQURED`
 
 
-For `mobile_wallet` recipient:  
-* first_name `REQUIRED`
-* last_name `REQUIRED`
-* phone `REQUIRED`
+For `mobile_wallet` recipient:
 * network `REQUIRED`
-
-
-The method allows you to pass optional `email` and `phone` key worded arguments for the recipient types.
 
 To send payments the `send_pay()` method is used. It takes the following arguments:
 * bearer_token `REQUIRED`
@@ -126,34 +124,34 @@ BANK_ACCOUNT = 'bank_account'
 MOBILE_WALLET = 'mobile_wallet'
 
 # create bank account pay recipient
+bank_kwargs = {"first_name": "first_name", "last_name": "last_name", "account_name": "account_name",
+             "bank_id": "bank_id", "bank_branch_id": "bank_branch_id", "account_number": "account_number",
+             "email": "email", "phone": "phone"}
 bank_pay_location = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
                                                           recipient_type=BANK_ACCOUNT,
-                                                          account_name='Jon Snow', 
-                                                          account_number='12345678912',
-                                                          bank_branch_id='5656565656',
-                                                          bank_id='12121212',
-                                                          name='Aegon Targeryan')
+                                                          **bank_kwargs)
 
 # create mobile wallet pay recipient
+mobile_kwargs = {"first_name": "first_name", "last_name": "last_name",
+                  "phone": "phone", "network": "network", "email": "email"}
 mobile_pay_location = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
                                                             recipient_type=MOBILE_WALLET,
-                                                            first_name='Jon',
-                                                            last_name='Snow',
-                                                            phone='+254123456789',
-                                                            network='Safaricom')
+                                                            **mobile_kwargs)
                                                                 
 # send pay transaction
 create_pay_location = pay_service.send_pay(bearer_token=BEARER_TOKEN,
                                             callback_url='https://myawesomeapp.com/',
                                             destination='7894571548',
-                                            value='2650',
+                                            value='2650'
                                             # optional metadata values
-                                            purpose='Loan repayment',
-                                            repayment_status='complete')
+                                            )
+
+# get payment request status
+pay_request_status = pay_service.pay_transaction_status(create_pay_location)
 ```
 
 #### Receive payments service
-The receive payments service allows you to create requests for payments over a specific channel and receive the payments 
+The receive payments service allows you to create requests for incoming payments over a specific channel and receive the payments 
 to your account. You can also check the status of your payment requests and access the payment request through a URL.
 
 
@@ -173,15 +171,13 @@ be overridden by passing a different currency value in its place. If you do not 
 passing it as an argument.
 
 
-The method also creates the provision for optional `email` and `phone` information to be passed in the key worded argument form, 
+The method also creates the provision for optional `email` information to be passed in the key worded argument form, 
 for instance:
 
+`email='mycool@email.domain'`
 
-`email='mycool@email.domain'`   
-`phone='+254701234567`  
-
-Furthermore, the `create_payment_payment()` allows you to add metadata information passed in the form of a maximum of 5 key worded arguments.  
-To get the URL required for checking a payment request status you use the `payment_request_location()` method which takes a http response object as an argument.  
+Furthermore, the `create_payment_request()` allows you to add metadata information passed in the form of a maximum of 5 key worded arguments.  
+The URL required for checking a payment request status is returned by default with the `create_payment_request` method.  
 
 ```python
 import os
@@ -193,7 +189,7 @@ BEARER_TOKEN = os.getenv('MY_BEARER_TOKEN')
 receive_payments_service = k2connect.ReceivePayments
 
 # create a payment request
-mpesa_payment_request = receive_payments_service.create_payment_request(bearer_token=BEARER_TOKEN,
+mpesa_payment_location = receive_payments_service.create_payment_request(bearer_token=BEARER_TOKEN,
                                                                         callback_url='https://my-cool-application-callback.com',
                                                                         first_name='Jon',
                                                                         last_name='Snow',
@@ -202,34 +198,38 @@ mpesa_payment_request = receive_payments_service.create_payment_request(bearer_t
                                                                         till_number='111111',
                                                                         value='5000',
                                                                         # metadata values
-                                                                        customer_id='KLN7845J',
-                                                                        notes='Purchased item: 65')
-
-# get payment request location
-mpesa_payment_location = receive_payments_service.payment_request_location(mpesa_payment_request)
+                                                                        )
 
 # get payment request status
 payment_request_status = receive_payments_service.payment_request_status(mpesa_payment_location)
 ```
 
 #### Transfers service
-The transfer service enables you to create verified settlement bank accounts using the `add_settlement_account()` method. The method takes the following arguments:
+The transfer service enables you to create verified settlement mobile and bank accounts with respective `add_settlement_account()` methods. The method takes the following arguments:
 
+Common for both:
 * bearer_token `REQUIRED`
+
+For `add_bank_settlement_account`:  
 * account_name `REQUIRED`
 * account_number `REQUIRED`
-* bank_ref `REQUIRED`
-* bank_branch_ref `REQUIRED`
+* bank_id `REQUIRED`
+* bank_branch_id `REQUIRED`
+
+For `add_mobile_wallet_settlement_account` recipient:  
+* msisdn `REQUIRED`
+* network: 'Safaricom' `REQUIRED`
 
 
-The transfer service enables you to transfer funds to pre-approved settlement accounts. To settle funds the `settle_funds()` is used. It enables you to make two types of transfer
+The transfer service enables you to transfer funds to these pre-approved settlement accounts. To settle funds the `settle_funds()` is used. It enables you to make two types of transfer
 transactions, a blind settlement and a targeted settlement. A blind transaction is made with the `destination` argument set to `None`, in the event that an ID for the destination of funds 
 is provided then a targeted transfer is made to that destination. The method takes the following arguments:
 
 * bearer_token `REQUIRED`
 * transfer_value `REQUIRED`
-* transfer_currency ='KES' `REQUIRED`
-* transfer_destination=None `OPTIONAL`  
+* transfer_currency = 'KES' `REQUIRED`
+* destination_type `OPTIONAL`
+* destination_reference `OPTIONAL`  
 
 Note: the currency argument is set to `KES` as the default currency since that is the only ISO currency currently supported. It may however, 
 be overridden by passing a different currency value in its place. If you do not wish to override the `KES` currency you can simply avoid 
@@ -237,7 +237,7 @@ passing it as an argument.
 
 
 You can check a transfer transaction's status by querying the transaction resource's location 
-URL. In order to get resource location, the `transfer_transaction_location()` method is used, the method takes a http response object as an argument.  
+URL which is returned by the `settle_funds` method by default.  
 The `transfer_transaction_status()` method is then used to check a transfer transaction status.
 
 ```python
@@ -248,8 +248,8 @@ transfer_service = k2connect.Transfers
 settlement_account = transfer_service.add_bank_settlement_account(bearer_token=BEARER_TOKEN,
                                                              account_name='Jon Snow',
                                                              account_number='4578124578556',
-                                                             bank_ref='7814548785',
-                                                             bank_branch_ref='87456874464')
+                                                             bank_id='7814548785',
+                                                             bank_branch_id='87456874464')
 # create verified settlement mobile account
 settlement_account = transfer_service.add_mobile_wallet_settlement_account(bearer_token=BEARER_TOKEN,
                                                              msisdn='254712345678',
@@ -258,23 +258,20 @@ settlement_account = transfer_service.add_mobile_wallet_settlement_account(beare
 # settle funds (blind transfer)
 transfer_transaction = transfer_service.settle_funds(bearer_token=BEARER_TOKEN,
                                                      transfer_value='26000')
-                                                     
+# TODO blind transfer missing                                                     
 # settle funds (targeted transfer to a merchant_wallet)
-transfer_transaction_2 = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
+transfer_transaction_mobile_location = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
                                                        destination_type='merchant_wallet',
                                                        destination_reference='457126554788',
                                                        transfer_value='26000')
 # settle funds (targeted transfer to a merchant_wallet)
-transfer_transaction_2 = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
+transfer_transaction_bank_location = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
                                                        destination_type='merchant_bank_account',
                                                        destination_reference='457126554788',
                                                        transfer_value='26000')
 
-# get transfer transaction location
-transfer_transaction_location = transfer_service.transfer_transaction_location(transfer_transaction)
-
 # get transfer transaction status
-transfer_transaction_status = transfer_service.transfer_transaction_status(transfer_transaction_location)
+transfer_transaction_status = transfer_service.transfer_transaction_status(transfer_transaction_mobile_location or transfer_transaction_bank_location)
 ```
 
 ##### The destination_reference number corresponding to a settlement account must exist before you can settle_funds to it. 
@@ -286,14 +283,14 @@ it takes the following arguments:
 * bearer_token `REQUIRED`
 * event_type `REQUIRED`
 * webhook_endpoint `REQUIRED`
-* webhook_secret `REQUIRED`
+* client_secret `REQUIRED`
 
 
 Currently the following events are supported:
 * b2b_transaction_received
 * buygoods_transaction_received
 * buygoods_transaction_reversed
-* merchant_to_merchant_transaction_received
+* m2m_transaction_received
 * settlement_transfer_completed
 * customer_created
 
@@ -304,7 +301,7 @@ import os
 webhook_service = k2connect.Webhooks
 
 # define a webhook secret
-WEBHOOK_SECRET = os.getenv('MY_WEBHOOK_SECRET')
+WEBHOOK_SECRET = os.getenv('MY_CLIENT_SECRET')
 
 # create webhook subscription
 customer_created_subscription = webhook_service.create_subscription(bearer_token=BEARER_TOKEN,
@@ -340,7 +337,7 @@ first_name = decomposer.first_name
 ```
 
 ### Author
-This library was written by [PhilipWafula](https://github.com/PhilipWafula)
+This library was written by [PhilipWafula](https://github.com/PhilipWafula) and [David Kariuki Mwangi](https://github.com/DavidJonKariz).
 
 ### Contributing
 Bug reports and pull requests are welcome. Feel free raise issues on our [issues tracker](https://github.com/kopokopo/k2-connect-python/issues)

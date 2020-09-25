@@ -132,6 +132,7 @@ class PayService(service.Service):
             if 'first_name' not in kwargs or \
                     'last_name' not in kwargs or \
                     'phone' not in kwargs or \
+                    'email' not in kwargs or \
                     'network' not in kwargs:
                 raise exceptions.InvalidArgumentError('Invalid arguments for mobile wallet')
 
