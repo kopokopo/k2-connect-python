@@ -324,7 +324,9 @@ def mpesa_payment(mpesa_links,
 
 def webhook_subscription(event_type,
                          webhook_endpoint,
-                         webhook_secret):
+                         webhook_secret,
+                         scope,
+                         scope_reference):
     """
     Returns JSON formatted str containing webhook subscription information
     :param event_type:The type of event subscribed to.
@@ -334,19 +336,25 @@ def webhook_subscription(event_type,
     :param webhook_secret: A string that will be used to encrypt the request
     payload using HMAC.
     :type webhook_secret: str
+    :param scope: A string that will be used to specify whether account is at Till or Company level.
+    :type scope: str
+    :param scope_reference: A string that represents the account number (eg MPESA till number).
+    :type scope_reference: str
     :return: str
     """
 
     # validate string arguments
     validation.validate_string_arguments(event_type,
                                          webhook_endpoint,
-                                         webhook_secret)
+                                         webhook_secret,
+                                         scope,
+                                         scope_reference)
 
     webhook_subscription_object = {'event_type': event_type,
                                    'url': webhook_endpoint,
                                    'secret': webhook_secret,
-                                   'scope': 'Till',
-                                   'scope_reference': '5555'
+                                   'scope': scope,
+                                   'scope_reference': scope_reference
                                    }
     return webhook_subscription_object
 
@@ -400,14 +408,16 @@ def transfers(transfer_links, transfers_amount,
     # validate string arguments
     validation.validate_string_arguments(*transfer_links, *transfers_amount)
 
-    if 'destination_reference' not in kwargs:
-        destination_reference = None
+    if 'destination_reference' not in kwargs and 'destination_type' not in kwargs:
+        destination_type = ""
+        destination_reference = ""
     else:
+        destination_type = kwargs['destination_type']
         destination_reference = kwargs['destination_reference']
 
     transfers_object = {'amount': transfers_amount,
                         'destination_reference': destination_reference,
-                        'destination_type': kwargs['destination_type'],
+                        'destination_type': destination_type,
                         '_links': transfer_links
                         }
     return transfers_object
