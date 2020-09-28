@@ -1,25 +1,93 @@
+import requests
 import unittest
-
 from urlvalidator import URLValidator
 
-from k2connect import exceptions
-from k2connect import webhooks
-from k2connect import validation
+from k2connect import webhooks, authorization, json_builder, exceptions, validation
 from k2connect.exceptions import InvalidArgumentError
-from tests import SAMPLE_BASE_URL, SAMPLE_BEARER_TOKEN, SAMPLE_WEBHOOK_SECRET
+from tests import SAMPLE_BASE_URL, SAMPLE_WEBHOOK_SECRET, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET
 
 
 class WebhooksTestCase(unittest.TestCase):
+    # Establish environment
     validate = URLValidator()
+    
+    token_service = authorization.TokenService(SAMPLE_BASE_URL, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET)
+    access_token_request = token_service.request_access_token()
+    ACCESS_TOKEN = token_service.get_access_token(access_token_request)
+
+    webhook_obj = webhooks.WebhookService(base_url=SAMPLE_BASE_URL)
+    header = dict(webhook_obj._headers)
+    header['Authorization'] = 'Bearer ' + ACCESS_TOKEN
 
     def test_init_method_with_base_url_argument_succeeds(self):
         webhook_service = webhooks.WebhookService(base_url=SAMPLE_BASE_URL)
         self.assertIsInstance(webhook_service, webhooks.WebhookService)
 
-    # Test it successfully sends the request
+    # Test Request Status
+    def test_create_buygoods_webhook_subscription_request_succeeds(self):
+        response = requests.post(
+            headers=WebhooksTestCase.header,
+            json=json_builder.webhook_subscription("buygoods_transaction_received",
+                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
+                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+            data=None,
+            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
+        self.assertEqual(response.status_code, 201)
+
+    def test_create_b2b_webhook_subscription_request_succeeds(self):
+        response = requests.post(
+            headers=WebhooksTestCase.header,
+            json=json_builder.webhook_subscription("b2b_transaction_received",
+                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
+                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+            data=None,
+            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
+        self.assertEqual(response.status_code, 201)
+
+    def test_create_buygoods_reversal_webhook_subscription_request_succeeds(self):
+        response = requests.post(
+            headers=WebhooksTestCase.header,
+            json=json_builder.webhook_subscription("buygoods_transaction_reversed",
+                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
+                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+            data=None,
+            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
+        self.assertEqual(response.status_code, 201)
+
+    def test_create_customer_created_webhook_subscription_request_succeeds(self):
+        response = requests.post(
+            headers=WebhooksTestCase.header,
+            json=json_builder.webhook_subscription("customer_created",
+                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
+                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+            data=None,
+            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
+        self.assertEqual(response.status_code, 201)
+
+    def test_create_settlement_transfer_webhook_subscription_request_succeeds(self):
+        response = requests.post(
+            headers=WebhooksTestCase.header,
+            json=json_builder.webhook_subscription("settlement_transfer_completed",
+                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
+                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+            data=None,
+            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
+        self.assertEqual(response.status_code, 201)
+
+    def test_create_m2m_transaction_received_webhook_subscription_request_succeeds(self):
+        response = requests.post(
+            headers=WebhooksTestCase.header,
+            json=json_builder.webhook_subscription("m2m_transaction_received",
+                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
+                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+            data=None,
+            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
+        self.assertEqual(response.status_code, 201)
+
+    # Test that module successfully creates and sends the request
     def test_create_buygoods_webhook_succeeds(self):
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+            WebhooksTestCase.ACCESS_TOKEN,
             "buygoods_transaction_received",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
@@ -28,7 +96,7 @@ class WebhooksTestCase(unittest.TestCase):
 
     def test_create_b2b_webhook_succeeds(self):
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+            WebhooksTestCase.ACCESS_TOKEN,
             "b2b_transaction_received",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
@@ -37,7 +105,7 @@ class WebhooksTestCase(unittest.TestCase):
 
     def test_create_buygoods_reversal_webhook_succeeds(self):
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+            WebhooksTestCase.ACCESS_TOKEN,
             "buygoods_transaction_reversed",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
@@ -46,7 +114,7 @@ class WebhooksTestCase(unittest.TestCase):
 
     def test_create_customer_created_succeeds(self):
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+            WebhooksTestCase.ACCESS_TOKEN,
             "customer_created",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
@@ -55,7 +123,7 @@ class WebhooksTestCase(unittest.TestCase):
 
     def test_create_settlement_transfer_webhook_succeeds(self):
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+            WebhooksTestCase.ACCESS_TOKEN,
             "settlement_transfer_completed",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
@@ -64,7 +132,7 @@ class WebhooksTestCase(unittest.TestCase):
 
     def test_create_m2m_transaction_received_webhook_succeeds(self):
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+            WebhooksTestCase.ACCESS_TOKEN,
             "m2m_transaction_received",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
@@ -73,70 +141,70 @@ class WebhooksTestCase(unittest.TestCase):
 
     # Test it returns the resource_url
     def test_buygoods_webhook_subscription_returns_resource_url(self):
-        req = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
+            WebhooksTestCase.ACCESS_TOKEN,
             "buygoods_transaction_received",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
             'Till',
             '112233')
-        self.assertIsNone(WebhooksTestCase.validate(req))
+        self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_b2b_webhook_subscription_returns_resource_url(self):
-        req = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
+            WebhooksTestCase.ACCESS_TOKEN,
             "b2b_transaction_received",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
             'Till',
             '112233')
-        self.assertIsNone(WebhooksTestCase.validate(req))
+        self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_buygoods_reversal_webhook_subscription_returns_resource_url(self):
-        req = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
+            WebhooksTestCase.ACCESS_TOKEN,
             "buygoods_transaction_reversed",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
             'Till',
             '112233')
-        self.assertIsNone(WebhooksTestCase.validate(req))
+        self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_customer_created_webhook_subscription_returns_resource_url(self):
-        req = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
+            WebhooksTestCase.ACCESS_TOKEN,
             "customer_created",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
             'Till',
             '112233')
-        self.assertIsNone(WebhooksTestCase.validate(req))
+        self.assertIsNone(WebhooksTestCase.validate(response))
 
-    def test_settlement_webhook_subscription_returns_resource_url(self):
-        req = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+    def test_settlement_transfer_webhook_subscription_returns_resource_url(self):
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
+            WebhooksTestCase.ACCESS_TOKEN,
             "settlement_transfer_completed",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
             'Till',
             '112233')
-        self.assertIsNone(WebhooksTestCase.validate(req))
+        self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_m2m_webhook_subscription_returns_resource_url(self):
-        req = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            SAMPLE_BEARER_TOKEN,
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
+            WebhooksTestCase.ACCESS_TOKEN,
             "m2m_transaction_received",
             "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
             SAMPLE_WEBHOOK_SECRET,
             'Till',
             '112233')
-        self.assertIsNone(WebhooksTestCase.validate(req))
+        self.assertIsNone(WebhooksTestCase.validate(response))
 
-    # Test for failure scenarios
+    # Test Failure scenarios
     def test_create_invalid_webhook_fails(self):
         with self.assertRaises(InvalidArgumentError):
             webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-                SAMPLE_BEARER_TOKEN,
+                WebhooksTestCase.ACCESS_TOKEN,
                 "settlement",
                 "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
                 SAMPLE_WEBHOOK_SECRET,
