@@ -8,6 +8,7 @@ from tests import SAMPLE_BASE_URL, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET, MSG
 
 
 class ReceivePaymentTestCase(unittest.TestCase):
+    query_url = ''
     # Establish environment
     validate = URLValidator()
 
@@ -59,6 +60,8 @@ class ReceivePaymentTestCase(unittest.TestCase):
                 "+254712345678",
                 "till_identifier",
                 "stk_amount")
+        if self.assertIsNone(ReceivePaymentTestCase.validate(response)) is None:
+            ReceivePaymentTestCase.query_url = response
         self.assertIsNone(ReceivePaymentTestCase.validate(response))
 
     def test_create_payment_request_with_invalid_params_fails(self):
@@ -88,7 +91,13 @@ class ReceivePaymentTestCase(unittest.TestCase):
         self.assertIsNotNone(
             ReceivePaymentTestCase.incoming_payments_obj.payment_request_status(
                 ReceivePaymentTestCase.ACCESS_TOKEN,
-                "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8"))
+                ReceivePaymentTestCase.query_url))
+
+    def test_successful_query_incoming_payment_request(self):
+        response = requests.get(
+            headers=ReceivePaymentTestCase.header,
+            url=ReceivePaymentTestCase.query_url)
+        self.assertEqual(response.status_code, 200)
 
     def test_payment_request_status_with_invalid_query_url_fails(self):
         with self.assertRaises(InvalidArgumentError):
