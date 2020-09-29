@@ -78,8 +78,8 @@ def amount(currency, value):
 
 def bank_account(account_name,
                  account_number,
-                 bank_branch_id,
-                 bank_id,
+                 bank_ref,
+                 bank_branch_ref,
                  first_name,
                  last_name,
                  **kwargs):
@@ -90,10 +90,10 @@ def bank_account(account_name,
     :type account_name: str
     :param account_number: Bank account number.
     :type account_number: str
-    :param bank_branch_id: Identifier identifying the destination bank branch.
-    :type bank_branch_id: str
-    :param bank_id: Identifier identifying the destination bank
-    :type bank_id: str
+    :param bank_branch_ref: Identifier identifying the destination bank branch.
+    :type bank_branch_ref: str
+    :param bank_ref: Identifier identifying the destination bank
+    :type bank_ref: str
     :param first_name: First Name of the receiving entity.
     :type first_name: str
     :param last_name: Last Name of the receiving entity.
@@ -105,8 +105,8 @@ def bank_account(account_name,
     # validate string arguments
     validation.validate_string_arguments(account_name,
                                          account_number,
-                                         bank_id,
-                                         bank_branch_id,
+                                         bank_ref,
+                                         bank_branch_ref,
                                          first_name,
                                          last_name)
     if 'email' not in kwargs:
@@ -120,8 +120,8 @@ def bank_account(account_name,
 
     bank_account_object = {'account_name': account_name,
                            'account_number': account_number,
-                           'bank_id': bank_id,
-                           'bank_branch_id': bank_branch_id,
+                           'bank_ref': bank_ref,
+                           'bank_branch_ref': bank_branch_ref,
                            'first_name': first_name,
                            'last_name': last_name,
                            'email': email,
@@ -131,29 +131,29 @@ def bank_account(account_name,
 
 def bank_settlement_account(account_name,
                             account_number,
-                            bank_id,
-                            bank_branch_id):
+                            bank_ref,
+                            bank_branch_ref):
     """
     Returns a json formatted str with bank settlement account information.
     :param account_name: The name as indicated on the bank account name
     :type account_name: str
     :param account_number: The bank account number
     :type account_number: str
-    :param bank_id: An identifier identifying the destination bank
-    :type bank_id: str
-    :param bank_branch_id: An identifier identifying the destination bank branch
-    :type bank_branch_id: str
+    :param bank_ref: An identifier identifying the destination bank
+    :type bank_ref: str
+    :param bank_branch_ref: An identifier identifying the destination bank branch
+    :type bank_branch_ref: str
     """
     # validate string arguments
     validation.validate_string_arguments(account_name,
                                          account_number,
-                                         bank_id,
-                                         bank_branch_id)
+                                         bank_ref,
+                                         bank_branch_ref)
 
     bank_settlement_account_object = {'account_name': account_name,
                                       'account_number': account_number,
-                                      'bank_id': bank_id,
-                                      'bank_branch_id': bank_branch_id
+                                      'bank_ref': bank_ref,
+                                      'bank_branch_ref': bank_branch_ref
                                       }
     return bank_settlement_account_object
 
@@ -179,7 +179,7 @@ def mobile_settlement_account(msisdn,
 
 def mobile_wallet(first_name,
                   last_name,
-                  phone,
+                  phone_number,
                   network,
                   **kwargs):
     """
@@ -190,8 +190,8 @@ def mobile_wallet(first_name,
     :type first_name: str
     :param last_name: Last name of the recipient.
     :type last_name: str
-    :param phone: Phone number of recipient.
-    :type phone: str
+    :param phone_number: Phone number of recipient.
+    :type phone_number: str
     :param network: The mobile network to which the phone number belongs.
     :type network: str
     :param kwargs: Provision for optional 'email' value
@@ -201,7 +201,7 @@ def mobile_wallet(first_name,
     # validate string arguments
     validation.validate_string_arguments(first_name,
                                          last_name,
-                                         phone,
+                                         phone_number,
                                          network)
 
     if 'email' not in kwargs:
@@ -211,7 +211,7 @@ def mobile_wallet(first_name,
 
     mobile_wallet_object = {'first_name': first_name,
                             'last_name': last_name,
-                            'phone': phone,
+                            'phone_number': phone_number,
                             'network': network,
                             'email': email
                             }
@@ -351,14 +351,17 @@ def webhook_subscription(event_type,
     return webhook_subscription_object
 
 
-def pay(payment_destination,
+def pay(destination_reference,
+        destination_type,
         payment_amount,
-        payment_metadata,
-        payment_links):
+        payment_links,
+        payment_metadata):
     """
     Return JSON formatted str containing information about a transfer.
-    :param payment_destination: ID of the destination of funds.
-    :type payment_destination : str
+    :param destination_reference: reference for the pay_recipient account.
+    :type destination_reference : str
+    :param destination_type: Differentiate between mobile and bank account type for recipient
+    :type destination_type : str
     :param payment_amount: A JSON formatted str containing the currency
     and the amount to be transferred.
     :type payment_amount: str
@@ -371,13 +374,15 @@ def pay(payment_destination,
     """
 
     # validate string arguments
-    validation.validate_string_arguments(*payment_destination,
+    validation.validate_string_arguments(*destination_reference,
+                                         *destination_type,
                                          *payment_amount,
-                                         *payment_metadata,
-                                         *payment_links)
+                                         *payment_links,
+                                         *payment_metadata)
 
     payment_json_object = {
-        "destination": payment_destination,
+        "destination_reference": destination_reference,
+        "destination_type": destination_type,
         "amount": payment_amount,
         "metadata": payment_metadata,
         "_links": payment_links

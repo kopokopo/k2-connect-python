@@ -1,7 +1,8 @@
-SAMPLE_CLIENT_ID = 'KkcZEdj7qx7qfcFMyTWFaUXV7xZv8z8WIm72U06BiPI'
-SAMPLE_CLIENT_SECRET = 'mVoTlmrjsMw2mnfTXQrynz49ZcDX05Xp5wty-uNaZX8'
+SAMPLE_CLIENT_ID = 'ReMYAYdLKcg--XNmKhzkLNTIbXPvOUPs3hyycUF8WmI'
+SAMPLE_CLIENT_SECRET = '4707e306330759f4b63716f0525f6634a4685b4b4bf75b3381f1244ee77eb3fa'
+SAMPLE_WEBHOOK_SECRET = 'sample_webhook_secret'
 SAMPLE_BASE_URL = 'http://127.0.0.1:3000/'
-SAMPLE_BEARER_TOKEN = 'V9c0Chb9EjMGU5xhCmdhChExLVqSsurlTVQqPFWp4Pk'
+SAMPLE_BEARER_TOKEN = 'Z9tnzpV-zwdk2ezCX-cBYLV4afcYfgl79NpjeNgfDQI'
 SAMPLE_AUTHORIZATION_PATH = '/oauth/token'
 SAMPLE_DICTIONARY = {
     'amount': '50,000',
@@ -11,7 +12,7 @@ SAMPLE_DICTIONARY = {
 MOBILE_PAY_RECIPIENT = {
     "first_name": "mobile_wallet_first_name",
     "last_name": "mobile_wallet_last_name",
-    "phone": "+254123456789",
+    "phone_number": "+254123456789",
     "network": "mobile_wallet_network",
     "email": "test@test.com"
 }
@@ -43,18 +44,18 @@ BANK_PAY_RECIPIENT = {
     "first_name": "bank_account_recipient_first_name",
     "last_name": "bank_account_recipient_last_name",
     "account_name": "bank_account_name",
-    "bank_id": "bank_id",
-    "bank_branch_id": "bank_branch_id",
+    "bank_ref": "21",
+    "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test@test.com",
-    "phone": "+254123456789"
+    "phone_number": "+254123456789"
 }
 
 INVALID_FIRST_NAME_BANK_PAY_RECIPIENT = {
     "last_name": "bank_account_recipient_last_name",
     "account_name": "bank_account_name",
-    "bank_id": "bank_id",
-    "bank_branch_id": "bank_branch_id",
+    "bank_ref": "21",
+    "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test@test.com",
     "phone": "+254123456789"
@@ -64,8 +65,8 @@ INVALID_PHONE_BANK_PAY_RECIPIENT = {
     "first_name": "bank_account_recipient_first_name",
     "last_name": "bank_account_recipient_last_name",
     "account_name": "bank_account_name",
-    "bank_id": "bank_id",
-    "bank_branch_id": "bank_branch_id",
+    "bank_ref": "21",
+    "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test@test.com",
     "phone": "mobile_phone"
@@ -75,8 +76,8 @@ INVALID_EMAIL_BANK_PAY_RECIPIENT = {
     "first_name": "bank_account_recipient_first_name",
     "last_name": "bank_account_recipient_last_name",
     "account_name": "bank_account_name",
-    "bank_id": "bank_id",
-    "bank_branch_id": "bank_branch_id",
+    "bank_ref": "21",
+    "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test",
     "phone": "+254123456789"

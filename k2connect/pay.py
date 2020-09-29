@@ -100,15 +100,15 @@ class PayService(service.Service):
 
         # expected parameters for bank account wallet recipient
         # ['account_name', 'account_number',
-        # 'bank_branch_id','bank_id', name']
+        # 'bank_branch_ref','bank_ref', name']
         if recipient_type == BANK_ACCOUNT_RECIPIENT_TYPE:
             if 'first_name' not in kwargs or \
                     'last_name' not in kwargs or \
                     'account_name' not in kwargs or \
-                    'bank_id' not in kwargs or \
-                    'bank_branch_id' not in kwargs or \
+                    'bank_ref' not in kwargs or \
+                    'bank_branch_ref' not in kwargs or \
                     'account_number' not in kwargs or \
-                    'phone' not in kwargs or \
+                    'phone_number' not in kwargs or \
                     'email' not in kwargs:
                 raise exceptions.InvalidArgumentError('Invalid arguments for bank account')
 
@@ -116,11 +116,11 @@ class PayService(service.Service):
             recipient_object = json_builder.bank_account(first_name=str(kwargs['first_name']),
                                                          last_name=str(kwargs['last_name']),
                                                          account_name=str(kwargs['account_name']),
-                                                         bank_id=str(kwargs['bank_id']),
-                                                         bank_branch_id=str(kwargs['bank_branch_id']),
                                                          account_number=str(kwargs['account_number']),
+                                                         bank_ref=str(kwargs['bank_ref']),
+                                                         bank_branch_ref=str(kwargs['bank_branch_ref']),
                                                          email=str(kwargs['email']),
-                                                         phone=str(kwargs['phone']))
+                                                         phone_number=str(kwargs['phone_number']))
             # build bank payment recipient json object
             payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
                                                                   recipient=recipient_object)
@@ -131,7 +131,7 @@ class PayService(service.Service):
         elif recipient_type == MOBILE_WALLET_RECIPIENT_TYPE:
             if 'first_name' not in kwargs or \
                     'last_name' not in kwargs or \
-                    'phone' not in kwargs or \
+                    'phone_number' not in kwargs or \
                     'email' not in kwargs or \
                     'network' not in kwargs:
                 raise exceptions.InvalidArgumentError('Invalid arguments for mobile wallet')
@@ -139,7 +139,7 @@ class PayService(service.Service):
             # create recipient json object
             recipient_object = json_builder.mobile_wallet(first_name=str(kwargs['first_name']),
                                                           last_name=str(kwargs['last_name']),
-                                                          phone=str(kwargs['phone']),
+                                                          phone_number=str(kwargs['phone_number']),
                                                           network=str(kwargs['network']),
                                                           email=str(kwargs['email']))
 
@@ -156,8 +156,9 @@ class PayService(service.Service):
 
     def send_pay(self,
                  bearer_token,
+                 destination_reference,
+                 destination_type,
                  callback_url,
-                 destination,
                  value,
                  currency='KES',
                  **kwargs):
@@ -169,10 +170,12 @@ class PayService(service.Service):
         :param bearer_token: Access token to be used to make calls to
         the Kopo Kopo API
         :type bearer_token: str
+        :param destination_reference: reference for the pay_recipient account.
+        :type destination_reference : str
+        :param destination_type: Differentiate between mobile and bank account type for recipient
+        :type destination_type : str
         :param callback_url:
         :type callback_url: str
-        :param destination: ID of the destination of funds.
-        :type destination: str
         :param value: Value of money to be sent (child of amount JSON str)
         :type value: str
         :param currency: Currency of amount being transacted
@@ -208,10 +211,11 @@ class PayService(service.Service):
         pay_links = json_builder.links(callback_url=callback_url)
 
         # create payment json object
-        pay_json = json_builder.pay(destination,
+        pay_json = json_builder.pay(destination_reference,
+                                    destination_type,
                                     pay_amount,
-                                    pay_metadata,
-                                    pay_links)
+                                    pay_links,
+                                    pay_metadata)
 
         return self._make_requests(url=send_pay_url,
                                    method='POST',
