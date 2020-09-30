@@ -89,7 +89,7 @@ class PayTestCase(unittest.TestCase):
             PayTestCase.pay_recipient_query_url = response
         self.assertIsNone(PayTestCase.validate(response))
 
-    # Mobile Pay Recipient Failure Scenarios
+    # Bank Pay Recipient Failure Scenarios
     def test_add_bank_pay_recipient_without_first_name_fails(self):
         with self.assertRaises(InvalidArgumentError):
             PayTestCase.pay_obj.add_pay_recipient(
@@ -174,6 +174,7 @@ class PayTestCase(unittest.TestCase):
                                          "3300")
 
     # Query Status
+    # Query Pay Transaction
     def test_pay_transaction_status_succeeds(self):
         self.assertIsNotNone(PayTestCase.pay_obj.pay_transaction_status(PayTestCase.ACCESS_TOKEN,
                                                                         PayTestCase.pay_transaction_query_url))
@@ -182,6 +183,13 @@ class PayTestCase(unittest.TestCase):
         self.assertIsNotNone(PayTestCase.pay_obj.pay_transaction_status(PayTestCase.ACCESS_TOKEN,
                                                                         PayTestCase.pay_transaction_query_url))
 
+    def test_successful_query_pay_transaction_request(self):
+        response = requests.get(
+            headers=PayTestCase.header,
+            url=PayTestCase.pay_transaction_query_url)
+        self.assertEqual(response.status_code, 200)
+
+    # Query Pay Recipient
     def test_pay_recipient_request_status_returns_object(self):
         self.assertIsNotNone(PayTestCase.pay_obj.pay_transaction_status(PayTestCase.ACCESS_TOKEN,
                                                                         PayTestCase.pay_recipient_query_url))
@@ -192,15 +200,14 @@ class PayTestCase(unittest.TestCase):
             url=PayTestCase.pay_recipient_query_url)
         self.assertEqual(response.status_code, 200)
 
-    def test_successful_query_pay_transaction_request(self):
-        response = requests.get(
-            headers=PayTestCase.header,
-            url=PayTestCase.pay_transaction_query_url)
-        self.assertEqual(response.status_code, 200)
-
+    # Query Status Failure Scenarios
     def test_pay_transaction_status_with_invalid_query_url_fails(self):
         with self.assertRaises(InvalidArgumentError):
             PayTestCase.pay_obj.pay_transaction_status(
                 PayTestCase.ACCESS_TOKEN, "destination")
 
-    # Query Pay Recipient
+    def test_pay_transaction_status_with_invalid_access_token_fails(self):
+        with self.assertRaises(InvalidArgumentError):
+            PayTestCase.pay_obj.pay_transaction_status(
+                'access_token', "destination")
+
