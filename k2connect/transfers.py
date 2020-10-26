@@ -39,22 +39,25 @@ class TransferService(service.Service):
 
     def add_bank_settlement_account(self,
                                     bearer_token,
+                                    settlement_method,
                                     account_name,
                                     account_number,
-                                    bank_id,
-                                    bank_branch_id
+                                    bank_ref,
+                                    bank_branch_ref
                                     ):
         """
         Creates a verified settlement bank account.
         Returns a request response object < class, 'requests.models.Response'>
         :param bearer_token
         :type bearer_token: str
+        :param settlement_method: EFT or RTS method to transfer funds
+        :type settlement_method: str
         :param account_name: The name as indicated on the bank account name
         :type account_name: str
-        :param bank_id: An identifier identifying the destination bank
-        :type bank_id: str
-        :param bank_branch_id: An identifier identifying the destination bank branch
-        :type bank_branch_id: str
+        :param bank_ref: An identifier identifying the destination bank
+        :type bank_ref: str
+        :param bank_branch_ref: An identifier identifying the destination bank branch
+        :type bank_branch_ref: str
         :param account_number: The bank account number
         :type account_number: str
         :return: requests.models.Response
@@ -67,18 +70,20 @@ class TransferService(service.Service):
 
         # validate string arguments
         validation.validate_string_arguments(bearer_token,
+                                             settlement_method,
                                              account_name,
-                                             bank_id,
-                                             bank_branch_id,
+                                             bank_ref,
+                                             bank_branch_ref,
                                              account_number)
 
         # add authorization to headers
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
         # define create bank settlement account payload
-        create_bank_settlement_account_payload = json_builder.bank_settlement_account(account_name=account_name,
+        create_bank_settlement_account_payload = json_builder.bank_settlement_account(settlement_method=settlement_method,
+                                                                                      account_name=account_name,
                                                                                       account_number=account_number,
-                                                                                      bank_branch_id=bank_branch_id,
-                                                                                      bank_id=bank_id)
+                                                                                      bank_branch_ref=bank_branch_ref,
+                                                                                      bank_ref=bank_ref)
         return self._make_requests(headers=headers,
                                    method='POST',
                                    url=create_bank_settlement_account_url,
@@ -86,7 +91,9 @@ class TransferService(service.Service):
 
     def add_mobile_wallet_settlement_account(self,
                                              bearer_token,
-                                             msisdn,
+                                             first_name,
+                                             last_name,
+                                             phone_number,
                                              network
                                              ):
         """
@@ -94,8 +101,12 @@ class TransferService(service.Service):
         Returns a request response object < class, 'requests.models.Response'>
         :param bearer_token
         :type bearer_token: str
-        :param msisdn: The name as indicated on the MSISDN (Phone Number)
-        :type msisdn: str
+        :param first_name: First name of the recipient.
+        :type first_name: str
+        :param last_name: Last name of the recipient.
+        :type last_name: str
+        :param phone_number: The mobile phone number
+        :type phone_number: str
         :param network: The name as indicated on the Network type
         :type network: str
         :return: requests.models.Response
@@ -108,15 +119,19 @@ class TransferService(service.Service):
 
         # validate string arguments
         validation.validate_string_arguments(bearer_token,
-                                             msisdn,
+                                             first_name,
+                                             last_name,
+                                             phone_number,
                                              network)
 
-        validation.validate_phone_number(msisdn)
+        validation.validate_phone_number(phone_number)
 
         # add authorization to headers
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
         # define create mobile settlement account payload
-        create_mobile_settlement_account_payload = json_builder.mobile_settlement_account(msisdn=msisdn,
+        create_mobile_settlement_account_payload = json_builder.mobile_settlement_account(first_name=first_name,
+                                                                                          last_name=last_name,
+                                                                                          phone_number=phone_number,
                                                                                           network=network)
         return self._make_requests(headers=headers,
                                    method='POST',
