@@ -114,7 +114,7 @@ class Requests:
 
             if 200 <= status_code <= 300:
                 # FIXME: This is a HACK.
-                if urlparse(url).path == '/oauth/token':
+                if urlparse(url).path == '/oauth/token' or method == 'GET':
                     return response.json()
                 response_location = response.headers.get('location')
                 return response_location

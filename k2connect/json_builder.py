@@ -129,49 +129,64 @@ def bank_account(account_name,
     return bank_account_object
 
 
-def bank_settlement_account(account_name,
+def bank_settlement_account(settlement_method,
+                            account_name,
                             account_number,
-                            bank_id,
-                            bank_branch_id):
+                            bank_ref,
+                            bank_branch_ref):
     """
     Returns a json formatted str with bank settlement account information.
+    :param settlement_method: EFT or RTS method to transfer funds
+    :type settlement_method: str
     :param account_name: The name as indicated on the bank account name
     :type account_name: str
     :param account_number: The bank account number
     :type account_number: str
-    :param bank_id: An identifier identifying the destination bank
-    :type bank_id: str
-    :param bank_branch_id: An identifier identifying the destination bank branch
-    :type bank_branch_id: str
+    :param bank_ref: An identifier identifying the destination bank
+    :type bank_ref: str
+    :param bank_branch_ref: An identifier identifying the destination bank branch
+    :type bank_branch_ref: str
     """
     # validate string arguments
-    validation.validate_string_arguments(account_name,
+    validation.validate_string_arguments(settlement_method,
+                                         account_name,
                                          account_number,
-                                         bank_id,
-                                         bank_branch_id)
+                                         bank_ref,
+                                         bank_branch_ref)
 
-    bank_settlement_account_object = {'account_name': account_name,
+    bank_settlement_account_object = {'settlement_method': settlement_method,
+                                      'account_name': account_name,
                                       'account_number': account_number,
-                                      'bank_id': bank_id,
-                                      'bank_branch_id': bank_branch_id
+                                      'bank_ref': bank_ref,
+                                      'bank_branch_ref': bank_branch_ref
                                       }
     return bank_settlement_account_object
 
 
-def mobile_settlement_account(msisdn,
+def mobile_settlement_account(first_name,
+                              last_name,
+                              phone_number,
                               network):
     """
     Returns a json formatted str with bank settlement account information.
-    :param msisdn: The name as indicated on the bank account name
-    :type msisdn: str
+    :param first_name: First name of the recipient.
+    :type first_name: str
+    :param last_name: Last name of the recipient.
+    :type last_name: str
+    :param phone_number: The mobile phone number
+    :type phone_number: str
     :param network: The bank account number
     :type network: str
     """
     # validate string arguments
-    validation.validate_string_arguments(msisdn,
+    validation.validate_string_arguments(first_name,
+                                         last_name,
+                                         phone_number,
                                          network)
 
-    mobile_settlement_account_object = {'msisdn': msisdn,
+    mobile_settlement_account_object = {'first_name': first_name,
+                                        'last_name': last_name,
+                                        'phone_number': phone_number,
                                         'network': network
                                         }
     return mobile_settlement_account_object
@@ -408,11 +423,14 @@ def transfers(transfer_links, transfers_amount,
     # validate string arguments
     validation.validate_string_arguments(*transfer_links, *transfers_amount)
 
-    if 'destination_reference' not in kwargs and 'destination_type' not in kwargs:
-        destination_type = ""
-        destination_reference = ""
+    if 'destination_type' not in kwargs:
+        destination_type = None
     else:
         destination_type = kwargs['destination_type']
+
+    if 'destination_reference' not in kwargs:
+        destination_reference = None
+    else:
         destination_reference = kwargs['destination_reference']
 
     transfers_object = {'amount': transfers_amount,
