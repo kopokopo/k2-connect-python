@@ -1,2 +1,7 @@
-flask
-requests
+flask~=0.12.2
+requests~=2.18.4
+
+urlvalidator~=0.1
+pip~=9.0.1
+wheel~=0.30.0
+setuptools~=40.8.0
