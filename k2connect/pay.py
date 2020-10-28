@@ -62,26 +62,25 @@ class PayService(service.Service):
         """
         super(PayService, self).__init__(base_url=base_url)
 
-    def add_pay_recipient(self,
-                          bearer_token,
-                          recipient_type,
-                          **kwargs):
+    def add_pay_recipient(self, kwargs):
         """
         Adds external entities that will be the destination of your payments.
         Returns a request response object < class, 'requests.models.Response'>
-        :param bearer_token: Access token to be used to make calls to
-        the Kopo Kopo API
-        :type bearer_token: str
-        :param recipient_type: The type of wallet to which pay will be sent.
-                Example:
-                    recipient_type = BANK_ACCOUNT_RECIPIENT_TYPE
-        :type recipient_type: str
         :param kwargs: The values thAccess token to be used to make calls to
-        the Kopo Kopo APIat constitute recipient types.
+        the Kopo Kopo API at constitute recipient types.
         :type kwargs: dict
 
         :return:'requests.models.Response'
         """
+        if 'access_token' not in kwargs:
+            raise exceptions.InvalidArgumentError('Access Token not given.')
+        if 'recipient_type' not in kwargs:
+            raise exceptions.InvalidArgumentError('Recipient Type not given.')
+        if 'access_token' in kwargs:
+            bearer_token = kwargs['access_token']
+        if 'recipient_type' in kwargs:
+            recipient_type = kwargs['recipient_type']
+
         # define headers
         headers = dict(self._headers)
 
@@ -95,12 +94,10 @@ class PayService(service.Service):
 
         if 'email' in kwargs:
             validation.validate_email(str(kwargs['email']))
-        if 'phone' in kwargs:
-            validation.validate_phone_number(str(kwargs['phone']))
+        if 'phone_number' in kwargs:
+            validation.validate_phone_number(str(kwargs['phone_number']))
 
         # expected parameters for bank account wallet recipient
-        # ['account_name', 'account_number',
-        # 'bank_branch_ref','bank_ref', name']
         if recipient_type == BANK_ACCOUNT_RECIPIENT_TYPE:
             if 'first_name' not in kwargs or \
                     'last_name' not in kwargs or \
@@ -154,38 +151,43 @@ class PayService(service.Service):
                                    url=add_pay_url,
                                    payload=payment_recipient_object)
 
-    def send_pay(self,
-                 bearer_token,
-                 destination_reference,
-                 destination_type,
-                 callback_url,
-                 value,
-                 currency='KES',
-                 **kwargs):
+    def send_pay(self, kwargs):
         """
         Creates an outgoing pay to a third party. The result of
         the pay is provided asynchronously and posted to the callback_url
         provided.
         Returns a request response object < class, 'requests.models.Response'>
-        :param bearer_token: Access token to be used to make calls to
-        the Kopo Kopo API
-        :type bearer_token: str
-        :param destination_reference: reference for the pay_recipient account.
-        :type destination_reference : str
-        :param destination_type: Differentiate between mobile and bank account type for recipient
-        :type destination_type : str
-        :param callback_url:
-        :type callback_url: str
-        :param value: Value of money to be sent (child of amount JSON str)
-        :type value: str
-        :param currency: Currency of amount being transacted
-        :type currency: str
         :param kwargs: Provision for optional metadata with maximum of 5
         key value pairs.
         :type kwargs: dict
 
         :return:requests.models.Response
         """
+        if 'access_token' not in kwargs:
+            raise exceptions.InvalidArgumentError('Access Token not given.')
+
+        if 'destination_reference' not in kwargs or \
+                'destination_type' not in kwargs or \
+                'callback_url' not in kwargs or \
+                'amount' not in kwargs:
+            raise exceptions.InvalidArgumentError('Invalid arguments for creating Outgoing Pay.')
+
+        if 'currency' not in kwargs:
+            currency = 'KES'
+
+        if 'metadata' not in kwargs:
+            pay_metadata = ''
+
+        # iterate through kwargs
+        if 'access_token' in kwargs:
+            bearer_token = kwargs['access_token']
+        if 'callback_url' in kwargs:
+            callback_url = kwargs['callback_url']
+        if 'currency' in kwargs:
+            currency = 'KES'
+        if 'metadata' in kwargs:
+            pay_metadata = json_builder.metadata(kwargs['pay_metadata'])
+
         # build send_pay url
         send_pay_url = self._build_url(SEND_PAY_PATH)
 
@@ -200,19 +202,14 @@ class PayService(service.Service):
 
         # create amount json object
         pay_amount = json_builder.amount(currency=currency,
-                                         value=value)
-
-        # create metadata json object
-        pay_metadata = kwargs
-        if kwargs is not None or kwargs != {}:
-            pay_metadata = json_builder.metadata(**kwargs)
+                                         value=kwargs['amount'])
 
         # create links json object
         pay_links = json_builder.links(callback_url=callback_url)
 
         # create payment json object
-        pay_json = json_builder.pay(destination_reference,
-                                    destination_type,
+        pay_json = json_builder.pay(kwargs['destination_reference'],
+                                    kwargs['destination_type'],
                                     pay_amount,
                                     pay_links,
                                     pay_metadata)

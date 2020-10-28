@@ -19,7 +19,7 @@ MOBILE_PAY_RECIPIENT = {
 
 INVALID_FIRST_NAME_MOBILE_PAY_RECIPIENT = {
     "last_name": "mobile_wallet_last_name",
-    "phone": "+254123456789",
+    "phone_number": "+254123456789",
     "network": "mobile_wallet_network",
     "email": "test@test.com"
 }
@@ -27,7 +27,7 @@ INVALID_FIRST_NAME_MOBILE_PAY_RECIPIENT = {
 INVALID_EMAIL_MOBILE_PAY_RECIPIENT = {
     "first_name": "mobile_wallet_first_name",
     "last_name": "mobile_wallet_last_name",
-    "phone": "+254123456789",
+    "phone_number": "+254123456789",
     "network": "mobile_wallet_network",
     "email": "mobile_wallet_email"
 }
@@ -35,7 +35,7 @@ INVALID_EMAIL_MOBILE_PAY_RECIPIENT = {
 INVALID_PHONE_MOBILE_PAY_RECIPIENT = {
     "first_name": "mobile_wallet_first_name",
     "last_name": "mobile_wallet_last_name",
-    "phone": "mobile_wallet_phone",
+    "phone_number": "mobile_wallet_phone",
     "network": "mobile_wallet_network",
     "email": "test@test.com"
 }
@@ -58,7 +58,7 @@ INVALID_FIRST_NAME_BANK_PAY_RECIPIENT = {
     "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test@test.com",
-    "phone": "+254123456789"
+    "phone_number": "+254123456789"
 }
 
 INVALID_PHONE_BANK_PAY_RECIPIENT = {
@@ -69,7 +69,7 @@ INVALID_PHONE_BANK_PAY_RECIPIENT = {
     "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test@test.com",
-    "phone": "mobile_phone"
+    "phone_number": "mobile_phone"
 }
 
 INVALID_EMAIL_BANK_PAY_RECIPIENT = {
@@ -80,7 +80,7 @@ INVALID_EMAIL_BANK_PAY_RECIPIENT = {
     "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
     "account_number": "bank_account_number",
     "email": "test",
-    "phone": "+254123456789"
+    "phone_number": "+254123456789"
 }
 
 PAY = {

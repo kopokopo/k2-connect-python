@@ -29,47 +29,61 @@ class PayTestCase(unittest.TestCase):
 
     # Mobile Pay recipient
     def test_add_mobile_pay_recipient_succeeds(self):
+        payload = PAY["mobile_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'mobile_wallet'})
         self.assertIsNotNone(
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'mobile_wallet', **PAY["mobile_pay"]))
+            PayTestCase.pay_obj.add_pay_recipient(payload))
 
     def test_successful_add_mobile_pay_receipient_request(self):
         response = requests.post(
             headers=PayTestCase.header,
             json=json_builder.pay_recipient("mobile_wallet",
-                                            json_builder.mobile_wallet("first_name", "last_name", "254900112501", "safaricom")),
+                                            json_builder.mobile_wallet("first_name", "last_name", "254900112501",
+                                                                       "safaricom")),
             data=None,
             url=PayTestCase.pay_obj._build_url(pay.ADD_PAY_PATH))
         self.assertEqual(response.status_code, 201)
 
     def test_add_mobile_pay_recipient_returns_resource_url(self):
-        response = PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'mobile_wallet', **PAY["mobile_pay"])
+        payload = PAY["mobile_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'mobile_wallet'})
+        response = PayTestCase.pay_obj.add_pay_recipient(payload)
         if self.assertIsNone(PayTestCase.validate(response)) is None:
             PayTestCase.pay_recipient_query_url = response
         self.assertIsNone(PayTestCase.validate(response))
 
     # Mobile Pay Recipient Failure Scenarios
+    def test_add_mobile_pay_recipient_nil_access_token_fails(self):
+        with self.assertRaisesRegex(InvalidArgumentError, 'Access Token not given.'):
+            PayTestCase.pay_obj.add_pay_recipient(PAY["mobile_pay"])
+
+    def test_add_mobile_pay_recipient_nil_recipient_type_fails(self):
+        with self.assertRaisesRegex(InvalidArgumentError, 'Access Token not given.'):
+            PayTestCase.pay_obj.add_pay_recipient(PAY["mobile_pay"])
+
     def test_add_mobile_pay_recipient_without_first_name_fails(self):
+        payload = PAY["invalid_first_name_mobile_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'mobile_wallet'})
         with self.assertRaises(InvalidArgumentError):
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'mobile_wallet', **PAY["invalid_first_name_mobile_pay"])
+            PayTestCase.pay_obj.add_pay_recipient(payload)
 
     def test_add_mobile_pay_recipient_with_invalid_email_fails(self):
+        payload = PAY["invalid_email_mobile_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'mobile_wallet'})
         with self.assertRaisesRegex(InvalidArgumentError, MSG["invalid_email"]):
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'mobile_wallet', **PAY["invalid_email_mobile_pay"])
+            PayTestCase.pay_obj.add_pay_recipient(payload)
 
     def test_add_mobile_pay_recipient_with_invalid_phone_fails(self):
+        payload = PAY["invalid_phone_mobile_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'mobile_wallet'})
         with self.assertRaisesRegex(InvalidArgumentError, MSG["invalid_phone"]):
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'mobile_wallet', **PAY["invalid_phone_mobile_pay"])
+            PayTestCase.pay_obj.add_pay_recipient(payload)
 
     # Bank Pay recipient
     def test_add_bank_pay_recipient_succeeds(self):
-        self.assertIsNotNone(
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'bank_account', **PAY["bank_pay"]))
+        payload = PAY["bank_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'bank_account'})
+        self.assertIsNotNone(PayTestCase.pay_obj.add_pay_recipient(payload))
 
     def test_successful_add_bank_receipient_request(self):
         response = requests.post(
@@ -77,57 +91,93 @@ class PayTestCase(unittest.TestCase):
             json=json_builder.pay_recipient("bank_account",
                                             json_builder.bank_account("David Kariuki Python", "566566",
                                                                       "21", "633aa26c-7b7c-4091-ae28-96c0687cf886",
-                                                                      "first_name", "last_name",)),
+                                                                      "first_name", "last_name", )),
             data=None,
             url=PayTestCase.pay_obj._build_url(pay.ADD_PAY_PATH))
         self.assertEqual(response.status_code, 201)
 
     def test_add_bank_pay_recipient_returns_resource_url(self):
-        response = PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'bank_account', **PAY["bank_pay"])
+        payload = PAY["bank_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'bank_account'})
+        response = PayTestCase.pay_obj.add_pay_recipient(payload)
         if self.assertIsNone(PayTestCase.validate(response)) is None:
             PayTestCase.pay_recipient_query_url = response
         self.assertIsNone(PayTestCase.validate(response))
 
     # Bank Pay Recipient Failure Scenarios
+    def test_add_bank_pay_recipient_nil_access_token_fails(self):
+        with self.assertRaisesRegex(InvalidArgumentError, 'Access Token not given.'):
+            PayTestCase.pay_obj.add_pay_recipient(PAY["bank_pay"])
+
+    def test_add_bank_pay_recipient_nil_recipient_type_fails(self):
+        with self.assertRaisesRegex(InvalidArgumentError, 'Access Token not given.'):
+            PayTestCase.pay_obj.add_pay_recipient(PAY["bank_pay"])
+
     def test_add_bank_pay_recipient_without_first_name_fails(self):
+        payload = PAY["invalid_first_name_bank_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'bank_account'})
         with self.assertRaises(InvalidArgumentError):
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'bank_account', **PAY["invalid_first_name_bank_pay"])
+            PayTestCase.pay_obj.add_pay_recipient(payload)
 
     def test_add_bank_pay_recipient_with_invalid_email_fails(self):
+        payload = PAY["invalid_email_bank_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'bank_account'})
         with self.assertRaisesRegex(InvalidArgumentError, MSG["invalid_email"]):
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'bank_account', **PAY["invalid_email_bank_pay"])
+            PayTestCase.pay_obj.add_pay_recipient(payload)
 
     def test_add_bank_pay_recipient_with_invalid_phone_fails(self):
+        payload = PAY["invalid_phone_bank_pay"]
+        payload.update({"access_token": PayTestCase.ACCESS_TOKEN, "recipient_type": 'bank_account'})
         with self.assertRaisesRegex(InvalidArgumentError, MSG["invalid_phone"]):
-            PayTestCase.pay_obj.add_pay_recipient(
-                PayTestCase.ACCESS_TOKEN, 'bank_account', **PAY["invalid_phone_bank_pay"])
+            PayTestCase.pay_obj.add_pay_recipient(payload)
 
     # Send Pay Transaction
     def test_send_pay_to_mobile_wallet_succeeds(self):
-        self.assertIsNotNone(PayTestCase.pay_obj.send_pay(
-            PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132", "mobile_wallet",
-            'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3', "3300"))
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "destination_type": 'mobile_wallet',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        self.assertIsNotNone(PayTestCase.pay_obj.send_pay(test_payload))
 
     def test_create_pay_to_bank_account_succeeds(self):
-        self.assertIsNotNone(PayTestCase.pay_obj.send_pay(
-            PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132", "bank_account",
-            'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3', "3300"))
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "destination_type": 'bank_account',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        self.assertIsNotNone(PayTestCase.pay_obj.send_pay(test_payload))
 
     def test_create_pay_to_mobile_wallet_returns_resource_url(self):
-        response = PayTestCase.pay_obj.send_pay(
-            PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132", "mobile_wallet",
-            'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3', "3300")
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "destination_type": 'mobile_wallet',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        response = PayTestCase.pay_obj.send_pay(test_payload)
         if self.assertIsNone(PayTestCase.validate(response)) is None:
             PayTestCase.pay_transaction_query_url = response
         self.assertIsNone(PayTestCase.validate(response))
 
     def test_create_pay_to_bank_account_returns_resource_url(self):
-        response = PayTestCase.pay_obj.send_pay(
-            PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132", "bank_account",
-            'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3', "3300")
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "destination_type": 'bank_account',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        response = PayTestCase.pay_obj.send_pay(test_payload)
         if self.assertIsNone(PayTestCase.validate(response)) is None:
             PayTestCase.pay_transaction_query_url = response
         self.assertIsNone(PayTestCase.validate(response))
@@ -154,24 +204,48 @@ class PayTestCase(unittest.TestCase):
 
     # Send Pay Transaction Failure Scenarios
     def test_send_pay_without_destination_reference_fails(self):
-        with self.assertRaises(TypeError):
-            PayTestCase.pay_obj.send_pay(PayTestCase.ACCESS_TOKEN, "bank_account",
-                                         'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3', "3300")
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_type": 'bank_account',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
+            PayTestCase.pay_obj.send_pay(test_payload)
 
     def test_send_pay_without_destination_type_fails(self):
-        with self.assertRaises(TypeError):
-            PayTestCase.pay_obj.send_pay(PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132",
-                                         'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3', "3300")
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
+            PayTestCase.pay_obj.send_pay(test_payload)
 
-    def test_send_pay_without_value_fails(self):
-        with self.assertRaises(TypeError):
-            PayTestCase.pay_obj.send_pay(PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132", "bank_account",
-                                         'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3')
+    def test_send_pay_without_amount_fails(self):
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "destination_type": 'mobile_wallet',
+            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "currency": 'KES'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
+            PayTestCase.pay_obj.send_pay(test_payload)
 
     def test_send_pay_with_invalid_callback_fails(self):
-        with self.assertRaises(InvalidArgumentError):
-            PayTestCase.pay_obj.send_pay(PayTestCase.ACCESS_TOKEN, "3344-effefnkka-132", "bank_account", 'callback',
-                                         "3300")
+        test_payload = {
+            "access_token": PayTestCase.ACCESS_TOKEN,
+            "destination_reference": '3344-effefnkka-132',
+            "destination_type": 'mobile_wallet',
+            "amount": '10',
+            "currency": 'KES'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
+            PayTestCase.pay_obj.send_pay(test_payload)
 
     # Query Status
     # Query Pay Transaction
@@ -210,4 +284,3 @@ class PayTestCase(unittest.TestCase):
         with self.assertRaises(InvalidArgumentError):
             PayTestCase.pay_obj.pay_transaction_status(
                 'access_token', "destination")
-
