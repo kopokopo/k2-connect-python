@@ -30,62 +30,76 @@ class ReceivePaymentTestCase(unittest.TestCase):
     def test_successful_create_incoming_payment_request(self):
         response = requests.post(
             headers=ReceivePaymentTestCase.header,
-            json=json_builder.mpesa_payment(json_builder.links("https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8"),
-                                            json_builder.amount('KES', 'python_sdk_value'),
-                                            json_builder.subscriber('first_name', 'last_name', "+254712345678", 'Null'),
-                                            'payment_channel', '112233'),
+            json=json_builder.mpesa_payment(
+                json_builder.links("https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8"),
+                json_builder.amount('KES', 'python_sdk_value'),
+                json_builder.subscriber('first_name', 'last_name', "+254712345678", 'Null'),
+                'payment_channel', '112233'),
             data=None,
-            url=ReceivePaymentTestCase.incoming_payments_obj._build_url(receive_payments.CREATE_RECEIVE_MPESA_PAYMENT_PATH))
+            url=ReceivePaymentTestCase.incoming_payments_obj._build_url(
+                receive_payments.CREATE_RECEIVE_MPESA_PAYMENT_PATH))
         self.assertEqual(response.status_code, 201)
 
     def test_correct_incoming_payment_method_format(self):
+        test_payload = {
+            "access_token": ReceivePaymentTestCase.ACCESS_TOKEN,
+            "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+            "first_name": "python_first_name",
+            "last_name": "python_last_name",
+            "email": "daivd.j.kariuki@gmail.com",
+            "payment_channel": "MPESA",
+            "phone_number": "+254911222536",
+            "till_number": "112233",
+            "amount": "10"
+        }
         self.assertIsNotNone(
-            ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(
-                ReceivePaymentTestCase.ACCESS_TOKEN,
-                "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                "stk_first_name",
-                "stk_last_name",
-                "payment_channel",
-                "+254712345678",
-                "till_identifier",
-                "stk_amount"))
+            ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload))
 
     def test_create_incoming_payment_returns_resource_url(self):
-        response = ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(
-                ReceivePaymentTestCase.ACCESS_TOKEN,
-                "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                "stk_first_name",
-                "stk_last_name",
-                "payment_channel",
-                "+254712345678",
-                "till_identifier",
-                "stk_amount")
+        test_payload = {
+            "access_token": ReceivePaymentTestCase.ACCESS_TOKEN,
+            "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+            "first_name": "python_first_name",
+            "last_name": "python_last_name",
+            "email": "daivd.j.kariuki@gmail.com",
+            "payment_channel": "MPESA",
+            "phone_number": "+254911222536",
+            "till_number": "112233",
+            "amount": "10"
+        }
+        response = ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
         if self.assertIsNone(ReceivePaymentTestCase.validate(response)) is None:
             ReceivePaymentTestCase.query_url = response
         self.assertIsNone(ReceivePaymentTestCase.validate(response))
 
     def test_create_payment_request_with_invalid_params_fails(self):
-        with self.assertRaises(TypeError):
-            ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(
-                ReceivePaymentTestCase.ACCESS_TOKEN,
-                "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                "stk_last_name",
-                "payment_channel",
-                "stk_phone",
-                "till_identifier",
-                "stk_amount")
+        with self.assertRaises(UnboundLocalError):
+            test_payload = {
+                "access_token": ReceivePaymentTestCase.ACCESS_TOKEN,
+                "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+                "last_name": "python_last_name",
+                "email": "daivd.j.kariuki@gmail.com",
+                "payment_channel": "MPESA",
+                "phone_number": "+254911222536",
+                "till_number": "112233",
+                "amount": "10"
+            }
+            ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
 
     def test_create_payment_request_with_invalid_phone_fails(self):
         with self.assertRaisesRegex(InvalidArgumentError, MSG["invalid_phone"]):
             ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(
-                ReceivePaymentTestCase.ACCESS_TOKEN,
-                "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                "stk_first_name",
-                "stk_last_name",
-                "payment_channel",
-                "stk_phone",
-                "till_identifier",
-                "stk_amount")
+                {
+                    "access_token": ReceivePaymentTestCase.ACCESS_TOKEN,
+                    "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+                    "first_name": "python_first_name",
+                    "last_name": "python_last_name",
+                    "email": "daivd.j.kariuki@gmail.com",
+                    "payment_channel": "MPESA",
+                    "phone_number": "254911222536",
+                    "till_number": "112233",
+                    "amount": "10"
+                })
 
     def test_payment_request_status_succeeds(self):
         self.assertIsNotNone(
