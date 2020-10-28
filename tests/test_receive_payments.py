@@ -72,6 +72,20 @@ class ReceivePaymentTestCase(unittest.TestCase):
             ReceivePaymentTestCase.query_url = response
         self.assertIsNone(ReceivePaymentTestCase.validate(response))
 
+    def test_create_payment_request_with_no_access_token_fails(self):
+        with self.assertRaisesRegex(InvalidArgumentError, 'Access Token not given.'):
+            test_payload = {
+                "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+                "first_name": "python_first_name",
+                "last_name": "python_last_name",
+                "email": "daivd.j.kariuki@gmail.com",
+                "payment_channel": "MPESA",
+                "phone_number": "+254911222536",
+                "till_number": "112233",
+                "amount": "10"
+            }
+            ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
+
     def test_create_payment_request_with_invalid_params_fails(self):
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Incoming Payment Request.'):
             test_payload = {

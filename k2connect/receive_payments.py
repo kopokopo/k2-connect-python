@@ -58,8 +58,10 @@ class ReceivePaymentsService(service.Service):
         :type kwargs: dict
         :return: requests.models.Response
         """
-        if 'access_token' not in kwargs or \
-                'first_name' not in kwargs or \
+        if 'access_token' not in kwargs:
+            raise exceptions.InvalidArgumentError('Access Token not given.')
+
+        if 'first_name' not in kwargs or \
                 'last_name' not in kwargs or \
                 'callback_url' not in kwargs or \
                 'payment_channel' not in kwargs or \
@@ -78,25 +80,13 @@ class ReceivePaymentsService(service.Service):
         # iterate through kwargs
         if 'access_token' in kwargs:
             bearer_token = kwargs['access_token']
-        if 'first_name' in kwargs:
-            first_name = kwargs['first_name']
-        if 'last_name' in kwargs:
-            last_name = kwargs['last_name']
-        if 'callback_url' in kwargs:
-            callback_url = kwargs['callback_url']
-        if 'payment_channel' in kwargs:
-            payment_channel = kwargs['payment_channel']
         if 'phone_number' in kwargs:
             phone_number = kwargs['phone_number']
             if validation.validate_phone_number(phone_number) is False:
                 pass
-        if 'till_number' in kwargs:
-            till_number = kwargs['till_number']
         if 'email' in kwargs:
             email = kwargs['email']
             validation.validate_email(email)
-        if 'amount' in kwargs:
-            amount = kwargs['amount']
         if 'currency' in kwargs:
             currency = 'KES'
         if 'metadata' in kwargs:
@@ -116,14 +106,14 @@ class ReceivePaymentsService(service.Service):
 
         # define amount JSON object
         mpesa_payment_request_amount = json_builder.amount(currency=currency,
-                                                           value=amount)
+                                                           value=kwargs['amount'])
 
         # define links JSON object
-        mpesa_payment_request_links = json_builder.links(callback_url=callback_url)
+        mpesa_payment_request_links = json_builder.links(callback_url=kwargs['callback_url'])
 
         # define subscriber JSON object
-        mpesa_payment_subscriber = json_builder.subscriber(first_name=first_name,
-                                                           last_name=last_name,
+        mpesa_payment_subscriber = json_builder.subscriber(first_name=kwargs['first_name'],
+                                                           last_name=kwargs['last_name'],
                                                            phone=phone_number,
                                                            email=email)
 
@@ -132,8 +122,8 @@ class ReceivePaymentsService(service.Service):
                                                                    mpesa_payment_amount=mpesa_payment_request_amount,
                                                                    mpesa_payment_subscriber=mpesa_payment_subscriber,
                                                                    metadata=mpesa_payment_metadata,
-                                                                   payment_channel=payment_channel,
-                                                                   till_number=till_number)
+                                                                   payment_channel=kwargs['payment_channel'],
+                                                                   till_number=kwargs['till_number'])
         return self._make_requests(headers=headers,
                                    method='POST',
                                    url=mpesa_payment_request_url,
