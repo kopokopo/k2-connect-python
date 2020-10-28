@@ -73,7 +73,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
         self.assertIsNone(ReceivePaymentTestCase.validate(response))
 
     def test_create_payment_request_with_invalid_params_fails(self):
-        with self.assertRaises(UnboundLocalError):
+        with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Incoming Payment Request.'):
             test_payload = {
                 "access_token": ReceivePaymentTestCase.ACCESS_TOKEN,
                 "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",

@@ -58,37 +58,49 @@ class ReceivePaymentsService(service.Service):
         :type kwargs: dict
         :return: requests.models.Response
         """
+        if 'access_token' not in kwargs or \
+                'first_name' not in kwargs or \
+                'last_name' not in kwargs or \
+                'callback_url' not in kwargs or \
+                'payment_channel' not in kwargs or \
+                'phone_number' not in kwargs or \
+                'till_number' not in kwargs or \
+                'email' not in kwargs or \
+                'amount' not in kwargs:
+            raise exceptions.InvalidArgumentError('Invalid arguments for creating Incoming Payment Request.')
 
-        mpesa_payment_metadata = ''
-        currency = 'KES'
+        if 'currency' not in kwargs:
+            currency = 'KES'
+
+        if 'metadata' not in kwargs:
+            mpesa_payment_metadata = ''
 
         # iterate through kwargs
-        for key, value in kwargs.items():
-            if key == 'access_token':
-                bearer_token = str(value)
-            if key == 'callback_url':
-                callback_url = str(value)
-            if key == 'first_name':
-                first_name = str(value)
-            if key == 'last_name':
-                last_name = str(value)
-            if key == 'payment_channel':
-                payment_channel = str(value)
-            if key == 'phone_number':
-                phone_number = str(value)
-                if validation.validate_phone_number(phone_number) is False:
-                    pass
-            if key == 'till_number':
-                till_number = str(value)
-            if key == 'amount':
-                amount = str(value)
-            if key == 'currency':
-                currency = 'KES'
-            if key == 'email':
-                email = str(value)
-                validation.validate_email(email)
-            if key == 'metadata':
-                mpesa_payment_metadata = str(value)
+        if 'access_token' in kwargs:
+            bearer_token = kwargs['access_token']
+        if 'first_name' in kwargs:
+            first_name = kwargs['first_name']
+        if 'last_name' in kwargs:
+            last_name = kwargs['last_name']
+        if 'callback_url' in kwargs:
+            callback_url = kwargs['callback_url']
+        if 'payment_channel' in kwargs:
+            payment_channel = kwargs['payment_channel']
+        if 'phone_number' in kwargs:
+            phone_number = kwargs['phone_number']
+            if validation.validate_phone_number(phone_number) is False:
+                pass
+        if 'till_number' in kwargs:
+            till_number = kwargs['till_number']
+        if 'email' in kwargs:
+            email = kwargs['email']
+            validation.validate_email(email)
+        if 'amount' in kwargs:
+            amount = kwargs['amount']
+        if 'currency' in kwargs:
+            currency = 'KES'
+        if 'metadata' in kwargs:
+            mpesa_payment_metadata = json_builder.metadata(kwargs['pay_metadata'])
 
         # define headers
         headers = dict(self._headers)
@@ -108,13 +120,6 @@ class ReceivePaymentsService(service.Service):
 
         # define links JSON object
         mpesa_payment_request_links = json_builder.links(callback_url=callback_url)
-
-        # define metadata JSON object
-        # mpesa_payment_metadata = json_builder.metadata(', '.join(['{}={}'.format(k, v)
-        # #                                                           for k, v in kwargs.items()]))
-        # mpesa_payment_metadata = kwargs
-        # if kwargs is not None or kwargs != {}:
-        #     mpesa_payment_metadata = json_builder.metadata(**kwargs)
 
         # define subscriber JSON object
         mpesa_payment_subscriber = json_builder.subscriber(first_name=first_name,
