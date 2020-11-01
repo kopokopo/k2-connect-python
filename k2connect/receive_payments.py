@@ -54,7 +54,7 @@ class ReceivePaymentsService(service.Service):
         """
         Creates a request for the reception of payments from MPESA users.
         Returns a request response object < class, 'requests.models.Response'>
-        :param kwargs:
+        :param kwargs: The values constitute all user input.
         :type kwargs: dict
         :return: requests.models.Response
         """

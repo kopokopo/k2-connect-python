@@ -4,10 +4,7 @@ of payments and pay recipients within the pay service. Once a transaction
 is created, the service provides the user with a means to query k2 servers
 for the pay transaction's status.
 """
-from k2connect import service
-from k2connect import json_builder
-from k2connect import exceptions
-from k2connect import validation
+from k2connect import service, json_builder, exceptions, validation
 
 # PAY Service paths
 ADD_PAY_PATH = "api/v1/pay_recipients"
@@ -66,8 +63,7 @@ class PayService(service.Service):
         """
         Adds external entities that will be the destination of your payments.
         Returns a request response object < class, 'requests.models.Response'>
-        :param kwargs: The values thAccess token to be used to make calls to
-        the Kopo Kopo API at constitute recipient types.
+        :param kwargs: The values constitute all user input.
         :type kwargs: dict
 
         :return:'requests.models.Response'
