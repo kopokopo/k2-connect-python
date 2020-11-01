@@ -132,7 +132,6 @@ def bank_account(account_name,
 def bank_settlement_account(settlement_method,
                             account_name,
                             account_number,
-                            bank_ref,
                             bank_branch_ref):
     """
     Returns a json formatted str with bank settlement account information.
@@ -142,8 +141,6 @@ def bank_settlement_account(settlement_method,
     :type account_name: str
     :param account_number: The bank account number
     :type account_number: str
-    :param bank_ref: An identifier identifying the destination bank
-    :type bank_ref: str
     :param bank_branch_ref: An identifier identifying the destination bank branch
     :type bank_branch_ref: str
     """
@@ -151,13 +148,11 @@ def bank_settlement_account(settlement_method,
     validation.validate_string_arguments(settlement_method,
                                          account_name,
                                          account_number,
-                                         bank_ref,
                                          bank_branch_ref)
 
     bank_settlement_account_object = {'settlement_method': settlement_method,
                                       'account_name': account_name,
                                       'account_number': account_number,
-                                      'bank_ref': bank_ref,
                                       'bank_branch_ref': bank_branch_ref
                                       }
     return bank_settlement_account_object

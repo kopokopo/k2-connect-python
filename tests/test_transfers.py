@@ -30,45 +30,49 @@ class TransferTestCase(unittest.TestCase):
     # Add Settlement Accounts
     # Bank account
     def test_add_bank_settlement_account_for_RTS_transfer_succeeds(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "settlement_method": 'RTS',
+            "account_name": 'py_sdk_account_name',
+            "account_number": 'py_sdk_account_number',
+            "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+        }
         self.assertIsNotNone(
-            TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "RTS",
-                "account_name",
-                "account_number",
-                "settlement_bank_id",
-                "settlement_bank_branch_id"))
+            TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload))
 
     def test_add_bank_settlement_account_for_EFT_transfer_succeeds(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "settlement_method": 'EFT',
+            "account_name": 'py_sdk_account_name',
+            "account_number": 'py_sdk_account_number',
+            "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+        }
         self.assertIsNotNone(
-            TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "EFT",
-                "account_name",
-                "account_number",
-                "settlement_bank_id",
-                "settlement_bank_branch_id"))
+            TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload))
 
     def test_successful_add_bank_settlement_account_for_EFT_transfer_returns_resource_url(self):
-        response = TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "EFT",
-                "account_name",
-                "account_number",
-                "settlement_bank_id",
-                "settlement_bank_branch_id")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "settlement_method": 'EFT',
+            "account_name": 'py_sdk_account_name',
+            "account_number": 'py_sdk_account_number',
+            "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+        }
+        response = TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
             TransferTestCase.verified_settlement_url = response
         self.assertIsNone(TransferTestCase.validate(response))
 
     def test_successful_add_bank_settlement_account_for_RTS_transfer_returns_resource_url(self):
-        response = TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "RTS",
-                "account_name",
-                "account_number",
-                "settlement_bank_id",
-                "settlement_bank_branch_id")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "settlement_method": 'RTS',
+            "account_name": 'py_sdk_account_name',
+            "account_number": 'py_sdk_account_number',
+            "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+        }
+        response = TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
             TransferTestCase.verified_settlement_url = response
         self.assertIsNone(TransferTestCase.validate(response))
@@ -76,7 +80,7 @@ class TransferTestCase(unittest.TestCase):
     def test_add_bank_settlement_account_for_EFT_transfer_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.bank_settlement_account("EFT", "py_sdk_account_name", "py_sdk_account_number", "21",
+            json=json_builder.bank_settlement_account("EFT", "py_sdk_account_name", "py_sdk_account_number",
                                                       "633aa26c-7b7c-4091-ae28-96c0687cf886"),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.SETTLEMENT_BANK_ACCOUNTS_PATH))
@@ -85,7 +89,7 @@ class TransferTestCase(unittest.TestCase):
     def test_add_bank_settlement_account_for_RTS_transfer_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.bank_settlement_account("RTS", "py_sdk_account_name", "py_sdk_account_number", "21",
+            json=json_builder.bank_settlement_account("RTS", "py_sdk_account_name", "py_sdk_account_number",
                                                       "633aa26c-7b7c-4091-ae28-96c0687cf886"),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.SETTLEMENT_BANK_ACCOUNTS_PATH))
@@ -93,30 +97,36 @@ class TransferTestCase(unittest.TestCase):
 
     # Failure scenarios
     def test_add_bank_settlement_account_with_invalid_params_fails(self):
-        with self.assertRaises(TypeError):
-            TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "account_number",
-                "settlement_bank_id",
-                "settlement_bank_branch_id")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "settlement_method": 'EFT',
+            "account_number": 'account_number',
+            "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Bank Settlement Account.'):
+            TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload)
 
     # Mobile Wallet
     def test_add_mobile_wallet_settlement_account_succeeds(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "first_name": 'py_sdk_first_name',
+            "last_name": 'py_sdk_last_name',
+            "phone_number": '+254911222538',
+            "network": 'Safaricom'
+        }
         self.assertIsNotNone(
-            TransferTestCase.settlement_transfer_obj.add_mobile_wallet_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "py_sdk_first_name",
-                "py_sdk_last_name",
-                "+254712345678",
-                "Safaricom"))
+            TransferTestCase.settlement_transfer_obj.add_mobile_wallet_settlement_account(test_payload))
 
     def test_successful_add_mobile_wallet_settlement_account_returns_resource_url(self):
-        response = TransferTestCase.settlement_transfer_obj.add_mobile_wallet_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "py_sdk_first_name",
-                "py_sdk_last_name",
-                "+254712345678",
-                "Safaricom")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "first_name": 'py_sdk_first_name',
+            "last_name": 'py_sdk_last_name',
+            "phone_number": '+254911222538',
+            "network": 'Safaricom'
+        }
+        response = TransferTestCase.settlement_transfer_obj.add_mobile_wallet_settlement_account(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
             TransferTestCase.verified_settlement_url = response
         self.assertIsNone(TransferTestCase.validate(response))
@@ -131,29 +141,35 @@ class TransferTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
 
     # Failure scenarios
-    def test_add_mobile_wallet_settlement_account_with_invalid_phone_succeeds(self):
+    def test_add_mobile_wallet_settlement_account_with_invalid_phone_fails(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "first_name": 'py_sdk_first_name',
+            "last_name": 'py_sdk_last_name',
+            "phone_number": 'phone_number',
+            "network": 'Safaricom'
+        }
         with self.assertRaises(InvalidArgumentError):
-            TransferTestCase.settlement_transfer_obj.add_mobile_wallet_settlement_account(
-                TransferTestCase.ACCESS_TOKEN,
-                "py_sdk_first_name",
-                "py_sdk_last_name",
-                "phone",
-                "Safaricom")
+            TransferTestCase.settlement_transfer_obj.add_mobile_wallet_settlement_account(test_payload)
 
     # Transfer/Settle funds
     # Blind Transfer
     def test_blind_transfer_succeeds(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
         self.assertIsNotNone(
-            TransferTestCase.settlement_transfer_obj.settle_funds(
-                TransferTestCase.ACCESS_TOKEN,
-                'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                "3300"))
+            TransferTestCase.settlement_transfer_obj.settle_funds(test_payload))
 
     def test_successful_blind_transfer_transaction_returns_resource_url(self):
-        response = TransferTestCase.settlement_transfer_obj.settle_funds(
-                TransferTestCase.ACCESS_TOKEN,
-                'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                "3300")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
+        response = TransferTestCase.settlement_transfer_obj.settle_funds(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
             TransferTestCase.transfer_funds_url = response
         self.assertIsNone(TransferTestCase.validate(response))
@@ -170,15 +186,25 @@ class TransferTestCase(unittest.TestCase):
     # Targeted Transfer
     # Merchant Bank Account
     def test_targeted_transfer_to_merchant_bank_account_succeeds(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "destination_type": 'merchant_bank_account',
+            "destination_reference": '6ad03242-2c6e-4050-8e46-987cb74f5326',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
         self.assertIsNotNone(
-            TransferTestCase.settlement_transfer_obj.settle_funds(
-                TransferTestCase.ACCESS_TOKEN, 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                "3300", "merchant_bank_account", "6ad03242-2c6e-4050-8e46-987cb74f5326"))
+            TransferTestCase.settlement_transfer_obj.settle_funds(test_payload))
 
     def test_successful_targeted_transfer_to_merchant_bank_account_returns_resource_url(self):
-        response = TransferTestCase.settlement_transfer_obj.settle_funds(
-                TransferTestCase.ACCESS_TOKEN, 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                "3300", "merchant_bank_account", "6ad03242-2c6e-4050-8e46-987cb74f5326")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "destination_type": 'merchant_bank_account',
+            "destination_reference": '6ad03242-2c6e-4050-8e46-987cb74f5326',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
+        response = TransferTestCase.settlement_transfer_obj.settle_funds(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
             TransferTestCase.transfer_funds_url = response
         self.assertIsNone(TransferTestCase.validate(response))
@@ -196,15 +222,25 @@ class TransferTestCase(unittest.TestCase):
 
     # Merchant Wallet
     def test_targeted_transfer_to_merchant_wallet_succeeds(self):
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "destination_type": 'merchant_wallet',
+            "destination_reference": '+254947237528',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
         self.assertIsNotNone(
-            TransferTestCase.settlement_transfer_obj.settle_funds(
-                TransferTestCase.ACCESS_TOKEN, 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                "3300", "merchant_wallet", "+254947237528"))
+            TransferTestCase.settlement_transfer_obj.settle_funds(test_payload))
 
     def test_successful_targeted_transfer_to_merchant_wallet_returns_resource_url(self):
-        response = TransferTestCase.settlement_transfer_obj.settle_funds(
-                TransferTestCase.ACCESS_TOKEN, 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
-                "3300", "merchant_wallet", "+254947237528")
+        test_payload = {
+            "access_token": TransferTestCase.ACCESS_TOKEN,
+            "destination_type": 'merchant_wallet',
+            "destination_reference": '+254947237528',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
+        response = TransferTestCase.settlement_transfer_obj.settle_funds(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
             TransferTestCase.transfer_funds_url = response
         self.assertIsNone(TransferTestCase.validate(response))
