@@ -137,7 +137,7 @@ class PayTestCase(unittest.TestCase):
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_reference": '3344-effefnkka-132',
             "destination_type": 'mobile_wallet',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "currency": 'KES'
         }
@@ -148,7 +148,7 @@ class PayTestCase(unittest.TestCase):
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_reference": '3344-effefnkka-132',
             "destination_type": 'bank_account',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "currency": 'KES'
         }
@@ -159,7 +159,7 @@ class PayTestCase(unittest.TestCase):
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_reference": '3344-effefnkka-132',
             "destination_type": 'mobile_wallet',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "currency": 'KES'
         }
@@ -173,7 +173,7 @@ class PayTestCase(unittest.TestCase):
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_reference": '3344-effefnkka-132',
             "destination_type": 'bank_account',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "currency": 'KES'
         }
@@ -186,7 +186,7 @@ class PayTestCase(unittest.TestCase):
         response = requests.post(
             headers=PayTestCase.header,
             json=json_builder.pay("3344-effefnkka-132", "mobile_wallet", json_builder.amount('KES', 'python_sdk_value'),
-                                  json_builder.links("https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8"),
+                                  json_builder.links("https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d"),
                                   json_builder.metadata({"cId": '8_675_309', "notes": 'Salary payment May 2018'})),
             data=None,
             url=PayTestCase.pay_obj._build_url(pay.SEND_PAY_PATH))
@@ -196,7 +196,7 @@ class PayTestCase(unittest.TestCase):
         response = requests.post(
             headers=PayTestCase.header,
             json=json_builder.pay("3344-effefnkka-132", "bank_account", json_builder.amount('KES', 'python_sdk_value'),
-                                  json_builder.links("https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8"),
+                                  json_builder.links("https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d"),
                                   json_builder.metadata({"cId": '8_675_309', "notes": 'Salary payment May 2018'})),
             data=None,
             url=PayTestCase.pay_obj._build_url(pay.SEND_PAY_PATH))
@@ -207,7 +207,7 @@ class PayTestCase(unittest.TestCase):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_type": 'bank_account',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "currency": 'KES'
         }
@@ -218,7 +218,7 @@ class PayTestCase(unittest.TestCase):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_reference": '3344-effefnkka-132',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "currency": 'KES'
         }
@@ -230,7 +230,7 @@ class PayTestCase(unittest.TestCase):
             "access_token": PayTestCase.ACCESS_TOKEN,
             "destination_reference": '3344-effefnkka-132',
             "destination_type": 'mobile_wallet',
-            "callback_url": 'https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "currency": 'KES'
         }
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):

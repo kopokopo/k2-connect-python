@@ -30,33 +30,40 @@ class WebhookService(service.Service):
         """
         super(WebhookService, self).__init__(base_url)
 
-    def create_subscription(self,
-                            bearer_token,
-                            event_type,
-                            webhook_endpoint,
-                            webhook_secret,
-                            scope,
-                            scope_reference):
+    def create_subscription(self, kwargs):
         """
         Creates a subscription to a webhook service.
         Returns a request response object < class, 'requests.models.Response'>
         :param bearer_token: Access token to be used to make calls to
         the Kopo Kopo API
-        :type bearer_token: str
-        :param event_type:Type of subscription event. Should be one of:
-        buygoods_transaction_received, buygoods_transaction_reversed,
-        settlement_transfer_completed, customer_created
-        :type event_type:  str
-        :param webhook_endpoint: HTTP end point to send the webhook.
-        :type webhook_endpoint: str
-        :param webhook_secret: Secret used to encrypt the request payload using HMAC.
-        :type webhook_secret: str
-        :param scope: A string that will be used to specify whether account is at Till or Company level.
-        :type scope: str
-        :param scope_reference: A string that represents the account number (eg MPESA till number).
-        :type scope_reference: str
+        :param kwargs: The values constitute all user input.
+        :type kwargs: dict
         :return: requests.models.Response
         """
+        if 'access_token' not in kwargs:
+            raise exceptions.InvalidArgumentError('Access Token not given.')
+        if 'event_type' not in kwargs:
+            raise exceptions.InvalidArgumentError('Event Type not given.')
+
+        if 'webhook_endpoint' not in kwargs or \
+                'webhook_secret' not in kwargs or \
+                'scope' not in kwargs or \
+                'scope_reference' not in kwargs:
+            raise exceptions.InvalidArgumentError('Invalid arguments for creating a Webhook Subscription.')
+
+        if 'access_token' in kwargs:
+            bearer_token = kwargs['access_token']
+        if 'event_type' in kwargs:
+            event_type = kwargs['event_type']
+        if 'webhook_endpoint' in kwargs:
+            webhook_endpoint = kwargs['webhook_endpoint']
+        if 'webhook_secret' in kwargs:
+            webhook_secret = kwargs['webhook_secret']
+        if 'scope' in kwargs:
+            scope = kwargs['scope']
+        if 'scope_reference' in kwargs:
+            scope_reference = kwargs['scope_reference']
+
         # event types
         event_types_to_check = ['b2b_transaction_received',
                                 'buygoods_transaction_received',

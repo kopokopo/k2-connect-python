@@ -177,7 +177,7 @@ class TransferTestCase(unittest.TestCase):
     def test_successful_blind_transfer_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.transfers(json_builder.links('https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3'),
+            json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
                                         json_builder.amount('KES', "3300")),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.TRANSFER_PATH))
@@ -212,7 +212,7 @@ class TransferTestCase(unittest.TestCase):
     def test_successful_targeted_transfer_to_merchant_bank_account_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.transfers(json_builder.links('https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3'),
+            json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
                                         json_builder.amount('KES', "3300"),
                                         **{"destination_type": "merchant_bank_account",
                                            "destination_reference": "6ad03242-2c6e-4050-8e46-987cb74f5326"}),
@@ -248,7 +248,7 @@ class TransferTestCase(unittest.TestCase):
     def test_successful_targeted_transfer_to_merchant_wallet_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.transfers(json_builder.links('https://webhook.site/437a5819-1a9d-4e96-b403-a6f898e5bed3'),
+            json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
                                         json_builder.amount('KES', "3300"),
                                         **{"destination_type": "merchant_wallet",
                                            "destination_reference": "+254947237528"}),

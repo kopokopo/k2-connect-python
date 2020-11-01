@@ -65,7 +65,6 @@ class PayService(service.Service):
         Returns a request response object < class, 'requests.models.Response'>
         :param kwargs: The values constitute all user input.
         :type kwargs: dict
-
         :return:'requests.models.Response'
         """
         if 'access_token' not in kwargs:

@@ -31,7 +31,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
         response = requests.post(
             headers=ReceivePaymentTestCase.header,
             json=json_builder.mpesa_payment(
-                json_builder.links("https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8"),
+                json_builder.links("https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d"),
                 json_builder.amount('KES', 'python_sdk_value'),
                 json_builder.subscriber('first_name', 'last_name', "+254712345678", 'Null'),
                 'payment_channel', '112233'),
