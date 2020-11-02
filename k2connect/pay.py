@@ -13,6 +13,8 @@ SEND_PAY_PATH = "api/v1/payments"
 # PAY recipient types
 BANK_ACCOUNT_RECIPIENT_TYPE = "bank_account"
 MOBILE_WALLET_RECIPIENT_TYPE = "mobile_wallet"
+TILL_RECIPIENT_TYPE = "till"
+K2_MERCHANT_RECIPIENT_TYPE = "kopo_kopo_merchant"
 
 
 class PayService(service.Service):
@@ -94,31 +96,23 @@ class PayService(service.Service):
 
         # expected parameters for bank account wallet recipient
         if recipient_type == BANK_ACCOUNT_RECIPIENT_TYPE:
-            if 'first_name' not in kwargs or \
-                    'last_name' not in kwargs or \
-                    'account_name' not in kwargs or \
-                    'bank_ref' not in kwargs or \
-                    'bank_branch_ref' not in kwargs or \
+            if 'account_name' not in kwargs or \
                     'account_number' not in kwargs or \
-                    'phone_number' not in kwargs or \
-                    'email' not in kwargs:
-                raise exceptions.InvalidArgumentError('Invalid arguments for bank account')
+                    'settlement_method' not in kwargs or \
+                    'bank_branch_ref' not in kwargs:
+                raise exceptions.InvalidArgumentError('Invalid arguments for bank account Pay recipient')
 
             # build recipient json object
-            recipient_object = json_builder.bank_account(first_name=str(kwargs['first_name']),
-                                                         last_name=str(kwargs['last_name']),
-                                                         account_name=str(kwargs['account_name']),
+            recipient_object = json_builder.bank_account(account_name=str(kwargs['account_name']),
                                                          account_number=str(kwargs['account_number']),
-                                                         bank_ref=str(kwargs['bank_ref']),
-                                                         bank_branch_ref=str(kwargs['bank_branch_ref']),
-                                                         email=str(kwargs['email']),
-                                                         phone_number=str(kwargs['phone_number']))
+                                                         settlement_method=str(kwargs['settlement_method']),
+                                                         bank_branch_ref=str(kwargs['bank_branch_ref']))
             # build bank payment recipient json object
             payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
                                                                   recipient=recipient_object)
         # expected parameters for mobile wallet recipient
         # ['first_name', 'last_name',
-        # network','phone','email']
+        # network','phone_number','email']
 
         elif recipient_type == MOBILE_WALLET_RECIPIENT_TYPE:
             if 'first_name' not in kwargs or \
@@ -126,7 +120,7 @@ class PayService(service.Service):
                     'phone_number' not in kwargs or \
                     'email' not in kwargs or \
                     'network' not in kwargs:
-                raise exceptions.InvalidArgumentError('Invalid arguments for mobile wallet')
+                raise exceptions.InvalidArgumentError('Invalid arguments for mobile wallet Pay recipient')
 
             # create recipient json object
             recipient_object = json_builder.mobile_wallet(first_name=str(kwargs['first_name']),
@@ -138,6 +132,37 @@ class PayService(service.Service):
             # create mobile wallet recipient json object
             payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
                                                                   recipient=recipient_object)
+
+        elif recipient_type == TILL_RECIPIENT_TYPE:
+            if 'till_name' not in kwargs or \
+                    'till_number' not in kwargs:
+                raise exceptions.InvalidArgumentError('Invalid arguments for till Pay recipient')
+
+            # create recipient json object
+            recipient_object = json_builder.till_pay_recipient(till_name=str(kwargs['till_name']),
+                                                          till_number=str(kwargs['till_number']))
+
+            # create mobile wallet recipient json object
+            payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
+                                                                  recipient=recipient_object)
+        # expected parameters for mobile wallet recipient
+        # ['till_name', 'till_number']
+
+        elif recipient_type == K2_MERCHANT_RECIPIENT_TYPE:
+            if 'alias_name' not in kwargs or \
+                    'till_number' not in kwargs:
+                raise exceptions.InvalidArgumentError('Invalid arguments for Kopo Kopo Merchant Pay recipient')
+
+            # create recipient json object
+            recipient_object = json_builder.kopo_kopo_merchant_pay_recipient(alias_name=str(kwargs['alias_name']),
+                                                          till_number=str(kwargs['till_number']))
+
+            # create mobile wallet recipient json object
+            payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
+                                                                  recipient=recipient_object)
+        # expected parameters for mobile wallet recipient
+        # ['alias_name', 'till_number']
+
         else:
             raise exceptions.InvalidArgumentError('The recipient type is not recognized by k2connect')
 

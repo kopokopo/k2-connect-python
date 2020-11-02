@@ -41,14 +41,17 @@ INVALID_PHONE_MOBILE_PAY_RECIPIENT = {
 }
 
 BANK_PAY_RECIPIENT = {
-    "first_name": "bank_account_recipient_first_name",
-    "last_name": "bank_account_recipient_last_name",
+    "settlement_method": "EFT",
     "account_name": "bank_account_name",
-    "bank_ref": "21",
     "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
-    "account_number": "bank_account_number",
-    "email": "test@test.com",
-    "phone_number": "+254123456789"
+    "account_number": "bank_account_number"
+}
+
+BANK_PAY_RECIPIENT_RTS = {
+    "settlement_method": "RTS",
+    "account_name": "bank_account_name",
+    "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
+    "account_number": "bank_account_number"
 }
 
 INVALID_FIRST_NAME_BANK_PAY_RECIPIENT = {
