@@ -78,10 +78,8 @@ def amount(currency, value):
 
 def bank_account(account_name,
                  account_number,
-                 bank_ref,
+                 settlement_method,
                  bank_branch_ref,
-                 first_name,
-                 last_name,
                  **kwargs):
     """
     Returns a json formatted str with the optional value of email and phone.
@@ -92,12 +90,8 @@ def bank_account(account_name,
     :type account_number: str
     :param bank_branch_ref: Identifier identifying the destination bank branch.
     :type bank_branch_ref: str
-    :param bank_ref: Identifier identifying the destination bank
-    :type bank_ref: str
-    :param first_name: First Name of the receiving entity.
-    :type first_name: str
-    :param last_name: Last Name of the receiving entity.
-    :type last_name: str
+    :param settlement_method: Whether bank account can settle via EFT or RTS
+    :type settlement_method: str
     :param kwargs: Provision for optional 'email' and 'phone' information.
     :type kwargs: kwargs
     :return: str
@@ -105,34 +99,19 @@ def bank_account(account_name,
     # validate string arguments
     validation.validate_string_arguments(account_name,
                                          account_number,
-                                         bank_ref,
-                                         bank_branch_ref,
-                                         first_name,
-                                         last_name)
-    if 'email' not in kwargs:
-        email = 'Null'
-    else:
-        email = kwargs['email']
-    if 'phone' not in kwargs:
-        phone = 'Null'
-    else:
-        phone = kwargs['phone']
+                                         settlement_method,
+                                         bank_branch_ref)
 
     bank_account_object = {'account_name': account_name,
                            'account_number': account_number,
-                           'bank_ref': bank_ref,
-                           'bank_branch_ref': bank_branch_ref,
-                           'first_name': first_name,
-                           'last_name': last_name,
-                           'email': email,
-                           'phone': phone}
+                           'settlement_method': settlement_method,
+                           'bank_branch_ref': bank_branch_ref}
     return bank_account_object
 
 
 def bank_settlement_account(settlement_method,
                             account_name,
                             account_number,
-                            bank_ref,
                             bank_branch_ref):
     """
     Returns a json formatted str with bank settlement account information.
@@ -142,8 +121,6 @@ def bank_settlement_account(settlement_method,
     :type account_name: str
     :param account_number: The bank account number
     :type account_number: str
-    :param bank_ref: An identifier identifying the destination bank
-    :type bank_ref: str
     :param bank_branch_ref: An identifier identifying the destination bank branch
     :type bank_branch_ref: str
     """
@@ -151,13 +128,11 @@ def bank_settlement_account(settlement_method,
     validation.validate_string_arguments(settlement_method,
                                          account_name,
                                          account_number,
-                                         bank_ref,
                                          bank_branch_ref)
 
     bank_settlement_account_object = {'settlement_method': settlement_method,
                                       'account_name': account_name,
                                       'account_number': account_number,
-                                      'bank_ref': bank_ref,
                                       'bank_branch_ref': bank_branch_ref
                                       }
     return bank_settlement_account_object
@@ -249,6 +224,47 @@ def pay_recipient(recipient_type, recipient):
 
     recipient_object = {'type': recipient_type, 'pay_recipient': recipient}
     return recipient_object
+
+
+def till_pay_recipient(till_name, till_number):
+    """
+    Returns a json formatted str with the optional value of email.
+    Checks if optional value is present, else passes values as null.
+
+    :param till_name: First name of the recipient.
+    :type till_name: str
+    :param till_number: Last name of the recipient.
+    :type till_number: str
+    :return:
+    """
+    # validate string arguments
+    validation.validate_string_arguments(till_name,
+                                         till_number)
+
+    till_pay_recipient_object = {'till_name': till_name,
+                            'till_number': till_number
+                            }
+    return till_pay_recipient_object
+
+
+def kopo_kopo_merchant_pay_recipient(alias_name, till_number):
+    """
+    Returns a json formatted str with the optional value of email.
+    Checks if optional value is present, else passes values as null.
+
+    :param alias_name: First name of the recipient.
+    :type alias_name: str
+    :param till_number: Last name of the recipient.
+    :type till_number: str
+    :return:
+    """
+    # validate string arguments
+    validation.validate_string_arguments(alias_name, till_number)
+
+    k2_merchant_pay_recipient_object = {'alias_name': alias_name,
+                            'till_number': till_number
+                            }
+    return k2_merchant_pay_recipient_object
 
 
 def subscriber(first_name,

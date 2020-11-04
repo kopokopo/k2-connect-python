@@ -86,127 +86,153 @@ class WebhooksTestCase(unittest.TestCase):
 
     # Test that module successfully creates and sends the request
     def test_create_buygoods_webhook_succeeds(self):
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "buygoods_transaction_received",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233'))
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'buygoods_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
     def test_create_b2b_webhook_succeeds(self):
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "b2b_transaction_received",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233'))
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'b2b_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
     def test_create_buygoods_reversal_webhook_succeeds(self):
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "buygoods_transaction_reversed",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233'))
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'buygoods_transaction_reversed',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
     def test_create_customer_created_succeeds(self):
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "customer_created",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233'))
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'customer_created',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
     def test_create_settlement_transfer_webhook_succeeds(self):
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "settlement_transfer_completed",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233'))
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'settlement_transfer_completed',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
     def test_create_m2m_transaction_received_webhook_succeeds(self):
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "m2m_transaction_received",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233'))
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'm2m_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
     # Test it returns the resource_url
     def test_buygoods_webhook_subscription_returns_resource_url(self):
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "buygoods_transaction_received",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233')
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'buygoods_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_b2b_webhook_subscription_returns_resource_url(self):
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "b2b_transaction_received",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233')
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'b2b_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_buygoods_reversal_webhook_subscription_returns_resource_url(self):
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "buygoods_transaction_reversed",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233')
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'buygoods_transaction_reversed',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_customer_created_webhook_subscription_returns_resource_url(self):
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "customer_created",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233')
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'customer_created',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_settlement_transfer_webhook_subscription_returns_resource_url(self):
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "settlement_transfer_completed",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233')
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'settlement_transfer_completed',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
 
     def test_m2m_webhook_subscription_returns_resource_url(self):
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-            WebhooksTestCase.ACCESS_TOKEN,
-            "m2m_transaction_received",
-            "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-            SAMPLE_WEBHOOK_SECRET,
-            'Till',
-            '112233')
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'm2m_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
+        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
 
     # Test Failure scenarios
     def test_create_invalid_webhook_fails(self):
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'settlement',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
+            "scope": 'Till',
+            "scope_reference": '112233'
+        }
         with self.assertRaises(InvalidArgumentError):
-            webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(
-                WebhooksTestCase.ACCESS_TOKEN,
-                "settlement",
-                "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                SAMPLE_WEBHOOK_SECRET,
-                'Till',
-                '112233')
+            webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
