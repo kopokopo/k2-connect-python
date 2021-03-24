@@ -7,7 +7,7 @@ from k2connect import json_builder
 from k2connect import service
 from k2connect import validation
 
-WEBHOOK_SUBSCRIPTION_PATH = 'webhook-subscription'
+WEBHOOK_SUBSCRIPTION_PATH = 'api/v1/webhook_subscriptions'
 
 
 class WebhookService(service.Service):
@@ -30,32 +30,45 @@ class WebhookService(service.Service):
         """
         super(WebhookService, self).__init__(base_url)
 
-    def create_subscription(self,
-                            bearer_token,
-                            event_type,
-                            webhook_endpoint,
-                            webhook_secret):
+    def create_subscription(self, kwargs):
         """
         Creates a subscription to a webhook service.
         Returns a request response object < class, 'requests.models.Response'>
         :param bearer_token: Access token to be used to make calls to
         the Kopo Kopo API
-        :type bearer_token: str
-        :param event_type:Type of subscription event. Should be one of:
-        buygoods_transaction_received, buygoods_transaction_reversed,
-        settlement_transfer_completed, customer_created
-        :type event_type:  str
-        :param webhook_endpoint: HTTP end point to send the webhook.
-        :type webhook_endpoint: str
-        :param webhook_secret: Secret used to encrypt the request payload using HMAC.
-        :type webhook_secret: str
+        :param kwargs: The values constitute all user input.
+        :type kwargs: dict
         :return: requests.models.Response
         """
+        if 'access_token' not in kwargs:
+            raise exceptions.InvalidArgumentError('Access Token not given.')
+        if 'event_type' not in kwargs:
+            raise exceptions.InvalidArgumentError('Event Type not given.')
+
+        if 'webhook_endpoint' not in kwargs or \
+                'webhook_secret' not in kwargs or \
+                'scope' not in kwargs or \
+                'scope_reference' not in kwargs:
+            raise exceptions.InvalidArgumentError('Invalid arguments for creating a Webhook Subscription.')
+
+        if 'access_token' in kwargs:
+            bearer_token = kwargs['access_token']
+        if 'event_type' in kwargs:
+            event_type = kwargs['event_type']
+        if 'webhook_endpoint' in kwargs:
+            webhook_endpoint = kwargs['webhook_endpoint']
+        if 'webhook_secret' in kwargs:
+            webhook_secret = kwargs['webhook_secret']
+        if 'scope' in kwargs:
+            scope = kwargs['scope']
+        if 'scope_reference' in kwargs:
+            scope_reference = kwargs['scope_reference']
+
         # event types
         event_types_to_check = ['b2b_transaction_received',
                                 'buygoods_transaction_received',
                                 'buygoods_transaction_reversed',
-                                'merchant_to_merchant_transaction_received',
+                                'm2m_transaction_received',
                                 'settlement_transfer_completed',
                                 'customer_created'
                                 ]
@@ -63,13 +76,15 @@ class WebhookService(service.Service):
         subscription_url = self._build_url(WEBHOOK_SUBSCRIPTION_PATH)
 
         # define headers
-        headers = dict(self.headers)
+        headers = dict(self._headers)
 
         # validate string arguments
         validation.validate_string_arguments(bearer_token,
                                              event_type,
                                              webhook_endpoint,
-                                             webhook_secret)
+                                             webhook_secret,
+                                             scope,
+                                             scope_reference)
 
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
 
@@ -82,9 +97,24 @@ class WebhookService(service.Service):
         # define subscription payload
         subscription_payload = json_builder.webhook_subscription(event_type=event_type,
                                                                  webhook_endpoint=webhook_endpoint,
-                                                                 webhook_secret=webhook_secret)
+                                                                 webhook_secret=webhook_secret,
+                                                                 scope=scope,
+                                                                 scope_reference=scope_reference)
 
         return self._make_requests(headers=headers,
                                    method='POST',
                                    url=subscription_url,
                                    payload=subscription_payload)
+
+    def webhook_status(self, bearer_token, query_url):
+        """
+        Returns a JSON object result containing the transaction status.
+        :param bearer_token: Access token to be used to make calls to
+        the Kopo Kopo API.
+        :type bearer_token: str
+        :param query_url: URL to which status query is made.
+        :type query_url: str
+        :return str
+        """
+        return self._query_transaction_status(bearer_token=bearer_token,
+                                              query_url=query_url)

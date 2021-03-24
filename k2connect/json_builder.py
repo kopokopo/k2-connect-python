@@ -40,7 +40,7 @@ def metadata(join=None, **kwargs):
     if len(kwargs) >= 5:
         raise exceptions.InvalidArgumentError('Should be less than or 5 metadata objects')
     metadata_object = kwargs
-    return serializer(metadata_object)
+    return metadata_object
 
 
 def links(callback_url):
@@ -57,7 +57,7 @@ def links(callback_url):
     validation.validate_url(callback_url)
 
     links_object = {'callback_url': callback_url}
-    return serializer(links_object)
+    return links_object
 
 
 def amount(currency, value):
@@ -72,17 +72,14 @@ def amount(currency, value):
     # validate str arguments
     validation.validate_string_arguments(currency, value)
 
-    amount_object = {'currency': currency,
-                     'value': value
-                     }
-    return serializer(amount_object)
+    amount_object = {'currency': currency, 'value': value}
+    return amount_object
 
 
 def bank_account(account_name,
                  account_number,
-                 bank_branch_id,
-                 bank_id,
-                 name,
+                 settlement_method,
+                 bank_branch_ref,
                  **kwargs):
     """
     Returns a json formatted str with the optional value of email and phone.
@@ -91,12 +88,10 @@ def bank_account(account_name,
     :type account_name: str
     :param account_number: Bank account number.
     :type account_number: str
-    :param bank_branch_id: Identifier identifying the destination bank branch.
-    :type bank_branch_id: str
-    :param bank_id: Identifier identifying the destination bank
-    :type bank_id: str
-    :param name: Name of the receiving entity.
-    :type name: str
+    :param bank_branch_ref: Identifier identifying the destination bank branch.
+    :type bank_branch_ref: str
+    :param settlement_method: Whether bank account can settle via EFT or RTS
+    :type settlement_method: str
     :param kwargs: Provision for optional 'email' and 'phone' information.
     :type kwargs: kwargs
     :return: str
@@ -104,60 +99,77 @@ def bank_account(account_name,
     # validate string arguments
     validation.validate_string_arguments(account_name,
                                          account_number,
-                                         bank_branch_id,
-                                         bank_id,
-                                         name)
-    if 'email' not in kwargs:
-        email = 'Null'
-    else:
-        email = kwargs['email']
-    if 'phone' not in kwargs:
-        phone = 'Null'
-    else:
-        phone = kwargs['phone']
+                                         settlement_method,
+                                         bank_branch_ref)
 
     bank_account_object = {'account_name': account_name,
                            'account_number': account_number,
-                           'bank_branch_id': bank_branch_id,
-                           'bank_id': bank_id,
-                           'name': name,
-                           'email': email,
-                           'phone': phone}
-    return serializer(bank_account_object)
+                           'settlement_method': settlement_method,
+                           'bank_branch_ref': bank_branch_ref}
+    return bank_account_object
 
 
-def bank_settlement_account(account_name,
+def bank_settlement_account(settlement_method,
+                            account_name,
                             account_number,
-                            bank_ref,
                             bank_branch_ref):
     """
     Returns a json formatted str with bank settlement account information.
+    :param settlement_method: EFT or RTS method to transfer funds
+    :type settlement_method: str
     :param account_name: The name as indicated on the bank account name
     :type account_name: str
     :param account_number: The bank account number
     :type account_number: str
-    :param bank_ref: An identifier identifying the destination bank
-    :type bank_ref: str
     :param bank_branch_ref: An identifier identifying the destination bank branch
     :type bank_branch_ref: str
     """
     # validate string arguments
-    validation.validate_string_arguments(account_name,
+    validation.validate_string_arguments(settlement_method,
+                                         account_name,
                                          account_number,
-                                         bank_ref,
                                          bank_branch_ref)
 
-    bank_settlement_account_object = {'account_name': account_name,
+    bank_settlement_account_object = {'settlement_method': settlement_method,
+                                      'account_name': account_name,
                                       'account_number': account_number,
-                                      'bank_ref': bank_ref,
                                       'bank_branch_ref': bank_branch_ref
                                       }
-    return serializer(bank_settlement_account_object)
+    return bank_settlement_account_object
+
+
+def mobile_settlement_account(first_name,
+                              last_name,
+                              phone_number,
+                              network):
+    """
+    Returns a json formatted str with bank settlement account information.
+    :param first_name: First name of the recipient.
+    :type first_name: str
+    :param last_name: Last name of the recipient.
+    :type last_name: str
+    :param phone_number: The mobile phone number
+    :type phone_number: str
+    :param network: The bank account number
+    :type network: str
+    """
+    # validate string arguments
+    validation.validate_string_arguments(first_name,
+                                         last_name,
+                                         phone_number,
+                                         network)
+
+    mobile_settlement_account_object = {'first_name': first_name,
+                                        'last_name': last_name,
+                                        'phone_number': phone_number,
+                                        'network': network
+                                        }
+    return mobile_settlement_account_object
 
 
 def mobile_wallet(first_name,
                   last_name,
-                  phone,
+                  phone_number,
                   network,
                   **kwargs):
     """
@@ -168,8 +180,8 @@ def mobile_wallet(first_name,
     :type first_name: str
     :param last_name: Last name of the recipient.
     :type last_name: str
-    :param phone: Phone number of recipient.
-    :type phone: str
+    :param phone_number: Phone number of recipient.
+    :type phone_number: str
     :param network: The mobile network to which the phone number belongs.
     :type network: str
     :param kwargs: Provision for optional 'email' value
@@ -179,7 +191,7 @@ def mobile_wallet(first_name,
     # validate string arguments
     validation.validate_string_arguments(first_name,
                                          last_name,
-                                         phone,
+                                         phone_number,
                                          network)
 
     if 'email' not in kwargs:
@@ -189,11 +201,11 @@ def mobile_wallet(first_name,
 
     mobile_wallet_object = {'first_name': first_name,
                             'last_name': last_name,
-                            'phone': phone,
+                            'phone_number': phone_number,
                             'network': network,
                             'email': email
                             }
-    return serializer(mobile_wallet_object)
+    return mobile_wallet_object
 
 
 def pay_recipient(recipient_type, recipient):
@@ -208,15 +220,57 @@ def pay_recipient(recipient_type, recipient):
     :return: str
     """
     # validate string arguments
-    validation.validate_string_arguments(recipient, recipient_type)
+    validation.validate_string_arguments(*recipient, recipient_type)
 
     recipient_object = {'type': recipient_type, 'pay_recipient': recipient}
-    return serializer(recipient_object)
+    return recipient_object
+
+
+def till_pay_recipient(till_name, till_number):
+    """
+    Returns a json formatted str with the optional value of email.
+    Checks if optional value is present, else passes values as null.
+
+    :param till_name: First name of the recipient.
+    :type till_name: str
+    :param till_number: Last name of the recipient.
+    :type till_number: str
+    :return:
+    """
+    # validate string arguments
+    validation.validate_string_arguments(till_name,
+                                         till_number)
+
+    till_pay_recipient_object = {'till_name': till_name,
+                            'till_number': till_number
+                            }
+    return till_pay_recipient_object
+
+
+def kopo_kopo_merchant_pay_recipient(alias_name, till_number):
+    """
+    Returns a json formatted str with the optional value of email.
+    Checks if optional value is present, else passes values as null.
+
+    :param alias_name: First name of the recipient.
+    :type alias_name: str
+    :param till_number: Last name of the recipient.
+    :type till_number: str
+    :return:
+    """
+    # validate string arguments
+    validation.validate_string_arguments(alias_name, till_number)
+
+    k2_merchant_pay_recipient_object = {'alias_name': alias_name,
+                            'till_number': till_number
+                            }
+    return k2_merchant_pay_recipient_object
 
 
 def subscriber(first_name,
                last_name,
                phone,
+               email,
                **kwargs):
     """
     Returns JSON formatted str containing subscriber information
@@ -227,6 +281,8 @@ def subscriber(first_name,
     :param phone: Phone number of the subscriber from which the
     pay will be made
     :type phone: str
+    :param email: Email of the subscriber
+    :type email: str
     :param kwargs: Provision for optional 'email' information.
     :type kwargs: str
     :return: str
@@ -235,17 +291,20 @@ def subscriber(first_name,
     validation.validate_string_arguments(first_name,
                                          last_name,
                                          phone)
-    if 'email' not in kwargs:
-        email = 'Null'
-    else:
-        email = kwargs['email']
+    if email != "Null":
+        validation.validate_email(email)
+
+    # if 'email' not in kwargs:
+    #     email = 'Null'
+    # else:
+    #     email = kwargs['email']
 
     subscriber_object = {'first_name': first_name,
                          'last_name': last_name,
                          'phone': phone,
                          'email': email}
 
-    return serializer(subscriber_object)
+    return subscriber_object
 
 
 def mpesa_payment(mpesa_links,
@@ -272,11 +331,11 @@ def mpesa_payment(mpesa_links,
     """
 
     # validate string arguments
-    validation.validate_string_arguments(mpesa_links,
-                                         mpesa_payment_amount,
-                                         mpesa_payment_subscriber,
-                                         payment_channel,
-                                         till_number)
+    validation.validate_string_arguments(*mpesa_links,
+                                         *mpesa_payment_amount,
+                                         *mpesa_payment_subscriber,
+                                         *payment_channel,
+                                         *till_number)
 
     if 'metadata' not in kwargs:
         mpesa_payment_metadata = 'Null'
@@ -291,12 +350,14 @@ def mpesa_payment(mpesa_links,
                             '_links': mpesa_links
                             }
 
-    return serializer(mpesa_payment_object)
+    return mpesa_payment_object
 
 
 def webhook_subscription(event_type,
                          webhook_endpoint,
-                         webhook_secret):
+                         webhook_secret,
+                         scope,
+                         scope_reference):
     """
     Returns JSON formatted str containing webhook subscription information
     :param event_type:The type of event subscribed to.
@@ -306,29 +367,40 @@ def webhook_subscription(event_type,
     :param webhook_secret: A string that will be used to encrypt the request
     payload using HMAC.
     :type webhook_secret: str
+    :param scope: A string that will be used to specify whether account is at Till or Company level.
+    :type scope: str
+    :param scope_reference: A string that represents the account number (eg MPESA till number).
+    :type scope_reference: str
     :return: str
     """
 
     # validate string arguments
     validation.validate_string_arguments(event_type,
                                          webhook_endpoint,
-                                         webhook_secret)
+                                         webhook_secret,
+                                         scope,
+                                         scope_reference)
 
     webhook_subscription_object = {'event_type': event_type,
                                    'url': webhook_endpoint,
-                                   'webhook_secret': webhook_secret
+                                   'secret': webhook_secret,
+                                   'scope': scope,
+                                   'scope_reference': scope_reference
                                    }
-    return serializer(webhook_subscription_object)
+    return webhook_subscription_object
 
 
-def pay(payment_destination,
+def pay(destination_reference,
+        destination_type,
         payment_amount,
-        payment_metadata,
-        payment_links):
+        payment_links,
+        payment_metadata):
     """
     Return JSON formatted str containing information about a transfer.
-    :param payment_destination: ID of the destination of funds.
-    :type payment_destination : str
+    :param destination_reference: reference for the pay_recipient account.
+    :type destination_reference : str
+    :param destination_type: Differentiate between mobile and bank account type for recipient
+    :type destination_type : str
     :param payment_amount: A JSON formatted str containing the currency
     and the amount to be transferred.
     :type payment_amount: str
@@ -341,40 +413,50 @@ def pay(payment_destination,
     """
 
     # validate string arguments
-    validation.validate_string_arguments(payment_destination,
-                                         payment_amount,
-                                         payment_metadata,
-                                         payment_links)
+    validation.validate_string_arguments(*destination_reference,
+                                         *destination_type,
+                                         *payment_amount,
+                                         *payment_links,
+                                         *payment_metadata)
 
     payment_json_object = {
-        "destination": payment_destination,
+        "destination_reference": destination_reference,
+        "destination_type": destination_type,
         "amount": payment_amount,
         "metadata": payment_metadata,
         "_links": payment_links
     }
-    return serializer(payment_json_object)
+    return payment_json_object
 
 
-def transfers(transfers_amount,
+def transfers(transfer_links, transfers_amount,
               **kwargs):
     """
     Returns JSON formatted containing information about a transfer.
     :param transfers_amount: Amount to be transferred.
     :type transfers_amount: str
+    :param transfer_links: Links containing Callback URL.
+    :type transfer_links: str
     :param kwargs: Provision for optional 'destination' value.
     :type kwargs: str
     :return: str
     """
-
     # validate string arguments
-    validation.validate_string_arguments(transfers_amount)
+    validation.validate_string_arguments(*transfer_links, *transfers_amount)
 
-    if 'transfer_destination' not in kwargs:
-        destination = 'Null'
+    if 'destination_type' not in kwargs:
+        destination_type = None
     else:
-        destination = kwargs['transfer_destination']
+        destination_type = kwargs['destination_type']
+
+    if 'destination_reference' not in kwargs:
+        destination_reference = None
+    else:
+        destination_reference = kwargs['destination_reference']
 
     transfers_object = {'amount': transfers_amount,
-                        'destination': destination
+                        'destination_reference': destination_reference,
+                        'destination_type': destination_type,
+                        '_links': transfer_links
                         }
-    return serializer(transfers_object)
+    return transfers_object
