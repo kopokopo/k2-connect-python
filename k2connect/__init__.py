@@ -3,6 +3,10 @@ This module handles the initialization of the k2connect library.
 It takes a client id, secret and base url and initializes all k2connect
 services as with appropriate required arguments.
 """
+# TODO: Remember to remove http from validation
+# TODO: David-dev branch is the one that is behind use the development branch which is the updated one
+from k2connect import exceptions
+
 import k2connect
 
 from .authorization import TokenService
@@ -54,4 +58,5 @@ def initialize(client_id, client_secret, base_url):
     globals()['Webhooks'] = WebhookService(base_url=base_url)
 
     # initialize response processor
-    globals()['ResultHandler'] = ResultProcessor(base_url=base_url)
+    globals()['ResultHandler'] = ResultProcessor(base_url=base_url,
+                                                 client_secret=client_secret)

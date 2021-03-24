@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--metadata-->
+	<meta charset="UTF-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!--website logo-->
+	<link href="../static/img/muffin.png" rel="icon">
+    <!--title-->
+	<title>Muffin</title>
+    <!--bootstrap css-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--custom css-->
+	<link href="../static/css/style.css" rel="stylesheet">
+    <!--jquery for menu animation-->
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!--clipboard js for copy to clipboard feature-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- Sidebar -->
+		<div id="sidebar-wrapper">
+			<!--dashboard logo-->
+			<div class="sidebar-header">
+				<a href="#"><img alt="" height="75" src="../static/img/muffin.png" width="75"></a>
+			</div>
+			<ul class="sidebar-nav components">
+				<!--welcome-->
+				<li>
+					<a href="http://localhost:5000/#welcome-section">Welcome</a>
+				</li>
+                <!--authentication-->
+				<li>
+					<a href="http://localhost:5000/#token-section">Tokens</a>
+				</li>
+                <!--bills-->
+				<li>
+					<a href="http://localhost:5000/#bills-section">Bills</a>
+				</li>
+                <!--payments-->
+				<li>
+					<a href="http://localhost:5000/#payments-section">Payments</a>
+				</li>
+                <!--settlements-->
+				<li>
+					<a href="http://localhost:5000/#settlements-section">Settlements</a>
+				</li>
+                <!--webhooks-->
+				<li>
+					<a href="http://localhost:5000/#webhooks-section">Webhooks</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+    <div class="container">
+        <!--payments sections header-->
+        <div class="section-header">
+            <h2>Settlements</h2>
+        </div>
+        <!--close payments sections header-->
+
+        <div class="row">
+            <div class="col-lg-9">
+            <!--resource sub-section-header-->
+            <div class="sub-section-header">
+                <h5>Resource Returned</h5>
+            </div>
+            <!--close supplier sub-section-header-->
+            <!--resource location table-->
+            <div class="table-responsive table-striped">
+                <table class="table">
+                    <thead style="background: #17a2b8; color: white">
+                    <tr>
+                        <th>Resource Location URL</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                        <td>{{ resource_location_url }}</td>
+                    </tr>
+                </table>
+            </div>
+            <!--close resource location table-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+            /*handle menu toggle*/
+	         $("#menu-toggle").click(function(e) {
+	             e.preventDefault();
+	             $("#wrapper").toggleClass("toggled");
+	         });
+	</script>
+
+    <!--solid js fontawesome lib-->
+	<script defer src="https://use.fontawesome.com/releases/v5.8.1/js/solid.js"></script>
+    <!--fontawesome js for icons-->
+    <script defer src="https://use.fontawesome.com/releases/v5.8.1/js/fontawesome.js"></script>
+    <!--bootstrap js-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

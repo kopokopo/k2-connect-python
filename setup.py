@@ -5,7 +5,7 @@ with open("README.md", "r") as file_header:
 
 setuptools.setup(
     name='k2-connect',
-    version='0.0.7.dev2',
+    version='0.0.7.dev3',
     author='Philip Wafula',
     author_email='philipwafula2@gmail.com',
     description='A python SDK to connect to Kopo Kopo API',
