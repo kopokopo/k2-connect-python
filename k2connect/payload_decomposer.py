@@ -193,16 +193,17 @@ def payment_decompose(decomposer, data_payload_nest, payments_result_type, payme
         decomposer.event_type = payments_events_payload_nest['type']
         # incoming payments resource payload
         payments_resource_payload_nest = payments_events_payload_nest['resource']
-        decomposer.transaction_ref = payments_resource_payload_nest['transaction_reference']
+        decomposer.reference = payments_resource_payload_nest['reference']
         decomposer.origination_time = payments_resource_payload_nest['origination_time']
-        decomposer.sender_msisdn = payments_resource_payload_nest['sender_msisdn']
+        decomposer.sender_phone_number = payments_resource_payload_nest['sender_phone_number']
         decomposer.amount = payments_resource_payload_nest['amount']
         decomposer.currency = payments_resource_payload_nest['currency']
-        decomposer.till_identifier = payments_resource_payload_nest['till_identifier']
+        decomposer.till_number = payments_resource_payload_nest['till_number']
         decomposer.system = payments_resource_payload_nest['system']
         decomposer.resource_status = payments_resource_payload_nest['status']
-        decomposer.sender_first_name = payments_resource_payload_nest['sender_first_name']
         decomposer.sender_last_name = payments_resource_payload_nest['sender_last_name']
+        decomposer.sender_first_name = payments_resource_payload_nest['sender_first_name']
+        decomposer.sender_middle_name = payments_resource_payload_nest['sender_middle_name']
 
     # decompose all values that are common to the PAY (OUTGOING PAYMENTS) and TRANSFER service
     if payments_result_type == CREATE_PAYMENT \
@@ -215,10 +216,10 @@ def payment_decompose(decomposer, data_payload_nest, payments_result_type, payme
     if payments_result_type == CREATE_PAYMENT:
         decomposer.transaction_ref = payments_attributes_payload_nest['transaction_reference']
         decomposer.destination = payments_attributes_payload_nest['destination']
-        decomposer.metadata = payments_attributes_payload_nest['meta_data']
+        decomposer.metadata = payments_attributes_payload_nest['metadata']
 
     # decompose all values that are in the Transfer service (Settlement Transfer Result)
     if payments_result_type == TRANSFER:
+        decomposer.metadata = payments_attributes_payload_nest['metadata']
         decomposer.destination_type = payments_attributes_payload_nest['destination_type']
         decomposer.destination_reference = payments_attributes_payload_nest['destination_reference']
-        decomposer.metadata = payments_attributes_payload_nest['metadata']
