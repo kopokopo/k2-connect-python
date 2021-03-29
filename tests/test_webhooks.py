@@ -29,7 +29,7 @@ class WebhooksTestCase(unittest.TestCase):
             headers=WebhooksTestCase.header,
             json=json_builder.webhook_subscription("buygoods_transaction_received",
                                                    "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+                                                   'till', '112233'),
             data=None,
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
@@ -39,7 +39,7 @@ class WebhooksTestCase(unittest.TestCase):
             headers=WebhooksTestCase.header,
             json=json_builder.webhook_subscription("b2b_transaction_received",
                                                    "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+                                                   'till', '112233'),
             data=None,
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
@@ -49,7 +49,7 @@ class WebhooksTestCase(unittest.TestCase):
             headers=WebhooksTestCase.header,
             json=json_builder.webhook_subscription("buygoods_transaction_reversed",
                                                    "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+                                                   'till', '112233'),
             data=None,
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
@@ -59,7 +59,7 @@ class WebhooksTestCase(unittest.TestCase):
             headers=WebhooksTestCase.header,
             json=json_builder.webhook_subscription("customer_created",
                                                    "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+                                                   'company'),
             data=None,
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
@@ -69,7 +69,7 @@ class WebhooksTestCase(unittest.TestCase):
             headers=WebhooksTestCase.header,
             json=json_builder.webhook_subscription("settlement_transfer_completed",
                                                    "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+                                                   'company'),
             data=None,
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
@@ -79,7 +79,7 @@ class WebhooksTestCase(unittest.TestCase):
             headers=WebhooksTestCase.header,
             json=json_builder.webhook_subscription("m2m_transaction_received",
                                                    "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   SAMPLE_WEBHOOK_SECRET, 'Till', '112233'),
+                                                   'company'),
             data=None,
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
@@ -90,8 +90,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'buygoods_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
+            "scope": 'till',
             "scope_reference": '112233'
         }
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
@@ -101,8 +100,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'b2b_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
+            "scope": 'till',
             "scope_reference": '112233'
         }
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
@@ -112,8 +110,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'buygoods_transaction_reversed',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
+            "scope": 'till',
             "scope_reference": '112233'
         }
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
@@ -123,9 +120,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'customer_created',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
-            "scope_reference": '112233'
+            "scope": 'company'
         }
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
@@ -134,9 +129,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'settlement_transfer_completed',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
-            "scope_reference": '112233'
+            "scope": 'company'
         }
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
@@ -145,9 +138,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'm2m_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
-            "scope_reference": '112233'
+            "scope": 'company'
         }
         self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
 
@@ -157,8 +148,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'buygoods_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
+            "scope": 'till',
             "scope_reference": '112233'
         }
         response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
@@ -169,8 +159,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'b2b_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
+            "scope": 'till',
             "scope_reference": '112233'
         }
         response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
@@ -181,8 +170,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'buygoods_transaction_reversed',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
+            "scope": 'till',
             "scope_reference": '112233'
         }
         response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
@@ -193,9 +181,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'customer_created',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
-            "scope_reference": '112233'
+            "scope": 'company'
         }
         response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
@@ -205,9 +191,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'settlement_transfer_completed',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
-            "scope_reference": '112233'
+            "scope": 'company'
         }
         response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
@@ -217,9 +201,7 @@ class WebhooksTestCase(unittest.TestCase):
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'm2m_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "webhook_secret": SAMPLE_WEBHOOK_SECRET,
-            "scope": 'Till',
-            "scope_reference": '112233'
+            "scope": 'company'
         }
         response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
         self.assertIsNone(WebhooksTestCase.validate(response))
@@ -235,4 +217,35 @@ class WebhooksTestCase(unittest.TestCase):
             "scope_reference": '112233'
         }
         with self.assertRaises(InvalidArgumentError):
+            webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
+
+    def test_create_invalid_till_scope_webhook_fails(self):
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'b2b_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "scope": 'company'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, "Invalid scope for given event type."):
+            webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
+
+    def test_create_till_scope_webhook_with_no_scope_reference_fails(self):
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'b2b_transaction_received',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "scope": 'till'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, 'Scope reference not given.'):
+            webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
+
+    def test_create_invalid_company_scope_webhook_fails(self):
+        test_payload = {
+            "access_token": WebhooksTestCase.ACCESS_TOKEN,
+            "event_type": 'settlement_transfer_completed',
+            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "scope": 'till',
+            "scope_reference": '112233'
+        }
+        with self.assertRaisesRegex(InvalidArgumentError, "Invalid scope for given event type."):
             webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
