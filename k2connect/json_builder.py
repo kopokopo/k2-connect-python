@@ -355,18 +355,14 @@ def mpesa_payment(mpesa_links,
 
 def webhook_subscription(event_type,
                          webhook_endpoint,
-                         webhook_secret,
                          scope,
-                         scope_reference):
+                         scope_reference=None):
     """
     Returns JSON formatted str containing webhook subscription information
     :param event_type:The type of event subscribed to.
     :type event_type:  str
     :param webhook_endpoint: The HTTP end point to send the webhook.
     :type webhook_endpoint: str
-    :param webhook_secret: A string that will be used to encrypt the request
-    payload using HMAC.
-    :type webhook_secret: str
     :param scope: A string that will be used to specify whether account is at Till or Company level.
     :type scope: str
     :param scope_reference: A string that represents the account number (eg MPESA till number).
@@ -377,13 +373,12 @@ def webhook_subscription(event_type,
     # validate string arguments
     validation.validate_string_arguments(event_type,
                                          webhook_endpoint,
-                                         webhook_secret,
-                                         scope,
-                                         scope_reference)
+                                         scope)
+    if scope_reference is not None:
+        validation.validate_string_arguments(scope_reference)
 
     webhook_subscription_object = {'event_type': event_type,
                                    'url': webhook_endpoint,
-                                   'secret': webhook_secret,
                                    'scope': scope,
                                    'scope_reference': scope_reference
                                    }
