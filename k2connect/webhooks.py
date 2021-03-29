@@ -46,9 +46,7 @@ class WebhookService(service.Service):
             raise exceptions.InvalidArgumentError('Event Type not given.')
 
         if 'webhook_endpoint' not in kwargs or \
-                'webhook_secret' not in kwargs or \
-                'scope' not in kwargs or \
-                'scope_reference' not in kwargs:
+                'scope' not in kwargs:
             raise exceptions.InvalidArgumentError('Invalid arguments for creating a Webhook Subscription.')
 
         if 'access_token' in kwargs:
@@ -57,21 +55,18 @@ class WebhookService(service.Service):
             event_type = kwargs['event_type']
         if 'webhook_endpoint' in kwargs:
             webhook_endpoint = kwargs['webhook_endpoint']
-        if 'webhook_secret' in kwargs:
-            webhook_secret = kwargs['webhook_secret']
         if 'scope' in kwargs:
             scope = kwargs['scope']
         if 'scope_reference' in kwargs:
             scope_reference = kwargs['scope_reference']
 
         # event types
-        event_types_to_check = ['b2b_transaction_received',
-                                'buygoods_transaction_received',
-                                'buygoods_transaction_reversed',
-                                'm2m_transaction_received',
-                                'settlement_transfer_completed',
-                                'customer_created'
-                                ]
+        event_types_to_check = ['b2b_transaction_received', 'buygoods_transaction_received',
+                                'buygoods_transaction_reversed', 'm2m_transaction_received',
+                                'settlement_transfer_completed', 'customer_created']
+        till_scope_event_types = ['b2b_transaction_received', 'buygoods_transaction_received',
+                                  'buygoods_transaction_reversed']
+
         # build subscription url
         subscription_url = self._build_url(WEBHOOK_SUBSCRIPTION_PATH)
 
@@ -82,22 +77,35 @@ class WebhookService(service.Service):
         validation.validate_string_arguments(bearer_token,
                                              event_type,
                                              webhook_endpoint,
-                                             webhook_secret,
-                                             scope,
-                                             scope_reference)
+                                             scope)
+
+        if 'scope_reference' in kwargs:
+            validation.validate_string_arguments(scope_reference)
 
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
 
         if not any(check in event_type for check in event_types_to_check):
             raise exceptions.InvalidArgumentError('Event type not recognized by k2-connect')
 
+        if any(check in event_type for check in till_scope_event_types):
+            if scope is not 'till':
+                raise exceptions.InvalidArgumentError('Invalid scope for given event type.')
+            if 'scope_reference' not in kwargs:
+                raise exceptions.InvalidArgumentError('Scope reference not given.')
+
+        if not any(check in event_type for check in till_scope_event_types):
+            scope_reference = None
+            if scope is not 'company':
+                raise exceptions.InvalidArgumentError('Invalid scope for given event type.')
+            if 'scope_reference' in kwargs:
+                raise exceptions.InvalidArgumentError('Invalid scope reference for given event type.')
+
         # validate webhook endpoint
         validation.validate_url(webhook_endpoint)
-        
+
         # define subscription payload
         subscription_payload = json_builder.webhook_subscription(event_type=event_type,
                                                                  webhook_endpoint=webhook_endpoint,
-                                                                 webhook_secret=webhook_secret,
                                                                  scope=scope,
                                                                  scope_reference=scope_reference)
 
