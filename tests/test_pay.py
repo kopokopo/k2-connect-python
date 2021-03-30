@@ -38,7 +38,7 @@ class PayTestCase(unittest.TestCase):
         response = requests.post(
             headers=PayTestCase.header,
             json=json_builder.pay_recipient("mobile_wallet",
-                                            json_builder.mobile_wallet("first_name", "last_name", "254900112501",
+                                            json_builder.mobile_wallet("first_name", "last_name", "9764ef5f-fcd6-42c1-bbff-de280becc64b",
                                                                        "safaricom")),
             data=None,
             url=PayTestCase.pay_obj._build_url(pay.ADD_PAY_PATH))
@@ -89,9 +89,8 @@ class PayTestCase(unittest.TestCase):
         response = requests.post(
             headers=PayTestCase.header,
             json=json_builder.pay_recipient("bank_account",
-                                            json_builder.bank_account("David Kariuki Python", "566566",
-                                                                      "21", "633aa26c-7b7c-4091-ae28-96c0687cf886",
-                                                                      "first_name", "last_name", )),
+                                            json_builder.bank_account(account_name="David Kariuki Python", account_number="566566", settlement_method="EFT",
+                                                                      bank_branch_ref="633aa26c-7b7c-4091-ae28-96c0687cf886", )),
             data=None,
             url=PayTestCase.pay_obj._build_url(pay.ADD_PAY_PATH))
         self.assertEqual(response.status_code, 201)
@@ -135,7 +134,7 @@ class PayTestCase(unittest.TestCase):
     def test_send_pay_to_mobile_wallet_succeeds(self):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
-            "destination_reference": '3344-effefnkka-132',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
             "destination_type": 'mobile_wallet',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
@@ -146,7 +145,7 @@ class PayTestCase(unittest.TestCase):
     def test_create_pay_to_bank_account_succeeds(self):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
-            "destination_reference": '3344-effefnkka-132',
+            "destination_reference": 'c533cb60-8501-440d-8150-7eaaff84616a',
             "destination_type": 'bank_account',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
@@ -157,7 +156,7 @@ class PayTestCase(unittest.TestCase):
     def test_create_pay_to_mobile_wallet_returns_resource_url(self):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
-            "destination_reference": '3344-effefnkka-132',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
             "destination_type": 'mobile_wallet',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
@@ -171,7 +170,7 @@ class PayTestCase(unittest.TestCase):
     def test_create_pay_to_bank_account_returns_resource_url(self):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
-            "destination_reference": '3344-effefnkka-132',
+            "destination_reference": 'c533cb60-8501-440d-8150-7eaaff84616a',
             "destination_type": 'bank_account',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
@@ -185,7 +184,7 @@ class PayTestCase(unittest.TestCase):
     def test_successful_create_pay_request_to_mobile_wallet(self):
         response = requests.post(
             headers=PayTestCase.header,
-            json=json_builder.pay("3344-effefnkka-132", "mobile_wallet", json_builder.amount('KES', 'python_sdk_value'),
+            json=json_builder.pay("9764ef5f-fcd6-42c1-bbff-de280becc64b", "mobile_wallet", json_builder.amount('KES', 'python_sdk_value'),
                                   json_builder.links("https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d"),
                                   json_builder.metadata({"cId": '8_675_309', "notes": 'Salary payment May 2018'})),
             data=None,
@@ -195,7 +194,7 @@ class PayTestCase(unittest.TestCase):
     def test_successful_create_pay_request_to_bank_account(self):
         response = requests.post(
             headers=PayTestCase.header,
-            json=json_builder.pay("3344-effefnkka-132", "bank_account", json_builder.amount('KES', 'python_sdk_value'),
+            json=json_builder.pay("c533cb60-8501-440d-8150-7eaaff84616a", "bank_account", json_builder.amount('KES', 'python_sdk_value'),
                                   json_builder.links("https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d"),
                                   json_builder.metadata({"cId": '8_675_309', "notes": 'Salary payment May 2018'})),
             data=None,
@@ -228,7 +227,7 @@ class PayTestCase(unittest.TestCase):
     def test_send_pay_without_amount_fails(self):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
-            "destination_reference": '3344-effefnkka-132',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
             "destination_type": 'mobile_wallet',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "currency": 'KES'
@@ -239,7 +238,7 @@ class PayTestCase(unittest.TestCase):
     def test_send_pay_with_invalid_callback_fails(self):
         test_payload = {
             "access_token": PayTestCase.ACCESS_TOKEN,
-            "destination_reference": '3344-effefnkka-132',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
             "destination_type": 'mobile_wallet',
             "amount": '10',
             "currency": 'KES'
