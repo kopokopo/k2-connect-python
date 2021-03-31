@@ -1,7 +1,3 @@
-# DISCLAIMER!!
-
-The following library has yet to be finalised to production, and as such, neither consumable nor usable as a python library.
-
 # k2-connect-python
 
 k2-connect is a Python library for accessing the Kopo Kopo APIs.
