@@ -189,7 +189,7 @@ class TransferTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "destination_type": 'merchant_bank_account',
-            "destination_reference": '6ad03242-2c6e-4050-8e46-987cb74f5326',
+            "destination_reference": '87bbfdcf-fb59-4d8e-b039-b85b97015a7e',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "value": '10',
         }
@@ -200,7 +200,7 @@ class TransferTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "destination_type": 'merchant_bank_account',
-            "destination_reference": '6ad03242-2c6e-4050-8e46-987cb74f5326',
+            "destination_reference": '87bbfdcf-fb59-4d8e-b039-b85b97015a7e',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "value": '10',
         }
@@ -215,7 +215,7 @@ class TransferTestCase(unittest.TestCase):
             json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
                                         json_builder.amount('KES', "3300"),
                                         **{"destination_type": "merchant_bank_account",
-                                           "destination_reference": "6ad03242-2c6e-4050-8e46-987cb74f5326"}),
+                                           "destination_reference": "87bbfdcf-fb59-4d8e-b039-b85b97015a7e"}),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.TRANSFER_PATH))
         self.assertEqual(response.status_code, 201)
@@ -225,7 +225,7 @@ class TransferTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "destination_type": 'merchant_wallet',
-            "destination_reference": '+254947237528',
+            "destination_reference": 'eba238ae-e03f-46f6-aed5-db357fb00f9c',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "value": '10',
         }
@@ -236,7 +236,7 @@ class TransferTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "destination_type": 'merchant_wallet',
-            "destination_reference": '+254947237528',
+            "destination_reference": 'eba238ae-e03f-46f6-aed5-db357fb00f9c',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "value": '10',
         }
@@ -251,7 +251,7 @@ class TransferTestCase(unittest.TestCase):
             json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
                                         json_builder.amount('KES', "3300"),
                                         **{"destination_type": "merchant_wallet",
-                                           "destination_reference": "+254947237528"}),
+                                           "destination_reference": "eba238ae-e03f-46f6-aed5-db357fb00f9c"}),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.TRANSFER_PATH))
         self.assertEqual(response.status_code, 201)
