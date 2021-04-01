@@ -301,7 +301,7 @@ def subscriber(first_name,
 
     subscriber_object = {'first_name': first_name,
                          'last_name': last_name,
-                         'phone': phone,
+                         'phone_number': phone,
                          'email': email}
 
     return subscriber_object
@@ -338,12 +338,12 @@ def mpesa_payment(mpesa_links,
                                          *till_number)
 
     if 'metadata' not in kwargs:
-        mpesa_payment_metadata = 'Null'
+        mpesa_payment_metadata = {}
     else:
         mpesa_payment_metadata = kwargs['metadata']
 
     mpesa_payment_object = {'payment_channel': payment_channel,
-                            'till_identifier': till_number,
+                            'till_number': till_number,
                             'subscriber': mpesa_payment_subscriber,
                             'amount': mpesa_payment_amount,
                             'metadata': mpesa_payment_metadata,

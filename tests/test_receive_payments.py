@@ -34,7 +34,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
                 json_builder.links("https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d"),
                 json_builder.amount('KES', 'python_sdk_value'),
                 json_builder.subscriber('first_name', 'last_name', "+254712345678", 'Null'),
-                'payment_channel', '112233'),
+                'payment_channel', 'K112233'),
             data=None,
             url=ReceivePaymentTestCase.incoming_payments_obj._build_url(
                 receive_payments.CREATE_RECEIVE_MPESA_PAYMENT_PATH))
@@ -49,7 +49,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
             "email": "daivd.j.kariuki@gmail.com",
             "payment_channel": "MPESA",
             "phone_number": "+254911222536",
-            "till_number": "112233",
+            "till_number": "K112233",
             "amount": "10"
         }
         self.assertIsNotNone(
@@ -64,7 +64,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
             "email": "daivd.j.kariuki@gmail.com",
             "payment_channel": "MPESA",
             "phone_number": "+254911222536",
-            "till_number": "112233",
+            "till_number": "K112233",
             "amount": "10"
         }
         response = ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
@@ -81,7 +81,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
                 "email": "daivd.j.kariuki@gmail.com",
                 "payment_channel": "MPESA",
                 "phone_number": "+254911222536",
-                "till_number": "112233",
+                "till_number": "K112233",
                 "amount": "10"
             }
             ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
@@ -95,7 +95,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
                 "email": "daivd.j.kariuki@gmail.com",
                 "payment_channel": "MPESA",
                 "phone_number": "+254911222536",
-                "till_number": "112233",
+                "till_number": "K112233",
                 "amount": "10"
             }
             ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
@@ -111,7 +111,7 @@ class ReceivePaymentTestCase(unittest.TestCase):
                     "email": "daivd.j.kariuki@gmail.com",
                     "payment_channel": "MPESA",
                     "phone_number": "254911222536",
-                    "till_number": "112233",
+                    "till_number": "K112233",
                     "amount": "10"
                 })
 
