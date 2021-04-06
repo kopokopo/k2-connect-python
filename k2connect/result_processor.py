@@ -20,13 +20,13 @@ class ResultProcessor(service.Service):
         >>> k2-connect.RequestProcessor
         >>> k2-connect.process(result)
     """
-    def __init__(self, base_url, client_secret):
+    def __init__(self, base_url, api_secret):
         """
         Initialize processor service with client id and client secret values for
         encryption with sha-256.
         """
         super(ResultProcessor, self).__init__(base_url)
-        self._client_secret = client_secret
+        self._api_secret = api_secret
 
     def process(self, result):
         """
@@ -48,14 +48,16 @@ class ResultProcessor(service.Service):
         x_kopo_kopo_signature = result.headers.get('X-KopoKopo-Signature')
 
         # define hmac signature
-        hmac_signature = generate_hmac_signature(bytes(self._client_secret, 'utf-8'), result_body)
+        hmac_signature = generate_hmac_signature(bytes(self._api_secret, 'utf-8'), result_body)
 
         # compare signatures
         if hmac.compare_digest(hmac_signature, x_kopo_kopo_signature) is False:
+            print("Hmac: ", hmac)
+            print("Signature: ", x_kopo_kopo_signature)
             raise exceptions.InvalidArgumentError('Invalid result passed')
         return json.dumps(result.get_json(), sort_keys=True)
 
 
-def generate_hmac_signature(client_secret, result_body):
-    signature = hmac.new(client_secret, result_body, hashlib.sha256).hexdigest()
+def generate_hmac_signature(api_secret, result_body):
+    signature = hmac.new(api_secret, result_body, hashlib.sha256).hexdigest()
     return signature

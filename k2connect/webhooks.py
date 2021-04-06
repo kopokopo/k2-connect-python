@@ -88,14 +88,14 @@ class WebhookService(service.Service):
             raise exceptions.InvalidArgumentError('Event type not recognized by k2-connect')
 
         if any(check in event_type for check in till_scope_event_types):
-            if scope is not 'till':
+            if scope != 'till':
                 raise exceptions.InvalidArgumentError('Invalid scope for given event type.')
-            if 'scope_reference' not in kwargs:
+            if 'scope_reference' not in kwargs or kwargs['scope_reference'] is None:
                 raise exceptions.InvalidArgumentError('Scope reference not given.')
 
         if not any(check in event_type for check in till_scope_event_types):
             scope_reference = None
-            if scope is not 'company':
+            if scope != 'company':
                 raise exceptions.InvalidArgumentError('Invalid scope for given event type.')
             if 'scope_reference' in kwargs:
                 raise exceptions.InvalidArgumentError('Invalid scope reference for given event type.')

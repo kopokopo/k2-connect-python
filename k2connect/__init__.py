@@ -26,7 +26,7 @@ Webhooks = None
 ResultHandler = None
 
 
-def initialize(client_id, client_secret, base_url):
+def initialize(client_id, client_secret, base_url, api_secret=None):
     """
     Initializes k2connect services
     :param base_url: The domain to use in the library.
@@ -35,6 +35,8 @@ def initialize(client_id, client_secret, base_url):
     :type client_id: str
     :param client_secret: Secret key for k2 user.
     :type client_secret: str
+    :param api_secret: API Secret key for processing webhook payloads.
+    :type api_secret: str
     """
     validation.validate_string_arguments(client_id,
                                          client_secret,
@@ -59,4 +61,4 @@ def initialize(client_id, client_secret, base_url):
 
     # initialize response processor
     globals()['ResultHandler'] = ResultProcessor(base_url=base_url,
-                                                 client_secret=client_secret)
+                                                 api_secret=api_secret)

@@ -206,7 +206,7 @@ class PayService(service.Service):
         if 'currency' in kwargs:
             currency = 'KES'
         if 'metadata' in kwargs:
-            pay_metadata = json_builder.metadata(kwargs['pay_metadata'])
+            pay_metadata = json_builder.metadata(kwargs['metadata'])
 
         # build send_pay url
         send_pay_url = self._build_url(SEND_PAY_PATH)

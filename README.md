@@ -2,9 +2,6 @@
 
 k2-connect is a Python library for accessing the Kopo Kopo APIs.
 
-# DISCLAIMER
-This library is still in development. To connect to kopokopo's current api check out it's documentation on https://app.kopokopo.com/push_api
-
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install k2connect.
