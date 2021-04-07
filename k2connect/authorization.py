@@ -11,6 +11,9 @@ from k2connect import validation
 
 # path for authorization requests
 AUTHORIZATION_PATH = 'oauth/token'
+REVOKE_PATH = 'oauth/revoke'
+INTROSPECT_PATH = 'oauth/introspect'
+TOKEN_INFO_PATH = 'oauth/token/info'
 
 
 class TokenService(service.Service):
@@ -72,6 +75,94 @@ class TokenService(service.Service):
             'client_id': self._client_id,
             'client_secret': self._client_secret,
             'grant_type': 'client_credentials',
+        }
+
+        # url-encode payload
+        data = urlencode(client_credentials_payload)
+
+        # request access token and expiry duration
+        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
+
+        return access_token_request
+
+    def revoke_access_token(self, access_token):
+        """
+        Returns response object with payload containing access token and
+        expiry time.
+        """
+
+        # build URL for token request
+        url = self._build_url(REVOKE_PATH)
+
+        # redefine headers for token request
+        headers = dict(self._headers)
+
+        # add content-type
+        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+        # define client credentials payload
+        client_credentials_payload = {
+            'client_id': self._client_id,
+            'client_secret': self._client_secret,
+            'token': access_token,
+        }
+
+        # url-encode payload
+        data = urlencode(client_credentials_payload)
+
+        # request access token and expiry duration
+        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
+
+        return access_token_request
+
+    def introspect_access_token(self, access_token):
+        """
+        Returns response object with payload containing access token and
+        expiry time.
+        """
+
+        # build URL for token request
+        url = self._build_url(INTROSPECT_PATH)
+
+        # redefine headers for token request
+        headers = dict(self._headers)
+
+        # add content-type
+        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+        # define client credentials payload
+        client_credentials_payload = {
+            'client_id': self._client_id,
+            'client_secret': self._client_secret,
+            'token': access_token,
+        }
+
+        # url-encode payload
+        data = urlencode(client_credentials_payload)
+
+        # request access token and expiry duration
+        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
+
+        return access_token_request
+
+    def request_token_info(self, access_token):
+        """
+        Returns response object with payload containing access token and
+        expiry time.
+        """
+
+        # build URL for token request
+        url = self._build_url(TOKEN_INFO_PATH)
+
+        # redefine headers for token request
+        headers = dict(self._headers)
+
+        # add content-type
+        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        headers['access_token'] = access_token
+
+        # define client credentials payload
+        client_credentials_payload = {
         }
 
         # url-encode payload

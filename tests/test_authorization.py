@@ -1,12 +1,12 @@
+import json
 import unittest
 from unittest.mock import patch
-
-from tests import SAMPLE_BASE_URL, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET
-from tests.data import headers
 
 from k2connect import authorization
 from k2connect import exceptions
 from mocks import k2_response_mock
+from tests import SAMPLE_BASE_URL, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET
+from tests.data import headers
 
 
 class TokenServiceInitializationTestCase(unittest.TestCase):
@@ -46,34 +46,155 @@ class TokenServiceInitializationTestCase(unittest.TestCase):
             self.assertIsInstance(token_request, authorization.TokenService)
 
 
+def return_json_mock_response(path_url):
+    with open(path_url) as f:
+        return json.load(f)
+
+
+def token_action(action):
+    switcher = {
+        "token_info": return_json_mock_response('tests/data/access_token_info.json'),
+        "revoke_token": return_json_mock_response('tests/data/revoke_access_token.json'),
+        "request_token": return_json_mock_response('tests/data/oauth_access_token.json'),
+        "introspect_token": return_json_mock_response('tests/data/access_token_introspect.json')
+    }
+    return switcher.get(action, "Invalid Token Action")
+
+
+def assign_mock_response(success_data):
+    return k2_response_mock.mock_response(headers=headers.headers, status_code=200, content=success_data,
+                                          mock_json=success_data)
+
+
+def get_mock_success_method(action):
+    return "mock_success_" + action + "_response"
+
+
 class RequestingAccessToken(unittest.TestCase):
     def setUp(self):
-        # define response for successful http request
-        success_data = open('data/oauth_access_token.json', 'r')
-        print(type(success_data.read()))
-
-        self.mock_success_response = k2_response_mock.mock_response(headers=headers.headers,
-                                                                    status_code=200,
-                                                                    content=success_data,
-                                                                    json=success_data)
-
-        success_data.close()
+        success_data = {}
+        token_actions = ["token_info", "revoke_token", "request_token", "introspect_token"]
+        for x in token_actions:
+            success_data[x] = token_action(x)
+            setattr(self, get_mock_success_method(x), assign_mock_response(success_data[x]))
 
     @patch('k2connect.authorization.TokenService')
-    def test_request_access_token_returns_response(self,
-                                                   mock_token_service):
+    def test_request_access_token_returns_response(self, mock_token_service):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
 
-        token_request.request_access_token.return_value = self.mock_success_response
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
 
         response = token_request.request_access_token()
 
         self.assertIsNotNone(response)
 
+    @patch('k2connect.authorization.TokenService')
+    def test_request_access_token_returns_access_token(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+
+        response = token_request.request_access_token()
+        access_token = response.body.get('access_token')
+
+        self.assertIsNotNone(access_token)
+
+    @patch('k2connect.authorization.TokenService')
+    def test_revoke_access_token_returns_response(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+        token_request.revoke_access_token.return_value = self.mock_success_revoke_token_response
+
+        access_token_response = token_request.request_access_token()
+        access_token = access_token_response.body.get('access_token')
+        response = token_request.revoke_access_token(access_token)
+
+        self.assertIsNotNone(response)
+
+    @patch('k2connect.authorization.TokenService')
+    def test_revoke_access_token_returns_status_200(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+        token_request.revoke_access_token.return_value = self.mock_success_revoke_token_response
+
+        access_token_response = token_request.request_access_token()
+        response = token_request.revoke_access_token(access_token_response.body.get('access_token'))
+
+        self.assertEqual(response.status_code, 200)
+
+    @patch('k2connect.authorization.TokenService')
+    def test_introspect_access_token_returns_response(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+        token_request.introspect_access_token.return_value = self.mock_success_introspect_token_response
+
+        access_token_response = token_request.request_access_token()
+        access_token = access_token_response.body.get('access_token')
+        response = token_request.introspect_access_token(access_token)
+
+        self.assertIsNotNone(response)
+
+    @patch('k2connect.authorization.TokenService')
+    def test_introspect_access_token_returns_status_200(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+        token_request.introspect_access_token.return_value = self.mock_success_introspect_token_response
+
+        access_token_response = token_request.request_access_token()
+        response = token_request.introspect_access_token(access_token_response.body.get('access_token'))
+
+        self.assertEqual(response.status_code, 200)
+
+    @patch('k2connect.authorization.TokenService')
+    def test_access_token_info_returns_response(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+        token_request.request_token_info.return_value = self.mock_success_token_info_response
+
+        access_token_response = token_request.request_access_token()
+        access_token = access_token_response.body.get('access_token')
+        response = token_request.request_token_info(access_token)
+
+        self.assertIsNotNone(response)
+
+    @patch('k2connect.authorization.TokenService')
+    def test_access_token_info_returns_status_200(self, mock_token_service):
+        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+                                           client_id=SAMPLE_CLIENT_ID,
+                                           client_secret=SAMPLE_CLIENT_SECRET)
+
+        token_request.request_access_token.return_value = self.mock_success_request_token_response
+        token_request.request_token_info.return_value = self.mock_success_token_info_response
+
+        access_token_response = token_request.request_access_token()
+        response = token_request.request_token_info(access_token_response.body.get('access_token'))
+
+        self.assertEqual(response.status_code, 200)
+
     def tearDown(self):
-        self.mock_success_response.dispose()
+        token_actions = ["token_info", "revoke_token", "request_token", "introspect_token"]
+        for method_name, action in zip(dir(self), token_actions):
+            if callable(getattr(self, method_name)) and action in method_name:
+                self.method_name.dispose()
 
 
 if __name__ == '__main__':
