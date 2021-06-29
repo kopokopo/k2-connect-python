@@ -455,3 +455,24 @@ def transfers(transfer_links, transfers_amount,
                         '_links': transfer_links
                         }
     return transfers_object
+
+
+def transaction_sms_notification(webhook_event_reference, message, callback_url):
+    """
+    Returns JSON formatted containing information about a transfer.
+    :param webhook_event_reference: Reference for webhook event.
+    :type webhook_event_reference: str
+    :param message: Message to be sent.
+    :type message: str
+    :param callback_url: Callback URL.
+    :type callback_url: str
+    :return: str
+    """
+    # validate string arguments
+    validation.validate_string_arguments(*webhook_event_reference, *message, *callback_url)
+
+    transaction_sms_notification_object = {'webhook_event_reference': webhook_event_reference,
+                                           'message': message,
+                                           'callback_url': callback_url
+                                           }
+    return transaction_sms_notification_object
