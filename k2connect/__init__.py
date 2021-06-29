@@ -16,7 +16,7 @@ from .receive_payments import ReceivePaymentsService
 from .transfers import TransferService
 from . import validation
 from .webhooks import WebhookService
-from .k2_notification import TransactionNotificationService
+from .transaction_notifications import TransactionNotificationService
 
 
 Tokens = None
