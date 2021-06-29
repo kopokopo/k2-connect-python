@@ -455,3 +455,30 @@ def transfers(transfer_links, transfers_amount,
                         '_links': transfer_links
                         }
     return transfers_object
+
+
+def polling(scope, scope_reference, from_time, to_time, polling_links):
+    """
+    Returns JSON formatted containing information about a transfer.
+    :param scope: Amount to be transferred.
+    :type scope: str
+    :param scope_reference: Links containing Callback URL.
+    :type scope_reference: str
+    :param from_time: Defines the beginning start time.
+    :type from_time: str
+    :param to_time: Defines the beginning end time.
+    :type to_time: str
+    :param polling_links: Contains callback_url.
+    :type polling_links: str
+    :return: str
+    """
+    # validate string arguments
+    validation.validate_string_arguments(*scope, *scope_reference, *from_time, *to_time, *polling_links)
+
+    transfers_object = {'scope': scope,
+                        'scope_reference': scope_reference,
+                        'from_time': from_time,
+                        'to_time': to_time,
+                        '_links': polling_links
+                        }
+    return transfers_object
