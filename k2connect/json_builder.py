@@ -242,8 +242,8 @@ def till_pay_recipient(till_name, till_number):
                                          till_number)
 
     till_pay_recipient_object = {'till_name': till_name,
-                            'till_number': till_number
-                            }
+                                 'till_number': till_number
+                                 }
     return till_pay_recipient_object
 
 
@@ -262,8 +262,8 @@ def kopo_kopo_merchant_pay_recipient(alias_name, till_number):
     validation.validate_string_arguments(alias_name, till_number)
 
     k2_merchant_pay_recipient_object = {'alias_name': alias_name,
-                            'till_number': till_number
-                            }
+                                        'till_number': till_number
+                                        }
     return k2_merchant_pay_recipient_object
 
 
@@ -473,6 +473,6 @@ def transaction_sms_notification(webhook_event_reference, message, callback_url)
 
     transaction_sms_notification_object = {'webhook_event_reference': webhook_event_reference,
                                            'message': message,
-                                           'callback_url': callback_url
+                                           '_links': {'callback_url': callback_url}
                                            }
     return transaction_sms_notification_object

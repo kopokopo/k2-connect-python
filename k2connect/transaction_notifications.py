@@ -74,7 +74,7 @@ class TransactionNotificationService(service.Service):
                                    url=create_transaction_sms_notification_url,
                                    payload=create_transaction_sms_notification_payload)
 
-    def transfer_transaction_status(self,
+    def transaction_notification_status(self,
                                     bearer_token,
                                     query_url):
         """
