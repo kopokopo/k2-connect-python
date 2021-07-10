@@ -25,8 +25,7 @@ class Requests:
         :type  bearer_token: str
         """
         self._headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
 
     @staticmethod
