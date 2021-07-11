@@ -2,7 +2,7 @@ import requests
 import unittest
 from urlvalidator import URLValidator
 
-from k2connect import transaction_notifications, authorization, json_builder, exceptions, validation
+from k2connect import notifications, authorization, json_builder, exceptions, validation
 from k2connect.exceptions import InvalidArgumentError
 from tests import SAMPLE_BASE_URL, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET
 
@@ -16,23 +16,23 @@ class TransactionNotificationsTestCase(unittest.TestCase):
     access_token_request = token_service.request_access_token()
     ACCESS_TOKEN = token_service.get_access_token(access_token_request)
 
-    transaction_notifications_obj = transaction_notifications.TransactionNotificationService(base_url=SAMPLE_BASE_URL)
+    transaction_notifications_obj = notifications.NotificationService(base_url=SAMPLE_BASE_URL)
     header = dict(transaction_notifications_obj._headers)
     header['Authorization'] = 'Bearer ' + ACCESS_TOKEN
 
     def test_init_method_with_base_url_argument_succeeds(self):
-        transaction_notifications_service = transaction_notifications.TransactionNotificationService(base_url=SAMPLE_BASE_URL)
-        self.assertIsInstance(transaction_notifications_service, transaction_notifications.TransactionNotificationService)
+        transaction_notifications_service = notifications.NotificationService(base_url=SAMPLE_BASE_URL)
+        self.assertIsInstance(transaction_notifications_service, notifications.NotificationService)
 
     def test_init_method_without_base_url_argument_fails(self):
-        self.assertRaises(TypeError, lambda: transaction_notifications.TransactionNotificationService())
+        self.assertRaises(TypeError, lambda: notifications.NotificationService())
 
     # Transaction Notification transaction_notifications
     def test_sending_transaction_sms_notification_succeeds(self):
         test_payload = {
             "access_token": TransactionNotificationsTestCase.ACCESS_TOKEN,
             "callback_url": 'https://webhook.site/48d6113c-8967-4bf4-ab56-dcf470e0b005',
-            "webhook_event_reference": "8a771dfb-df81-4c89-a9c7-fb79eff5bdcc",
+            "webhook_event_reference": "d81312b9-4c0e-4347-971f-c3d5b14bdbe4",
             "message": 'Alleluia',
         }
         self.assertIsNotNone(
@@ -42,7 +42,7 @@ class TransactionNotificationsTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransactionNotificationsTestCase.ACCESS_TOKEN,
             "callback_url": 'https://webhook.site/48d6113c-8967-4bf4-ab56-dcf470e0b005',
-            "webhook_event_reference": "8a771dfb-df81-4c89-a9c7-fb79eff5bdcc",
+            "webhook_event_reference": "d81312b9-4c0e-4347-971f-c3d5b14bdbe4",
             "message": 'Alleluia',
         }
         response = TransactionNotificationsTestCase.transaction_notifications_obj.send_transaction_sms_notification(test_payload)

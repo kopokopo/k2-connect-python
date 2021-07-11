@@ -10,7 +10,7 @@ from k2connect import json_builder, exceptions, service, validation
 TRANSACTION_NOTIFICATIONS_PATH = 'api/v1/transaction_sms_notifications'
 
 
-class TransactionNotificationService(service.Service):
+class NotificationService(service.Service):
     """
     The TransferService class containing methods for creation of settlement accounts:
     Example:
@@ -28,7 +28,7 @@ class TransactionNotificationService(service.Service):
         :param base_url:
         :type  base_url: str
         """
-        super(TransactionNotificationService, self).__init__(base_url)
+        super(NotificationService, self).__init__(base_url)
 
     def send_transaction_sms_notification(self, kwargs):
         """
@@ -63,12 +63,14 @@ class TransactionNotificationService(service.Service):
         # validate string arguments
         validation.validate_string_arguments(bearer_token, webhook_event_reference, message, callback_url)
 
+        notification_links = json_builder.links(callback_url=callback_url)
+
         # add authorization to headers
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
         # define create bank settlement account payload
         create_transaction_sms_notification_payload = json_builder.transaction_sms_notification(webhook_event_reference=webhook_event_reference,
                                                                                                 message=message,
-                                                                                                callback_url=callback_url)
+                                                                                                notification_links=notification_links)
         return self._make_requests(headers=headers,
                                    method='POST',
                                    url=create_transaction_sms_notification_url,
