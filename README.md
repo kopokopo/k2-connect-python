@@ -47,6 +47,7 @@ One can access the following k2connect services:
 - [TransferService](#transfers-service)
 - [WebhookService](#webhook-service)
 - [NotificationService](#notification-service)
+- [PollingService](#polling-service)
 
 #### Token service
 The token service allows you to request access tokens that you will use in order to communicate with the Kopo Kopo APIs.
@@ -117,35 +118,53 @@ The pay service also enables you to check the status of a transaction by queryin
 # create an instance of the pay service
 pay_service = k2connect.Pay
 
-# define recipient types
-BANK_ACCOUNT = 'bank_account'
-MOBILE_WALLET = 'mobile_wallet'
-
 # create bank account pay recipient
-bank_kwargs = {"first_name": "first_name", "last_name": "last_name", "account_name": "account_name",
-             "bank_id": "bank_id", "bank_branch_id": "bank_branch_id", "account_number": "account_number",
-             "email": "email", "phone": "phone"}
-bank_pay_location = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
-                                                          recipient_type=BANK_ACCOUNT,
-                                                          **bank_kwargs)
+bank_recipient_request = {
+    "access_token": 'ACCESS_TOKEN',
+    "recipient_type": 'bank_account',
+    "settlement_method": "EFT",
+    "account_name": "bank_account_name",
+    "bank_branch_ref": "633aa26c-7b7c-4091-ae28-96c0687cf886",
+    "account_number": "bank_account_number"
+}
+bank_pay_location = pay_service.add_pay_recipient(bank_recipient_request)
 
 # create mobile wallet pay recipient
-mobile_kwargs = {"first_name": "first_name", "last_name": "last_name",
-                  "phone": "phone", "network": "network", "email": "email"}
-mobile_pay_location = pay_service.add_pay_recipient(bearer_token=BEARER_TOKEN,
-                                                            recipient_type=MOBILE_WALLET,
-                                                            **mobile_kwargs)
+mobile_recipient_request = {
+    "access_token": 'ACCESS_TOKEN',
+    "recipient_type": 'mobile_wallet',
+    "first_name": "mobile_wallet_first_name",
+    "last_name": "mobile_wallet_last_name",
+    "phone_number": "+254123456789",
+    "network": "mobile_wallet_network",
+    "email": "test@test.com"
+}
+mobile_pay_location = pay_service.add_pay_recipient(mobile_recipient_request)
                                                                 
-# send pay transaction
-create_pay_location = pay_service.send_pay(bearer_token=BEARER_TOKEN,
-                                            callback_url='https://myawesomeapp.com/',
-                                            destination='7894571548',
-                                            value='2650'
-                                            # optional metadata values
-                                            )
+# send pay transaction to mobile wallet
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
+            "destination_type": 'mobile_wallet',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "amount": '10',
+            "currency": 'KES'
+        }
+create_mobile_pay_location = pay_service.send_pay(request_payload)
+                                                                
+# send pay transaction to bank account
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
+            "destination_type": 'bank_account',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "amount": '10',
+            "currency": 'KES'
+        }
+create_bank_pay_location = pay_service.send_pay(request_payload)
 
 # get payment request status
-pay_request_status = pay_service.pay_transaction_status(create_pay_location)
+pay_request_status = pay_service.pay_transaction_status(create_mobile_pay_location)
 ```
 
 #### Receive payments service
@@ -187,16 +206,18 @@ BEARER_TOKEN = os.getenv('MY_BEARER_TOKEN')
 receive_payments_service = k2connect.ReceivePayments
 
 # create a payment request
-mpesa_payment_location = receive_payments_service.create_payment_request(bearer_token=BEARER_TOKEN,
-                                                                        callback_url='https://my-cool-application-callback.com',
-                                                                        first_name='Jon',
-                                                                        last_name='Snow',
-                                                                        payment_channel='MPESA',
-                                                                        phone='+254712345678',
-                                                                        till_number='111111',
-                                                                        value='5000',
-                                                                        # metadata values
-                                                                        )
+request_payload = {
+    "access_token": 'ACCESS_TOKEN',
+    "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+    "first_name": "python_first_name",
+    "last_name": "python_last_name",
+    "email": "daivd.j.kariuki@gmail.com",
+    "payment_channel": "MPESA",
+    "phone_number": "+254911222536",
+    "till_number": "K112233",
+    "amount": "10"
+}
+mpesa_payment_location = receive_payments_service.create_payment_request(request_payload)
 
 # get payment request status
 payment_request_status = receive_payments_service.payment_request_status(mpesa_payment_location)
@@ -243,30 +264,51 @@ The `transfer_transaction_status()` method is then used to check a transfer tran
 transfer_service = k2connect.Transfers
 
 # create verified settlement bank account
-settlement_account = transfer_service.add_bank_settlement_account(bearer_token=BEARER_TOKEN,
-                                                             account_name='Jon Snow',
-                                                             account_number='4578124578556',
-                                                             bank_id='7814548785',
-                                                             bank_branch_id='87456874464')
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "settlement_method": 'RTS',
+            "account_name": 'py_sdk_account_name',
+            "account_number": 'py_sdk_account_number',
+            "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+        }
+settlement_account = transfer_service.add_bank_settlement_account(request_payload)
 # create verified settlement mobile account
-settlement_account = transfer_service.add_mobile_wallet_settlement_account(bearer_token=BEARER_TOKEN,
-                                                             msisdn='254712345678',
-                                                             network='Safaricom')
+request_payload = {
+    "access_token": 'ACCESS_TOKEN',
+    "first_name": 'py_sdk_first_name',
+    "last_name": 'py_sdk_last_name',
+    "phone_number": '+254911222538',
+    "network": 'Safaricom'
+    }
+settlement_account = transfer_service.add_mobile_wallet_settlement_account(request_payload)
 
 # settle funds (blind transfer)
-transfer_transaction = transfer_service.settle_funds(bearer_token=BEARER_TOKEN,
-                                                     transfer_value='26000')
-# TODO blind transfer missing                                                     
+request_payload = {
+    "access_token": 'ACCESS_TOKEN',
+    "callback_url": 'url',
+    "value": '10',
+    }
+transfer_transaction = transfer_service.settle_funds(request_payload) 
+
 # settle funds (targeted transfer to a merchant_wallet)
-transfer_transaction_mobile_location = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
-                                                       destination_type='merchant_wallet',
-                                                       destination_reference='457126554788',
-                                                       transfer_value='26000')
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "destination_type": 'merchant_bank_account',
+            "destination_reference": '87bbfdcf-fb59-4d8e-b039-b85b97015a7e',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
+transfer_transaction_mobile_location = transfer_service.settle_funds(request_payload)
+
 # settle funds (targeted transfer to a merchant_wallet)
-transfer_transaction_bank_location = transfer_service.settle_funds(bearer_token=BEARER_TOKEN, 
-                                                       destination_type='merchant_bank_account',
-                                                       destination_reference='457126554788',
-                                                       transfer_value='26000')
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "destination_type": 'merchant_wallet',
+            "destination_reference": 'eba238ae-e03f-46f6-aed5-db357fb00f9c',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "value": '10',
+        }
+transfer_transaction_bank_location = transfer_service.settle_funds(request_payload)
 
 # get transfer transaction status
 transfer_transaction_status = transfer_service.transfer_transaction_status(transfer_transaction_mobile_location or transfer_transaction_bank_location)
@@ -295,21 +337,23 @@ Currently the following events are supported:
 ```python
 import os
 
-# initialize webhook service
+# initialize service
 webhook_service = k2connect.Webhooks
 
-# define a webhook secret
-WEBHOOK_SECRET = os.getenv('MY_CLIENT_SECRET')
+request_payload = {
+    "access_token": 'ACCESS_TOKEN',
+    "event_type": 'buygoods_transaction_received',
+    "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+    "scope": 'till',
+    "scope_reference": '112233'
+    }
 
 # create webhook subscription
-customer_created_subscription = webhook_service.create_subscription(bearer_token=BEARER_TOKEN,
-                                                                    event_type='customer_created',
-                                                                    webhook_endpoint='https://myawesomeapplication.com/webhooks/customer_created',
-                                                                    webhook_secret=WEBHOOK_SECRET)
+customer_created_subscription = webhook_service.create_subscription(request_payload)
 ```
 
 #### Notification service
-This service allows you to send custom sms messages to successful buy-goods transactions that occurred on the KopoKopo. 
+This service allows you to send custom sms messages to successful buy-goods transactions received that occurred on the Kopo Kopo. 
 It takes the following arguments:
 
 * bearer_token `REQUIRED`
@@ -320,7 +364,7 @@ It takes the following arguments:
 Note: A buygoods_transaction_received webhook subscription must have been created, with its subsequent webhook event in place.
 
 
-You can check an SMSM notification request's status by querying the requests' location 
+You can check an SMS notification request's status by querying the requests' location 
 URL which is returned by the `send_transaction_sms_notification` method by default.  
 The `transaction_notification_status()` method is used to check an SMS notification request status.
 
@@ -331,13 +375,52 @@ import os
 notification_service = k2connect.Notifications
 
 # create transaction sms notifications
-test_payload = {
+request_payload = {
     "access_token": 'ACCESS_TOKEN',
     "callback_url": 'callback_url',
     "webhook_event_reference": "d81312b9-4c0e-4347-971f-c3d5b14bdbe4",
     "message": 'Alleluia',
     }
-customer_created_subscription = notification_service.send_transaction_sms_notification(test_payload)
+notification_resource_location_url = notification_service.send_transaction_sms_notification(request_payload)
+
+# get request status
+request_status = notification_service.transaction_notification_status(notification_resource_location_url)
+```
+
+#### Polling service
+This service allows you to poll transactions received on the Kopo Kopo system within a certain time range, and either a company or a specific till. 
+It takes the following arguments:
+
+* bearer_token `REQUIRED`
+* fromTime: The starting time of the polling request `REQUIRED`
+* toTime: The end time of the polling request `REQUIRED`
+* scope: The scope of the polling request `REQUIRED`
+* scopeReference: The scope reference `REQUIRED for the 'till' scope`
+* callbackUrl: Url that the result will be posted to `REQUIRED`
+
+You can check a polling request's status by querying the requests' location 
+URL which is returned by the `create_polling_request` method by default.  
+The `polling_request_status()` method is used to check an polling request status.
+
+```python
+import os
+
+# initialize service
+notification_service = k2connect.Polling
+
+# create polling request
+request_payload = {
+    "access_token": 'ACCESS_TOKEN',
+    "callback_url": 'callback_url',
+    "scope": "till",
+    "scope_reference": "112233",
+    "from_time": "2021-07-09T08:50:22+03:00",
+    "to_time": "2021-07-10T18:00:22+03:00",
+    }
+polling_resource_location_url = notification_service.send_transaction_sms_notification(request_payload)
+
+# get request status
+request_status = notification_service.transaction_notification_status(polling_resource_location_url)
 ```
 
 For more information, please read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
