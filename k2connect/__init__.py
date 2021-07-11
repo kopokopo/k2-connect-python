@@ -17,6 +17,7 @@ from .transfers import TransferService
 from . import validation
 from .webhooks import WebhookService
 from .notifications import NotificationService
+from .polling import PollingService
 
 
 Tokens = None
@@ -26,6 +27,7 @@ Transfers = None
 Webhooks = None
 TransactionNotifications = None
 ResultHandler = None
+Polling = None
 
 
 def initialize(client_id, client_secret, base_url, api_secret=None):
@@ -63,6 +65,9 @@ def initialize(client_id, client_secret, base_url, api_secret=None):
 
     # initialize transaction notification service
     globals()['TransactionNotifications'] = NotificationService(base_url=base_url)
+
+    # initialize polling service
+    globals()['Polling'] = PollingService(base_url=base_url)
 
     # initialize response processor
     globals()['ResultHandler'] = ResultProcessor(base_url=base_url,
