@@ -16,6 +16,7 @@ from .receive_payments import ReceivePaymentsService
 from .transfers import TransferService
 from . import validation
 from .webhooks import WebhookService
+from .notifications import NotificationService
 
 
 Tokens = None
@@ -23,6 +24,7 @@ ReceivePayments = None
 Pay = None
 Transfers = None
 Webhooks = None
+TransactionNotifications = None
 ResultHandler = None
 
 
@@ -58,6 +60,9 @@ def initialize(client_id, client_secret, base_url, api_secret=None):
 
     # initialize webhook service
     globals()['Webhooks'] = WebhookService(base_url=base_url)
+
+    # initialize transaction notification service
+    globals()['TransactionNotifications'] = NotificationService(base_url=base_url)
 
     # initialize response processor
     globals()['ResultHandler'] = ResultProcessor(base_url=base_url,

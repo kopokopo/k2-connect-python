@@ -7,7 +7,7 @@ k2-connect is a Python library for accessing the Kopo Kopo APIs.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install k2connect.
 
 ```bash
-pip install k2connect
+pip3 install k2-connect
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ import k2connect
 
 CLIENT_ID = 'my_client_id'
 CLIENT_SECRET = os.getenv('MY_CLIENT_SECRET')
-BASE_URL = 'https://Changed_from_localhost:3000/'
+BASE_URL = 'https://sandbox.kopopkopo.com/'
 
 #initialize the library
 k2connect.initialize(CLIENT_ID, CLIENT_SECRET, BASE_URL)
@@ -46,6 +46,7 @@ One can access the following k2connect services:
 - [ReceivePaymentsService](#receive-payments-service)
 - [TransferService](#transfers-service)
 - [WebhookService](#webhook-service)
+- [NotificationService](#notification-service)
 
 #### Token service
 The token service allows you to request access tokens that you will use in order to communicate with the Kopo Kopo APIs.
@@ -305,6 +306,38 @@ customer_created_subscription = webhook_service.create_subscription(bearer_token
                                                                     event_type='customer_created',
                                                                     webhook_endpoint='https://myawesomeapplication.com/webhooks/customer_created',
                                                                     webhook_secret=WEBHOOK_SECRET)
+```
+
+#### Notification service
+This service allows you to send custom sms messages to successful buy-goods transactions that occurred on the KopoKopo. 
+It takes the following arguments:
+
+* bearer_token `REQUIRED`
+* webhookEventReference: The webhook event reference for a buygoods_transaction_received webhook. `REQUIRED`
+* message: The message to be sent `REQUIRED`
+* callbackUrl: Url that the result will be posted to `REQUIRED`
+
+Note: A buygoods_transaction_received webhook subscription must have been created, with its subsequent webhook event in place.
+
+
+You can check an SMSM notification request's status by querying the requests' location 
+URL which is returned by the `send_transaction_sms_notification` method by default.  
+The `transaction_notification_status()` method is used to check an SMS notification request status.
+
+```python
+import os
+
+# initialize notification service
+notification_service = k2connect.Notifications
+
+# create transaction sms notifications
+test_payload = {
+    "access_token": 'ACCESS_TOKEN',
+    "callback_url": 'callback_url',
+    "webhook_event_reference": "d81312b9-4c0e-4347-971f-c3d5b14bdbe4",
+    "message": 'Alleluia',
+    }
+customer_created_subscription = notification_service.send_transaction_sms_notification(test_payload)
 ```
 
 #### Result processor 

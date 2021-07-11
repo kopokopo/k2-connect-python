@@ -242,8 +242,8 @@ def till_pay_recipient(till_name, till_number):
                                          till_number)
 
     till_pay_recipient_object = {'till_name': till_name,
-                            'till_number': till_number
-                            }
+                                 'till_number': till_number
+                                 }
     return till_pay_recipient_object
 
 
@@ -262,14 +262,14 @@ def kopo_kopo_merchant_pay_recipient(alias_name, till_number):
     validation.validate_string_arguments(alias_name, till_number)
 
     k2_merchant_pay_recipient_object = {'alias_name': alias_name,
-                            'till_number': till_number
-                            }
+                                        'till_number': till_number
+                                        }
     return k2_merchant_pay_recipient_object
 
 
 def subscriber(first_name,
                last_name,
-               phone,
+               phone_number,
                email,
                **kwargs):
     """
@@ -278,9 +278,9 @@ def subscriber(first_name,
     :type first_name: str
     :param last_name: Last name of the subscriber
     :type last_name: str
-    :param phone: Phone number of the subscriber from which the
+    :param phone_number: Phone number of the subscriber from which the
     pay will be made
-    :type phone: str
+    :type phone_number: str
     :param email: Email of the subscriber
     :type email: str
     :param kwargs: Provision for optional 'email' information.
@@ -290,7 +290,7 @@ def subscriber(first_name,
     # validate string arguments
     validation.validate_string_arguments(first_name,
                                          last_name,
-                                         phone)
+                                         phone_number)
     if email != "Null":
         validation.validate_email(email)
 
@@ -301,7 +301,7 @@ def subscriber(first_name,
 
     subscriber_object = {'first_name': first_name,
                          'last_name': last_name,
-                         'phone_number': phone,
+                         'phone_number': phone_number,
                          'email': email}
 
     return subscriber_object
@@ -455,6 +455,27 @@ def transfers(transfer_links, transfers_amount,
                         '_links': transfer_links
                         }
     return transfers_object
+
+
+def transaction_sms_notification(webhook_event_reference, message, notification_links):
+    """
+    Returns JSON formatted containing information about a transfer.
+    :param webhook_event_reference: Reference for webhook event.
+    :type webhook_event_reference: str
+    :param message: Message to be sent.
+    :type message: str
+    :param notification_links: Links containing callback URL.
+    :type notification_links: str
+    :return: str
+    """
+    # validate string arguments
+    validation.validate_string_arguments(*webhook_event_reference, *message, *notification_links)
+
+    transaction_sms_notification_object = {'webhook_event_reference': webhook_event_reference,
+                                           'message': message,
+                                           '_links': notification_links
+                                           }
+    return transaction_sms_notification_object
 
 
 def polling(scope, scope_reference, from_time, to_time, polling_links):

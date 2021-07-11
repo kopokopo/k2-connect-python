@@ -25,7 +25,7 @@ class Requests:
         :type  bearer_token: str
         """
         self._headers = {
-            'Accept': 'application/json',
+            'Accept': 'application/vnd.kopokopo.v4.hal+json',
             'Content-Type': 'application/json'
         }
 
@@ -118,7 +118,7 @@ class Requests:
                     return response.json()
                 response_location = response.headers.get('location')
                 return response_location
-            return response.reason
+            raise exceptions.K2Error(response.reason)
         return exceptions.K2Error
 
     def _query_transaction_status(self,

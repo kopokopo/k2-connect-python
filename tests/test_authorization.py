@@ -1,5 +1,6 @@
 import json
 import unittest
+import requests
 from unittest.mock import patch
 
 from k2connect import authorization
@@ -9,41 +10,65 @@ from tests import SAMPLE_BASE_URL, SAMPLE_CLIENT_ID, SAMPLE_CLIENT_SECRET
 from tests.data import headers
 
 
-class TokenServiceInitializationTestCase(unittest.TestCase):
+class TokenServiceTestCase(unittest.TestCase):
+    token_service_obj = authorization.TokenService(base_url=SAMPLE_BASE_URL, client_id=SAMPLE_CLIENT_ID,
+                                                   client_secret=SAMPLE_CLIENT_SECRET)
+    header = dict(token_service_obj._headers)
 
     def test_initialization_with_all_arguments_present_succeeds(self):
-        token_request = authorization.TokenService(base_url=SAMPLE_BASE_URL,
+        token_service = authorization.TokenService(base_url=SAMPLE_BASE_URL,
                                                    client_id=SAMPLE_CLIENT_ID,
                                                    client_secret=SAMPLE_CLIENT_SECRET)
-        self.assertIsInstance(token_request, authorization.TokenService)
+        self.assertIsInstance(token_service, authorization.TokenService)
 
     def test_initialization_without_base_url_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            token_request = authorization.TokenService(base_url=None,
+            token_service = authorization.TokenService(base_url=None,
                                                        client_id=SAMPLE_CLIENT_ID,
                                                        client_secret=SAMPLE_CLIENT_SECRET)
-            self.assertIsInstance(token_request, authorization.TokenService)
+            self.assertIsInstance(token_service, authorization.TokenService)
 
     def test_initialization_without_client_id_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            token_request = authorization.TokenService(base_url=SAMPLE_BASE_URL,
+            token_service = authorization.TokenService(base_url=SAMPLE_BASE_URL,
                                                        client_id=None,
                                                        client_secret=SAMPLE_CLIENT_SECRET)
-            self.assertIsInstance(token_request, authorization.TokenService)
+            self.assertIsInstance(token_service, authorization.TokenService)
 
     def test_initialization_without_client_secret_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            token_request = authorization.TokenService(base_url=SAMPLE_BASE_URL,
+            token_service = authorization.TokenService(base_url=SAMPLE_BASE_URL,
                                                        client_id=SAMPLE_CLIENT_ID,
                                                        client_secret=None)
-            self.assertIsInstance(token_request, authorization.TokenService)
+            self.assertIsInstance(token_service, authorization.TokenService)
 
     def test_initialization_without_all_arguments_fails(self):
         with self.assertRaises(exceptions.InvalidArgumentError):
-            token_request = authorization.TokenService(base_url=None,
+            token_service = authorization.TokenService(base_url=None,
                                                        client_id=None,
                                                        client_secret=None)
-            self.assertIsInstance(token_request, authorization.TokenService)
+            self.assertIsInstance(token_service, authorization.TokenService)
+
+    def test_successful_create_incoming_payment_request(self):
+        response = requests.post(
+            headers=TokenServiceTestCase.header,
+            params={
+                'grant_type': 'client_credentials',
+                'client_id': SAMPLE_CLIENT_ID,
+                'client_secret': SAMPLE_CLIENT_SECRET,
+            },
+            data=None,
+            url=TokenServiceTestCase.token_service_obj._build_url(authorization.AUTHORIZATION_PATH))
+        self.assertEqual(response.status_code, 200)
+
+    def test_request_access_token_returns_response(self):
+        response = TokenServiceTestCase.token_service_obj.request_access_token()
+        self.assertIsNotNone(response)
+
+    def test_request_access_token_returns_access_token(self):
+        token_request = TokenServiceTestCase.token_service_obj.request_access_token()
+        access_token = TokenServiceTestCase.token_service_obj.get_access_token(token_request)
+        self.assertIsNotNone(access_token)
 
 
 def return_json_mock_response(path_url):
@@ -78,29 +103,26 @@ class RequestingAccessToken(unittest.TestCase):
             success_data[x] = token_action(x)
             setattr(self, get_mock_success_method(x), assign_mock_response(success_data[x]))
 
-    @patch('k2connect.authorization.TokenService')
-    def test_request_access_token_returns_response(self, mock_token_service):
-        token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
-                                           client_id=SAMPLE_CLIENT_ID,
-                                           client_secret=SAMPLE_CLIENT_SECRET)
-
-        token_request.request_access_token.return_value = self.mock_success_request_token_response
-
-        response = token_request.request_access_token()
-
-        self.assertIsNotNone(response)
+    # @patch('k2connect.authorization.TokenService')
+    # def test_request_access_token_returns_response(self, mock_token_service):
+    #     token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
+    #                                        client_id=SAMPLE_CLIENT_ID,
+    #                                        client_secret=SAMPLE_CLIENT_SECRET)
+    #
+    #     token_request.request_access_token.return_value = self.mock_success_request_token_response
+    #
+    #     response = token_request.request_access_token()
+    #
+    #     self.assertIsNotNone(response)
 
     @patch('k2connect.authorization.TokenService')
     def test_request_access_token_returns_access_token(self, mock_token_service):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
-
         response = token_request.request_access_token()
         access_token = response.body.get('access_token')
-
         self.assertIsNotNone(access_token)
 
     @patch('k2connect.authorization.TokenService')
@@ -108,14 +130,11 @@ class RequestingAccessToken(unittest.TestCase):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
         token_request.revoke_access_token.return_value = self.mock_success_revoke_token_response
-
         access_token_response = token_request.request_access_token()
         access_token = access_token_response.body.get('access_token')
         response = token_request.revoke_access_token(access_token)
-
         self.assertIsNotNone(response)
 
     @patch('k2connect.authorization.TokenService')
@@ -123,13 +142,10 @@ class RequestingAccessToken(unittest.TestCase):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
         token_request.revoke_access_token.return_value = self.mock_success_revoke_token_response
-
         access_token_response = token_request.request_access_token()
         response = token_request.revoke_access_token(access_token_response.body.get('access_token'))
-
         self.assertEqual(response.status_code, 200)
 
     @patch('k2connect.authorization.TokenService')
@@ -137,14 +153,11 @@ class RequestingAccessToken(unittest.TestCase):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
         token_request.introspect_access_token.return_value = self.mock_success_introspect_token_response
-
         access_token_response = token_request.request_access_token()
         access_token = access_token_response.body.get('access_token')
         response = token_request.introspect_access_token(access_token)
-
         self.assertIsNotNone(response)
 
     @patch('k2connect.authorization.TokenService')
@@ -152,13 +165,10 @@ class RequestingAccessToken(unittest.TestCase):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
         token_request.introspect_access_token.return_value = self.mock_success_introspect_token_response
-
         access_token_response = token_request.request_access_token()
         response = token_request.introspect_access_token(access_token_response.body.get('access_token'))
-
         self.assertEqual(response.status_code, 200)
 
     @patch('k2connect.authorization.TokenService')
@@ -166,14 +176,11 @@ class RequestingAccessToken(unittest.TestCase):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
         token_request.request_token_info.return_value = self.mock_success_token_info_response
-
         access_token_response = token_request.request_access_token()
         access_token = access_token_response.body.get('access_token')
         response = token_request.request_token_info(access_token)
-
         self.assertIsNotNone(response)
 
     @patch('k2connect.authorization.TokenService')
@@ -181,13 +188,10 @@ class RequestingAccessToken(unittest.TestCase):
         token_request = mock_token_service(base_url=SAMPLE_BASE_URL,
                                            client_id=SAMPLE_CLIENT_ID,
                                            client_secret=SAMPLE_CLIENT_SECRET)
-
         token_request.request_access_token.return_value = self.mock_success_request_token_response
         token_request.request_token_info.return_value = self.mock_success_token_info_response
-
         access_token_response = token_request.request_access_token()
         response = token_request.request_token_info(access_token_response.body.get('access_token'))
-
         self.assertEqual(response.status_code, 200)
 
     def tearDown(self):
@@ -198,7 +202,7 @@ class RequestingAccessToken(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    INITIALIZATION_SUITE = unittest.TestLoader().loadTestsFromTestCase(TokenServiceInitializationTestCase)
+    INITIALIZATION_SUITE = unittest.TestLoader().loadTestsFromTestCase(TokenServiceTestCase)
     REQUEST_ACCESS_TOKEN_SUITE = unittest.TestLoader().loadTestsFromTestCase(RequestingAccessToken)
     PARENT_SUITE = unittest.TestSuite([INITIALIZATION_SUITE, REQUEST_ACCESS_TOKEN_SUITE])
     unittest.TextTestRunner(verbosity=1).run(PARENT_SUITE)
