@@ -340,6 +340,8 @@ test_payload = {
 customer_created_subscription = notification_service.send_transaction_sms_notification(test_payload)
 ```
 
+For more information, please read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
+
 #### Result processor 
 Results (inclusive of webhook results and results posted to callback URLs asynchronously) sent from KopoKopo have to be processed before payloads can 
 be accessed. The result processor can be used to accomplish this using the `process()` method.
