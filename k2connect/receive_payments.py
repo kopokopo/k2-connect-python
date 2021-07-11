@@ -114,7 +114,7 @@ class ReceivePaymentsService(service.Service):
         # define subscriber JSON object
         mpesa_payment_subscriber = json_builder.subscriber(first_name=kwargs['first_name'],
                                                            last_name=kwargs['last_name'],
-                                                           phone=phone_number,
+                                                           phone_number=phone_number,
                                                            email=email)
 
         # define MPESA payment request JSON object
