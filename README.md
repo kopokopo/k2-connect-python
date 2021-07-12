@@ -1,4 +1,5 @@
 # k2-connect-python
+![PyPI](https://img.shields.io/pypi/v/k2-connect?style=for-the-badge)(https://pypi.org/project/k2-connect/)
 
 k2-connect is a Python library for accessing the Kopo Kopo APIs.
 
