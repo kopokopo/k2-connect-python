@@ -28,6 +28,7 @@ Webhooks = None
 TransactionNotifications = None
 ResultHandler = None
 Polling = None
+__version__ = '1.2.0'
 
 
 def initialize(client_id, client_secret, base_url, api_secret=None):
