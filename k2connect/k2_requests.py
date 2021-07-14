@@ -118,7 +118,11 @@ class Requests:
                     return response.json()
                 response_location = response.headers.get('location')
                 return response_location
-            raise exceptions.K2Error(response.reason)
+            response_error = {
+                'error_code': response.status_code,
+                'error_content': response.text
+            }
+            raise exceptions.K2Error(response_error)
         return exceptions.K2Error
 
     def _query_transaction_status(self,
