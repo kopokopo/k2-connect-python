@@ -46,6 +46,7 @@ def initialize(client_id, client_secret, base_url, api_secret=None):
     validation.validate_string_arguments(client_id,
                                          client_secret,
                                          base_url)
+    validation.validate_base_url(base_url)
 
     # initialize  token service
     globals()['Tokens'] = TokenService(client_id=client_id,

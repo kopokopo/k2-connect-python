@@ -41,6 +41,17 @@ def validate_url(url):
         return True
 
 
+def validate_base_url(url):
+    validate_url(url)
+    validated_url = urlparse(url)
+    # check url format
+    if validated_url.path is not "/":
+        raise exceptions.InvalidArgumentError('Invalid base url format (should be : https://domain.com/ with the domain'
+                                              ' details only)')
+    else:
+        return True
+
+
 def validate_string_arguments(*args):
     for arg in args:
         if arg is None or arg == '':
