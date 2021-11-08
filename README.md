@@ -81,27 +81,37 @@ To add pay recipients the `add_pay_recipient()` method is used. The currently su
 `mobile_wallet` the method then takes a set of key worded arguments required to create a recipient of either type. The accepted 
 key worded arguments are as follows:
 
-Common for both types:
+For `bank_account` recipient:  
+* account_name `REQUIRED`
+* account_number `REQUIRED`
+* bank_branch_ref `REQUIRED`
+* settlement_method `REQUIRED`
+
+
+For `mobile_wallet` recipient:
 * first_name `REQUIRED`
 * last_name `REQUIRED`
 * phone `REQUIRED`
 * email `REQUIRED`
-
-For `bank_account` recipient:  
-* account_name `REQUIRED`
-* account_number `REQUIRED`
-* bank_branch_id `REQUIRED`
-* bank_id `REQUIRED`
-
-
-For `mobile_wallet` recipient:
 * network `REQUIRED`
+
+
+For `till` recipient:
+* till_name `REQUIRED`
+* till_number `REQUIRED`
+
+
+For `paybill` recipient:
+* paybill_name `REQUIRED`
+* paybill_number `REQUIRED`
+* paybill_account_number `REQUIRED`
 
 To send payments the `send_pay()` method is used. It takes the following arguments:
 * bearer_token `REQUIRED`
 * callback_url `REQUIRED`
 * destination `REQUIRED`
-* value `REQUIRED`
+* amount `REQUIRED`
+* description `REQUIRED`
 * currency='KES' `REQUIRED`
 
  
@@ -141,6 +151,25 @@ mobile_recipient_request = {
     "email": "test@test.com"
 }
 mobile_pay_location = pay_service.add_pay_recipient(mobile_recipient_request)
+
+# create till pay recipient
+till_recipient_request = {
+    "access_token": "ACCESS_TOKEN",
+    "recipient_type": "till",
+    "till_name": "till_name",
+    "till_number": "till_number",
+}
+till_pay_location = pay_service.add_pay_recipient(till_recipient_request)
+
+# create paybill pay recipient
+paybill_recipient_request = {
+    "access_token": "ACCESS_TOKEN",
+    "recipient_type": "paybill",
+    "paybill_name": "paybill_name",
+    "paybill_number": "paybill_number",
+    "paybill_account_number": "account_number",
+}
+paybill_pay_location = pay_service.add_pay_recipient(paybill_recipient_request)
                                                                 
 # send pay transaction to mobile wallet
 request_payload = {
@@ -163,6 +192,28 @@ request_payload = {
             "currency": 'KES'
         }
 create_bank_pay_location = pay_service.send_pay(request_payload)
+                                                                
+# send pay transaction to till
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
+            "destination_type": 'till',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "amount": '10',
+            "currency": 'KES'
+        }
+create_till_pay_location = pay_service.send_pay(request_payload)
+                                                                
+# send pay transaction to paybill account
+request_payload = {
+            "access_token": 'ACCESS_TOKEN',
+            "destination_reference": '9764ef5f-fcd6-42c1-bbff-de280becc64b',
+            "destination_type": 'paybill',
+            "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+            "amount": '10',
+            "currency": 'KES'
+        }
+create_paybill_pay_location = pay_service.send_pay(request_payload)
 
 # get payment request status
 pay_request_status = pay_service.pay_transaction_status(create_mobile_pay_location)

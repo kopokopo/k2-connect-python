@@ -247,24 +247,27 @@ def till_pay_recipient(till_name, till_number):
     return till_pay_recipient_object
 
 
-def kopo_kopo_merchant_pay_recipient(alias_name, till_number):
+def paybill_pay_recipient(paybill_name, paybill_number, paybill_account_number):
     """
     Returns a json formatted str with the optional value of email.
     Checks if optional value is present, else passes values as null.
 
-    :param alias_name: First name of the recipient.
-    :type alias_name: str
-    :param till_number: Last name of the recipient.
-    :type till_number: str
+    :param paybill_name: Business name of the business.
+    :type paybill_name: str
+    :param paybill_number: Paybill business number.
+    :type paybill_number: str
+    :param paybill_account_number: Account number for the paybill.
+    :type paybill_account_number: str
     :return:
     """
     # validate string arguments
-    validation.validate_string_arguments(alias_name, till_number)
+    validation.validate_string_arguments(paybill_name, paybill_number, paybill_account_number)
 
-    k2_merchant_pay_recipient_object = {'alias_name': alias_name,
-                                        'till_number': till_number
-                                        }
-    return k2_merchant_pay_recipient_object
+    paybill_pay_recipient_object = {'paybill_name': paybill_name,
+                                    'paybill_number': paybill_number,
+                                    'paybill_account_number': paybill_account_number
+                                    }
+    return paybill_pay_recipient_object
 
 
 def subscriber(first_name,
@@ -388,6 +391,7 @@ def webhook_subscription(event_type,
 def pay(destination_reference,
         destination_type,
         payment_amount,
+        description,
         payment_links,
         payment_metadata):
     """
@@ -399,6 +403,8 @@ def pay(destination_reference,
     :param payment_amount: A JSON formatted str containing the currency
     and the amount to be transferred.
     :type payment_amount: str
+    :param description: Description or purpose of payment.
+    :type description: str
     :param payment_metadata: A JSON formatted str with a maximum of 5
     key-value pairs.
     :type payment_metadata: str
@@ -411,6 +417,7 @@ def pay(destination_reference,
     validation.validate_string_arguments(*destination_reference,
                                          *destination_type,
                                          *payment_amount,
+                                         *description,
                                          *payment_links,
                                          *payment_metadata)
 
@@ -418,6 +425,7 @@ def pay(destination_reference,
         "destination_reference": destination_reference,
         "destination_type": destination_type,
         "amount": payment_amount,
+        "description": description,
         "metadata": payment_metadata,
         "_links": payment_links
     }

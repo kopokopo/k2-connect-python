@@ -14,7 +14,7 @@ SEND_PAY_PATH = "api/v1/payments"
 BANK_ACCOUNT_RECIPIENT_TYPE = "bank_account"
 MOBILE_WALLET_RECIPIENT_TYPE = "mobile_wallet"
 TILL_RECIPIENT_TYPE = "till"
-K2_MERCHANT_RECIPIENT_TYPE = "kopo_kopo_merchant"
+PAYBILL_RECIPIENT_TYPE = "paybill"
 
 
 class PayService(service.Service):
@@ -148,14 +148,16 @@ class PayService(service.Service):
         # expected parameters for mobile wallet recipient
         # ['till_name', 'till_number']
 
-        elif recipient_type == K2_MERCHANT_RECIPIENT_TYPE:
-            if 'alias_name' not in kwargs or \
-                    'till_number' not in kwargs:
-                raise exceptions.InvalidArgumentError('Invalid arguments for Kopo Kopo Merchant Pay recipient')
+        elif recipient_type == PAYBILL_RECIPIENT_TYPE:
+            if 'paybill_name' not in kwargs or \
+                    'paybill_number' not in kwargs or \
+                    'paybill_account_number' not in kwargs:
+                raise exceptions.InvalidArgumentError('Invalid arguments for paybill Pay recipient')
 
             # create recipient json object
-            recipient_object = json_builder.kopo_kopo_merchant_pay_recipient(alias_name=str(kwargs['alias_name']),
-                                                          till_number=str(kwargs['till_number']))
+            recipient_object = json_builder.paybill_pay_recipient(paybill_name=str(kwargs['paybill_name']),
+                                                                  paybill_number=str(kwargs['paybill_number']),
+                                                                  paybill_account_number=str(kwargs['paybill_account_number']))
 
             # create mobile wallet recipient json object
             payment_recipient_object = json_builder.pay_recipient(recipient_type=recipient_type,
@@ -189,6 +191,7 @@ class PayService(service.Service):
         if 'destination_reference' not in kwargs or \
                 'destination_type' not in kwargs or \
                 'callback_url' not in kwargs or \
+                'description' not in kwargs or \
                 'amount' not in kwargs:
             raise exceptions.InvalidArgumentError('Invalid arguments for creating Outgoing Pay.')
 
@@ -203,6 +206,8 @@ class PayService(service.Service):
             bearer_token = kwargs['access_token']
         if 'callback_url' in kwargs:
             callback_url = kwargs['callback_url']
+        if 'description' in kwargs:
+            description = kwargs['description']
         if 'currency' in kwargs:
             currency = 'KES'
         if 'metadata' in kwargs:
@@ -231,6 +236,7 @@ class PayService(service.Service):
         pay_json = json_builder.pay(kwargs['destination_reference'],
                                     kwargs['destination_type'],
                                     pay_amount,
+                                    description,
                                     pay_links,
                                     pay_metadata)
 
