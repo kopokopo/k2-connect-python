@@ -1,8 +1,8 @@
-SAMPLE_CLIENT_ID = 'T1RyrPntqO4PJ35RLv6IVfPKRyg6gVoMvXEwEBin9Cw'
-SAMPLE_CLIENT_SECRET = 'Ywk_J18RySqLOmhhhVm8fhh4FzJTUzVcZJ03ckNpZK8'
+SAMPLE_CLIENT_ID = 'sample_client_id'
+SAMPLE_CLIENT_SECRET = 'sample_client_secret'
 SAMPLE_WEBHOOK_SECRET = 'sample_webhook_secret'
 SAMPLE_BASE_URL = 'https://sandbox.kopokopo.com/'
-SAMPLE_BEARER_TOKEN = 'Z9tnzpV-zwdk2ezCX-cBYLV4afcYfgl79NpjeNgfDQI'
+SAMPLE_BEARER_TOKEN = 'sample_access_token'
 SAMPLE_AUTHORIZATION_PATH = '/oauth/token'
 SAMPLE_DICTIONARY = {
     'amount': '50,000',
