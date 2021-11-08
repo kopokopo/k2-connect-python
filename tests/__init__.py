@@ -54,6 +54,40 @@ BANK_PAY_RECIPIENT_RTS = {
     "account_number": "bank_account_number"
 }
 
+TILL_PAY_RECIPIENT = {
+    "till_name": "Python Test Till",
+    "till_number": "519953"
+}
+
+INVALID_TILL_NAME_PAY_RECIPIENT = {
+    "till_number": "519953"
+}
+
+INVALID_TILL_NUMBER_PAY_RECIPIENT = {
+    "till_name": "Python Test Till",
+}
+
+PAYBILL_PAY_RECIPIENT = {
+    "paybill_name": "Python Payhiss",
+    "paybill_number": "815581",
+    "paybill_account_number": "account_one"
+}
+
+INVALID_PAYBILL_NAME_PAYBILL = {
+    "paybill_number": "815581",
+    "paybill_account_number": "account_one"
+}
+
+INVALID_PAYBILL_NUMBER_PAYBILL = {
+    "paybill_name": "Python Payhiss",
+    "paybill_account_number": "account_one"
+}
+
+INVALID_PAYBILL_ACCOUNT_NUMBER_PAYBILL = {
+    "paybill_name": "Python Payhiss",
+    "paybill_number": "815581",
+}
+
 INVALID_FIRST_NAME_BANK_PAY_RECIPIENT = {
     "last_name": "bank_account_recipient_last_name",
     "account_name": "bank_account_name",
@@ -94,7 +128,14 @@ PAY = {
     "bank_pay": BANK_PAY_RECIPIENT,
     "invalid_first_name_bank_pay": INVALID_FIRST_NAME_BANK_PAY_RECIPIENT,
     "invalid_phone_bank_pay": INVALID_PHONE_BANK_PAY_RECIPIENT,
-    "invalid_email_bank_pay": INVALID_EMAIL_BANK_PAY_RECIPIENT
+    "invalid_email_bank_pay": INVALID_EMAIL_BANK_PAY_RECIPIENT,
+    "till_pay": TILL_PAY_RECIPIENT,
+    "invalid_till_name_till_pay": INVALID_TILL_NAME_PAY_RECIPIENT,
+    "invalid_till_number_till_pay": INVALID_TILL_NUMBER_PAY_RECIPIENT,
+    "paybill_pay": PAYBILL_PAY_RECIPIENT,
+    "invalid_paybill_name_paybill": INVALID_PAYBILL_NAME_PAYBILL,
+    "invalid_paybill_number_paybill": INVALID_PAYBILL_NUMBER_PAYBILL,
+    "invalid_paybill_account_number_paybill": INVALID_PAYBILL_ACCOUNT_NUMBER_PAYBILL,
 }
 
 MSG = {
