@@ -113,6 +113,7 @@ To send payments the `send_pay()` method is used. It takes the following argumen
 * amount `REQUIRED`
 * description `REQUIRED`
 * currency='KES' `REQUIRED`
+* metadata `OPTIONAL`. Maximum 5 dictionaries/hashes/key-value pairs.
 
  
 Note: the currency argument is set to `KES` as the default currency since that is the only ISO currency currently supported. It may however, 
@@ -178,7 +179,8 @@ request_payload = {
             "destination_type": 'mobile_wallet',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'angelo'}
         }
 create_mobile_pay_location = pay_service.send_pay(request_payload)
                                                                 
@@ -189,7 +191,8 @@ request_payload = {
             "destination_type": 'bank_account',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'angelo'}
         }
 create_bank_pay_location = pay_service.send_pay(request_payload)
                                                                 
@@ -200,7 +203,8 @@ request_payload = {
             "destination_type": 'till',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'angelo'}
         }
 create_till_pay_location = pay_service.send_pay(request_payload)
                                                                 
@@ -211,7 +215,8 @@ request_payload = {
             "destination_type": 'paybill',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'angelo'}
         }
 create_paybill_pay_location = pay_service.send_pay(request_payload)
 
@@ -234,6 +239,7 @@ In order to create a payment request, the `create_payment_request()` method is u
 * till_number `REQUIRED`
 * value `REQUIRED`
 * currency='KES' `REQUIRED`
+* metadata `OPTIONAL`. Maximum 5 dictionaries/hashes/key-value pairs.
 
 Note: the currency argument is set to `KES` as the default currency since that is the only ISO currency currently supported. It may however, 
 be overridden by passing a different currency value in its place. If you do not wish to override the `KES` currency you can simply avoid 
@@ -267,7 +273,8 @@ request_payload = {
     "payment_channel": "MPESA",
     "phone_number": "+254911222536",
     "till_number": "K112233",
-    "amount": "10"
+    "amount": "10",
+    "metadata": { "hey": 'there', "mister": 'angelo'}
 }
 mpesa_payment_location = receive_payments_service.create_payment_request(request_payload)
 

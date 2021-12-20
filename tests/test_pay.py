@@ -232,7 +232,8 @@ class PayTestCase(unittest.TestCase):
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "description": "test",
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         self.assertIsNotNone(PayTestCase.pay_obj.send_pay(test_payload))
 
@@ -244,7 +245,8 @@ class PayTestCase(unittest.TestCase):
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "description": "test",
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         self.assertIsNotNone(PayTestCase.pay_obj.send_pay(test_payload))
 
@@ -256,7 +258,8 @@ class PayTestCase(unittest.TestCase):
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "description": "test",
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         response = PayTestCase.pay_obj.send_pay(test_payload)
         if self.assertIsNone(PayTestCase.validate(response)) is None:
@@ -271,7 +274,8 @@ class PayTestCase(unittest.TestCase):
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "description": "test",
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         response = PayTestCase.pay_obj.send_pay(test_payload)
         if self.assertIsNone(PayTestCase.validate(response)) is None:
@@ -306,7 +310,8 @@ class PayTestCase(unittest.TestCase):
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "description": "test",
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
             PayTestCase.pay_obj.send_pay(test_payload)
@@ -318,7 +323,8 @@ class PayTestCase(unittest.TestCase):
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
             "description": "test",
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
             PayTestCase.pay_obj.send_pay(test_payload)
@@ -330,7 +336,8 @@ class PayTestCase(unittest.TestCase):
             "destination_type": 'mobile_wallet',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "description": "test",
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
             PayTestCase.pay_obj.send_pay(test_payload)
@@ -342,7 +349,8 @@ class PayTestCase(unittest.TestCase):
             "destination_type": 'mobile_wallet',
             "amount": '10',
             "description": "test",
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
             PayTestCase.pay_obj.send_pay(test_payload)
@@ -354,7 +362,8 @@ class PayTestCase(unittest.TestCase):
             "destination_type": 'bank_account',
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "amount": '10',
-            "currency": 'KES'
+            "currency": 'KES',
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         with self.assertRaisesRegex(InvalidArgumentError, 'Invalid arguments for creating Outgoing Pay.'):
             PayTestCase.pay_obj.send_pay(test_payload)
