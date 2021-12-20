@@ -65,7 +65,8 @@ class ReceivePaymentTestCase(unittest.TestCase):
             "payment_channel": "MPESA",
             "phone_number": "+254911222536",
             "till_number": "K112233",
-            "amount": "10"
+            "amount": "10",
+            "metadata": { "hey": 'there', "mister": 'dude'}
         }
         response = ReceivePaymentTestCase.incoming_payments_obj.create_payment_request(test_payload)
         if self.assertIsNone(ReceivePaymentTestCase.validate(response)) is None:

@@ -90,7 +90,7 @@ class ReceivePaymentsService(service.Service):
         if 'currency' in kwargs:
             currency = 'KES'
         if 'metadata' in kwargs:
-            mpesa_payment_metadata = json_builder.metadata(kwargs['pay_metadata'])
+            mpesa_payment_metadata = json_builder.metadata(kwargs['metadata'])
 
         # define headers
         headers = dict(self._headers)
