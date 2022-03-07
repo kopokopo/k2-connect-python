@@ -279,7 +279,7 @@ request_payload = {
 mpesa_payment_location = receive_payments_service.create_payment_request(request_payload)
 
 # get payment request status
-payment_request_status = receive_payments_service.payment_request_status(mpesa_payment_location)
+payment_request_status = receive_payments_service.payment_request_status(access_token, mpesa_payment_location)
 ```
 
 #### Transfers service
@@ -370,7 +370,7 @@ request_payload = {
 transfer_transaction_bank_location = transfer_service.settle_funds(request_payload)
 
 # get transfer transaction status
-transfer_transaction_status = transfer_service.transfer_transaction_status(transfer_transaction_mobile_location or transfer_transaction_bank_location)
+transfer_transaction_status = transfer_service.transfer_transaction_status(access_token, transfer_transaction_mobile_location or transfer_transaction_bank_location)
 ```
 
 ##### The destination_reference number corresponding to a settlement account must exist before you can settle_funds to it. 
@@ -443,7 +443,7 @@ request_payload = {
 notification_resource_location_url = notification_service.send_transaction_sms_notification(request_payload)
 
 # get request status
-request_status = notification_service.transaction_notification_status(notification_resource_location_url)
+request_status = notification_service.transaction_notification_status(access_token, notification_resource_location_url)
 ```
 
 #### Polling service
@@ -479,7 +479,7 @@ request_payload = {
 polling_resource_location_url = notification_service.send_transaction_sms_notification(request_payload)
 
 # get request status
-request_status = notification_service.transaction_notification_status(polling_resource_location_url)
+request_status = notification_service.transaction_notification_status(access_token, polling_resource_location_url)
 ```
 
 For more information, please read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
