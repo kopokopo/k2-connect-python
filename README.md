@@ -221,7 +221,7 @@ request_payload = {
 create_paybill_pay_location = pay_service.send_pay(request_payload)
 
 # get payment request status
-pay_request_status = pay_service.pay_transaction_status(create_mobile_pay_location)
+pay_request_status = pay_service.pay_transaction_status(access_token, create_mobile_pay_location)
 ```
 
 #### Receive payments service

@@ -87,6 +87,7 @@ def mobile_recipient():
 def create_payment():
     destination_type = request.form['destination-type']
     destination_reference = request.form['destination-reference']
+    description = request.form['description']
     amount = request.form['amount']
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
     pay_service = k2connect.Pay
@@ -96,6 +97,7 @@ def create_payment():
         "access_token": environ.get('ACCESS_TOKEN'),
         "destination_reference": destination_reference,
         "destination_type": destination_type,
+        "description": description,
         "callback_url": 'http://127.0.0.1:5000/result/payment/outgoing',
         "amount": amount,
         "currency": 'KES',
@@ -104,6 +106,17 @@ def create_payment():
 
     create_pay_location = pay_service.send_pay(pay_request)
     return render_template('payment.html', resource_location_url=create_pay_location)
+
+
+@app.route('/query_outgoing_payment', methods=['POST'])
+def query_outgoing_payment():
+    resource_url = request.form['resource-url']
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    pay_service = k2connect.Pay
+
+    pay_object = pay_service.pay_transaction_status(environ.get('ACCESS_TOKEN'), resource_url)
+    print("Pay Object: " + json.dumps(pay_object, default=lambda o: o.__dict__))
+    return render_template('payment.html', resource_location_url=pay_object)
 
 
 @app.route('/incoming_payment', methods=['POST'])
