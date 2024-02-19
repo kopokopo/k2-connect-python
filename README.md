@@ -26,7 +26,7 @@ import k2connect
 
 CLIENT_ID = 'my_client_id'
 CLIENT_SECRET = os.getenv('MY_CLIENT_SECRET')
-BASE_URL = 'https://sandbox.kopopkopo.com/'
+BASE_URL = 'https://sandbox.kopokopo.com/'
 
 #initialize the library
 k2connect.initialize(CLIENT_ID, CLIENT_SECRET, BASE_URL)
