@@ -153,6 +153,9 @@ class TransferService(service.Service):
         """
         if 'access_token' not in kwargs:
             raise exceptions.InvalidArgumentError('Access Token not given.')
+        else:
+            bearer_token = kwargs['access_token']
+
         if 'currency' not in kwargs:
             currency = 'KES'
         if 'destination_reference' not in kwargs:
@@ -165,8 +168,6 @@ class TransferService(service.Service):
             raise exceptions.InvalidArgumentError('Invalid arguments for creating Outgoing Pay.')
 
         # iterate through kwargs
-        if 'access_token' in kwargs:
-            bearer_token = kwargs['access_token']
         if 'callback_url' in kwargs:
             callback_url = kwargs['callback_url']
         if 'destination_type' in kwargs:
