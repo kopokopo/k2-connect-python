@@ -113,13 +113,12 @@ class Requests:
             status_code = response.status_code
 
             if 200 <= status_code <= 300:
-                # FIXME: This is a HACK.
                 if urlparse(url).path == '/oauth/token' or method == 'GET':
                     return response.json()
                 response_location = response.headers.get('location')
                 return response_location
             response_error = {
-                'error_code': response.status_code,
+                'error_code': status_code,
                 'error_content': response.text
             }
             raise exceptions.K2Error(response_error)

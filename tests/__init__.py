@@ -1,7 +1,7 @@
 SAMPLE_CLIENT_ID = 'sample_client_id'
 SAMPLE_CLIENT_SECRET = 'sample_client_secret'
 SAMPLE_WEBHOOK_SECRET = 'sample_webhook_secret'
-SAMPLE_BASE_URL = 'https://sandbox.kopokopo.com/'
+SAMPLE_BASE_URL = 'http://127.0.0.1:3000/'
 SAMPLE_BEARER_TOKEN = 'sample_access_token'
 SAMPLE_AUTHORIZATION_PATH = '/oauth/token'
 SAMPLE_DICTIONARY = {

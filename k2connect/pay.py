@@ -71,11 +71,12 @@ class PayService(service.Service):
         """
         if 'access_token' not in kwargs:
             raise exceptions.InvalidArgumentError('Access Token not given.')
+        else:
+            bearer_token = kwargs['access_token']
+
         if 'recipient_type' not in kwargs:
             raise exceptions.InvalidArgumentError('Recipient Type not given.')
-        if 'access_token' in kwargs:
-            bearer_token = kwargs['access_token']
-        if 'recipient_type' in kwargs:
+        else:
             recipient_type = kwargs['recipient_type']
 
         # define headers
