@@ -163,8 +163,7 @@ class TransferService(service.Service):
         if 'destination_type' not in kwargs:
             destination_type = ''
 
-        if 'callback_url' not in kwargs or \
-                'value' not in kwargs:
+        if 'callback_url' not in kwargs:
             raise exceptions.InvalidArgumentError('Invalid arguments for creating Outgoing Pay.')
 
         # iterate through kwargs
@@ -184,23 +183,21 @@ class TransferService(service.Service):
         headers = dict(self._headers)
 
         # check bearer token
-        validation.validate_string_arguments(bearer_token,
-                                             currency,
-                                             value)
+        validation.validate_string_arguments(bearer_token)
 
         # add authorization to headers
         headers['Authorization'] = 'Bearer ' + bearer_token + ''
 
         # define amount
-        transfer_amount = json_builder.amount(currency=currency,
-                                              value=value)
+        if 'value' in kwargs:
+            validation.validate_string_arguments(currency, value)
+            transfer_amount = json_builder.amount(currency=currency, value=value)
 
         # create links json object
         transfer_links = json_builder.links(callback_url=callback_url)
 
-        if destination_reference is None and destination_type is None:
-            settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
-                                                          transfers_amount=transfer_amount)
+        if destination_reference == '' and destination_type == '':
+            settle_funds_payload = json_builder.transfers(transfer_links=transfer_links)
         else:
             settle_funds_payload = json_builder.transfers(transfer_links=transfer_links,
                                                           transfers_amount=transfer_amount,
