@@ -26,7 +26,8 @@ class Requests:
         """
         self._headers = {
             'Accept': 'application/vnd.kopokopo.v4.hal+json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'User-Agent': 'Kopokopo-Python-SDK',
         }
 
     @staticmethod
