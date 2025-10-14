@@ -44,6 +44,19 @@
                     }
                 });
             }).change();
+
+            /*change external recipients forms*/
+            $("#add-external-recipient-form").change(function () {
+                $(this).find("option:selected").each(function () {
+                    let optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".payment-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else {
+                        $(".payment-form").hide();
+                    }
+                });
+            }).change();
             /*change settlement account type forms*/
             $("#select-settlements-account-type-form").change(function () {
                 $(this).find("option:selected").each(function () {
@@ -189,64 +202,6 @@
                         </form>
                     </div>
                     <!--close request access token column-->
-
-                    <!--custom refresh mechanism-->
-                    <!--                        <div class="col-lg-6">-->
-
-                    <!--                            <label>Refresh Mechanisms</label>-->
-
-                    <!--                            &lt;!&ndash;current expiry time&ndash;&gt;-->
-                    <!--                            <div class="card border-secondary mb-3">-->
-                    <!--                                <div class="card-header">Expires on:</div>-->
-                    <!--                                <p class="card-text" style="padding: 0.5em;">Tue, 11/04/2019 21:36</p>-->
-                    <!--                            </div>-->
-
-                    <!--                            &lt;!&ndash;form for token refresh&ndash;&gt;-->
-                    <!--                            <form>-->
-                    <!--                                <label class="my-1 mr-2" for="refresh-time">Refresh __ before expiry:</label>-->
-                    <!--                                <div class="form-group">-->
-                    <!--                                    <select class="custom-select" id="refresh-time" style="width: 100%">-->
-                    <!--                                        <option selected>Choose...</option>-->
-                    <!--                                        <option value="1">15 Minutes</option>-->
-                    <!--                                        <option value="2">5 Minutes</option>-->
-                    <!--                                        <option value="3">1 Minute</option>-->
-                    <!--                                    </select>-->
-                    <!--                                </div>-->
-
-                    <!--                                <label  class="my-1 mr-2" for="refresh-token">Valid token to refresh:</label>-->
-                    <!--                                <div class="form-group">-->
-                    <!--                                    <select class="custom-select " id="refresh-token" style="width: 100%">-->
-                    <!--                                        <option selected>Choose...</option>-->
-                    <!--                                        <option value="1">z07xifdnSbJ2LnfvOfQxNlbAjLm</option>-->
-                    <!--                                    </select>-->
-                    <!--                                </div>-->
-                    <!--                                <button class="btn btn-info" id="refresh-access-token-button" type="button">Refresh Access Token</button>-->
-                    <!--                            </form>-->
-
-                    <!--                            &lt;!&ndash;table of refresh methods&ndash;&gt;-->
-                    <!--                            <div class="table-container table-responsive table-striped">-->
-                    <!--                                &lt;!&ndash;access token table&ndash;&gt;-->
-                    <!--                                <table class="table">-->
-                    <!--                                    <thead style="background: #17a2b8; color: white">-->
-                    <!--                                        <tr>-->
-                    <!--                                            <th scope="col">Access Token</th>-->
-                    <!--                                            <th scope="col">Expiry Date</th>-->
-                    <!--                                            <th scope="col">Scheduled Refresh</th>-->
-                    <!--                                            <th scope="col">Edit</th>-->
-                    <!--                                        </tr>-->
-                    <!--                                    </thead>-->
-                    <!--                                    <tbody>-->
-                    <!--                                        <tr>-->
-                    <!--                                            <td>z07xifdnSbJ2LnfvOfQxNlbAjLm</td>-->
-                    <!--                                            <td>Tue, 11/04/2019 21:36</td>-->
-                    <!--                                            <td>Tue, 11/04/2019 21:06</td>-->
-                    <!--                                            <td><i class="fas fa-edit"></i></td>-->
-                    <!--                                        </tr>-->
-                    <!--                                    </tbody>-->
-                    <!--                                </table>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--close custom refresh mechanism-->
                 </div>
                 <!--close token request row-->
             </div>
@@ -297,142 +252,6 @@
                             </table>
                         </div>
                         <!--close suppliers table-->
-
-                        <div class="sub-section-header">
-                            <h5>Add Pay Recipients</h5>
-                        </div>
-
-                        <!--select pay recipients-->
-                        <form id="select-recipient-type-form">
-                            <div class="form-group">
-                                <label for="select-recipient-type"> Recipient Type: </label>
-                                <select class="custom-select " id="select-recipient-type" style="width: 100%">
-                                    <option selected>Select recipient type...</option>
-                                    <option value="bank-account-recipient-form">Bank Account</option>
-                                    <option value="mobile-wallet-recipient-form">Mobile Wallet</option>
-                                    <option value="till-recipient-form">Till</option>
-                                    <option value="paybill-recipient-form">Paybill</option>
-                                </select>
-                            </div>
-                        </form>
-                        <!--select pay recipients-->
-
-                        <!--bank account recipient form-->
-                        <div id="bank-account-recipient-form" class="recipient-form">
-                            <form action="{{ url_for('bank_recipient') }}" method="post">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="bank-account-number">*Account Number:</label>
-                                        <input type="number" id="bank-account-number" name="bank-account-number"
-                                               class="form-control" placeholder="Account number">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="bank-account-name">*Account Name:</label>
-                                        <input type="text" id="bank-account-name" name="bank-account-name"
-                                               class="form-control" placeholder="Account name">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="bank-branch-ref">*Bank Branch Reference:</label>
-                                        <input type="text" id="bank-branch-ref" name="bank-branch-ref"
-                                               class="form-control" placeholder="Bank branch Reference">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Add Recipient</button>
-                            </form>
-                        </div>
-                        <!--close bank account recipient form-->
-
-                        <!--mobile wallet recipient form-->
-                        <div id="mobile-wallet-recipient-form" class="recipient-form">
-                            <form method="post" action="{{ url_for('mobile_recipient') }}">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="mobile-wallet-first-name">*First Name:</label>
-                                        <input type="text" id="mobile-wallet-first-name" name="mobile-wallet-first-name"
-                                               class="form-control" placeholder="First name">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="mobile-wallet-last-name">*Last Name:</label>
-                                        <input type="text" id="mobile-wallet-last-name" name="mobile-wallet-last-name"
-                                               class="form-control" placeholder="Last name">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="mobile-wallet-network">*Network:</label>
-                                        <input type="text" id="mobile-wallet-network" name="mobile-wallet-network"
-                                               class="form-control" placeholder="Network">
-                                    </div>
-
-                                    <div class="form-group col-6">
-                                        <label for="mobile-wallet-phone">*Phone:</label>
-                                        <input type="text" id="mobile-wallet-phone" name="mobile-wallet-phone"
-                                               class="form-control" placeholder="Phone">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="mobile-wallet-email">Email:</label>
-                                        <input type="text" id="mobile-wallet-email" name="mobile-wallet-email"
-                                               class="form-control" placeholder="Email">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Add Recipient</button>
-
-                            </form>
-                        </div>
-                        <!--close mobile wallet recipient form-->
-
-                        <!--till recipient form-->
-                        <div id="till-recipient-form" class="recipient-form">
-                            <form method="post" action="{{ url_for('till_recipient') }}">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="till-name">*Till name:</label>
-                                        <input type="text" id="till-name" name="till-name"
-                                               class="form-control" placeholder="First name">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="till-number">*Till number:</label>
-                                        <input type="text" id="till-number" name="till-number"
-                                               class="form-control" placeholder="Last name">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Add Recipient</button>
-
-                            </form>
-                        </div>
-                        <!--close till recipient form-->
-
-                        <!--paybill recipient form-->
-                        <div id="paybill-recipient-form" class="recipient-form">
-                            <form method="post" action="{{ url_for('paybill_recipient') }}">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="paybill-name">*Paybill name:</label>
-                                        <input type="text" id="paybill-name" name="paybill-name"
-                                               class="form-control" placeholder="Paybill name">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="paybill-number">*Paybill number:</label>
-                                        <input type="text" id="paybill-number" name="paybill-number"
-                                               class="form-control" placeholder="Paybill number">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="paybill-account-number">*Paybill account number:</label>
-                                        <input type="text" id="paybill-account-number" name="paybill-account-number"
-                                               class="form-control" placeholder="Paybill account number">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Add Recipient</button>
-
-                            </form>
-                        </div>
-                        <!--close paybill recipient form-->
                     </div>
                 </div>
             </div>
@@ -445,7 +264,7 @@
 
                 <!--payments sections header-->
                 <div class="section-header">
-                    <h2>Payments</h2>
+                    <h2>Send Money</h2>
                 </div>
                 <!--close payments sections header-->
 
@@ -461,28 +280,29 @@
                                 <label for="select-payment-type"> Payment Type: </label>
                                 <select class="custom-select " id="select-payment-type" style="width: 100%">
                                     <option selected>Select payment type...</option>
-                                    <option value="outgoing-payment-form">Outgoing Payment</option>
-                                    <option value="incoming-payment-form">Incoming Payment</option>
+                                    <option value="merchant_wallet_payment">Merchant M-Pesa Wallet Payment</option>
+                                    <option value="merchant_bank_payment">Merchant Bank Payment</option>
+                                    <option value="till_to_till_payment">Till to Till Payment</option>
+                                    <option value="external_mpesa_wallet_payment">External M-Pesa Wallet Payment
+                                    <option value="paybill_payment">Paybill Payment</option>
+                                    <option value="bank_payment">External Bank Payment</option>
+                                    <!--                                    <option value="incoming-payment-form">Incoming Payment</option>-->
                                 </select>
                             </div>
                         </form>
-                        <!--select pay recipients-->
+                        <!--select payment type-->
 
-                        <!--outgoing payment form-->
-                        <div id="outgoing-payment-form" class="payment-form">
-                            <form action="{{ url_for('create_payment') }}" method="post">
+                        <!--merchant wallet payment form-->
+                        <div id="merchant_wallet_payment" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
                                 <div class="form-row">
+                                    <input type="hidden" id="destination_type" name="destination_type"
+                                           value="merchant_wallet">
                                     <div class="form-group col-6">
-                                        <label for="destination-type">*Destination Type:</label>
-                                        <input type="text" id="destination-type" name="destination-type"
+                                        <label for="reference">*Reference:</label>
+                                        <input type="text" id="reference" name="reference"
                                                class="form-control"
-                                               placeholder="Destination Type">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="destination-reference">*Destination Reference:</label>
-                                        <input type="text" id="destination-reference" name="destination-reference"
-                                               class="form-control"
-                                               placeholder="Destination Reference">
+                                               placeholder="Reference">
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -491,6 +311,158 @@
                                         <input type="text" id="amount" name="amount" class="form-control"
                                                placeholder="Amount">
                                     </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Send Money</button>
+                            </form>
+                        </div>
+                        <!--end merchant wallet payment form-->
+
+
+                        <!--merchant bank account payment form-->
+                        <div id="merchant_bank_payment" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="destination_type" name="destination_type"
+                                           value="merchant_bank_account">
+                                    <div class="form-group col-6">
+                                        <label for="reference">*Reference:</label>
+                                        <input type="text" id="reference" name="reference"
+                                               class="form-control"
+                                               placeholder="Reference">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>
+                                        <input type="text" id="amount" name="amount" class="form-control"
+                                               placeholder="Amount">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Send Money</button>
+                            </form>
+                        </div>
+                        <!--end merchant wallet payment form-->
+
+                        <!--till to till payment form-->
+                        <div id="till_to_till_payment" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="destination_type" name="destination_type" value="till">
+                                    <div class="form-group col-6">
+                                        <label for="till_number">*Till Number:</label>
+                                        <input type="text" id="till_number" name="till_number"
+                                               class="form-control"
+                                               placeholder="Till Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="description">*Description:</label>
+                                        <input type="text" id="description" name="description"
+                                               class="form-control"
+                                               placeholder="Description">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>
+                                        <input type="text" id="amount" name="amount" class="form-control"
+                                               placeholder="Amount">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Send Money</button>
+                            </form>
+                        </div>
+                        <!--end till to till payment form-->
+
+                        <!--external mpesa wallet payment form-->
+                        <div id="external_mpesa_wallet_payment" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="destination_type" name="destination_type"
+                                           value="mobile_wallet">
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="phone_number">*Phone Number:</label>
+                                        <input type="text" id="phone_number" name="phone_number"
+                                               class="form-control"
+                                               placeholder="Phone Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="network">*Network:</label>
+                                        <input type="text" id="network" name="network"
+                                               class="form-control"
+                                               placeholder="Network">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="description">*Description:</label>
+                                        <input type="text" id="description" name="description"
+                                               class="form-control"
+                                               placeholder="Description">
+                                    </div>
+
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>
+                                        <input type="text" id="amount" name="amount" class="form-control"
+                                               placeholder="Amount">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Send Money</button>
+                            </form>
+                        </div>
+                        <!--end external mpesa wallet payment form-->
+
+                        <!--paybill payment form-->
+                        <div id="paybill_payment" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="destination_type" name="destination_type" value="paybill">
+                                    <div class="form-group col-6">
+                                        <label for="nickname">*Paybill Number:</label>
+                                        <input type="text" id="paybill_number" name="paybill_number"
+                                               class="form-control"
+                                               placeholder="Paybill Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">*Paybill Account Number:</label>
+                                        <input type="text" id="paybill_account_number" name="paybill_account_number"
+                                               class="form-control"
+                                               placeholder="Paybill Account Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="phone_number">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>
+                                        <input type="text" id="amount" name="amount" class="form-control"
+                                               placeholder="Amount">
+                                    </div>
+
                                     <div class="form-group col-6">
                                         <label for="description">*Description:</label>
                                         <input type="text" id="description" name="description"
@@ -498,21 +470,68 @@
                                                placeholder="Description">
                                     </div>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="callback-url">*Callback URL:</label>
-                                        <input type="text" id="callback-url" name="callback-url" class="form-control"
-                                               placeholder="Callback URL">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Create Payment</button>
+                                <button type="submit" class="btn btn-info">Send Money</button>
                             </form>
                         </div>
-                        <!--close outgoing payment form-->
+                        <!--end paybill payment form-->
+
+                        <!--external bank payment form-->
+                        <div id="bank_payment" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="destination_type" name="destination_type"
+                                           value="bank_account">
+                                    <div class="form-group col-6">
+                                        <label for="nickname">*Account Name:</label>
+                                        <input type="text" id="account_name" name="account_name"
+                                               class="form-control"
+                                               placeholder="Account Name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">*Account Number:</label>
+                                        <input type="text" id="account_number" name="account_number"
+                                               class="form-control"
+                                               placeholder="Account Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">*Bank Branch Reference:</label>
+                                        <input type="text" id="bank_branch_ref" name="bank_branch_ref"
+                                               class="form-control"
+                                               placeholder="Bank Branch Reference">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="phone_number">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>
+                                        <input type="text" id="amount" name="amount" class="form-control"
+                                               placeholder="Amount">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="description">*Description:</label>
+                                        <input type="text" id="description" name="description"
+                                               class="form-control"
+                                               placeholder="Description">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Send Money</button>
+                            </form>
+                        </div>
+                        <!--end paybill payment form-->
 
                         <!--incoming payment form-->
                         <div id="incoming-payment-form" class="payment-form">
-                            <form action="{{ url_for('incoming_payment') }}" method="post">
+                            <form action="{{ url_for('send_money') }}" method="post">
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="payment-channel">*Payment Channel:</label>
@@ -566,6 +585,201 @@
         </section>
         <!--close payments section-->
 
+        <!--external recipients section-->
+        <section class="muffin-section" id="external-recipients-section">
+            <div class="container">
+
+                <div class="section-header">
+                    <h2>External Recipients</h2>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="sub-section-header">
+                            <h5>Add External Recipient</h5>
+                        </div>
+
+                        <!--select external recipient type-->
+                        <form id="add-external-recipient-form">
+                            <div class="form-group">
+                                <label for="select-payment-type"> Type: </label>
+                                <select class="custom-select " id="add-external-recipient" style="width: 100%">
+                                    <option selected>Select payment type...</option>
+                                    <option value="mobile_wallet_recipient">Mobile Wallet</option>
+                                    <option value="till_recipient">Till</option>
+                                    <option value="paybill_recipient">Paybill</option>
+                                    <option value="bank_account_recipient">Bank Account</option>
+                                </select>
+                            </div>
+                        </form>
+
+                        <!--mobile wallet recipient form-->
+                        <div id="mobile_wallet_recipient" class="payment-form">
+                            <form action="{{ url_for('add_external_recipient') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="recipient_type" name="recipient_type"
+                                           value="mobile_wallet">
+                                    <div class="form-group col-6">
+                                        <label for="first_name">*First Name:</label>
+                                        <input type="text" id="first_name" name="first_name"
+                                               class="form-control"
+                                               placeholder="First Name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Last Name:</label>
+                                        <input type="text" id="last_name" name="last_name"
+                                               class="form-control"
+                                               placeholder="Last Name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Phone Number:</label>
+                                        <input type="text" id="phone_number" name="phone_number"
+                                               class="form-control"
+                                               placeholder="+2547XXXXXXXXX">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Email:</label>
+                                        <input type="text" id="email" name="email"
+                                               class="form-control"
+                                               placeholder="Email">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Network:</label>
+                                        <input type="text" id="network" name="network"
+                                               class="form-control"
+                                               placeholder="Network">
+                                    </div>
+
+
+                                </div>
+                                <button type="submit" class="btn btn-info">Add Recipient</button>
+                            </form>
+                        </div>
+                        <!--end mobile wallet recipient form-->
+
+                        <!--till recipient form-->
+                        <div id="till_recipient" class="payment-form">
+                            <form action="{{ url_for('add_external_recipient') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="recipient_type" name="recipient_type" value="till">
+                                    <div class="form-group col-6">
+                                        <label for="till_name">*Till Name:</label>
+                                        <input type="text" id="till_name" name="till_name"
+                                               class="form-control"
+                                               placeholder="Till Name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Till Number:</label>
+                                        <input type="text" id="till_number" name="till_number"
+                                               class="form-control"
+                                               placeholder="Till Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Add Recipient</button>
+                            </form>
+                        </div>
+                        <!--end till recipient form-->
+
+                        <!--paybill recipient form-->
+                        <div id="paybill_recipient" class="payment-form">
+                            <form action="{{ url_for('add_external_recipient') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="recipient_type" name="recipient_type" value="paybill">
+                                    <div class="form-group col-6">
+                                        <label for="paybill_name">*Paybill Name:</label>
+                                        <input type="text" id="paybill_name" name="paybill_name"
+                                               class="form-control"
+                                               placeholder="Paybill Name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Paybill Number:</label>
+                                        <input type="text" id="paybill_number" name="paybill_number"
+                                               class="form-control"
+                                               placeholder="Paybill Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Paybill Account Number:</label>
+                                        <input type="text" id="paybill_account_number" name="paybill_account_number"
+                                               class="form-control"
+                                               placeholder="Paybill Account Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Add Recipient</button>
+                            </form>
+                        </div>
+                        <!--end paybill recipient form-->
+
+                        <!--bank account recipient form-->
+                        <div id="bank_account_recipient" class="payment-form">
+                            <form action="{{ url_for('add_external_recipient') }}" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" id="recipient_type" name="recipient_type" value="bank_account">
+                                    <div class="form-group col-6">
+                                        <label for="account_name">*Account Name:</label>
+                                        <input type="text" id="account_name" name="account_name"
+                                               class="form-control"
+                                               placeholder="Account Name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Account Number:</label>
+                                        <input type="text" id="account_number" name="account_number"
+                                               class="form-control"
+                                               placeholder="Account Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="last_name">*Bank Branch Reference:</label>
+                                        <input type="text" id="bank_branch_ref" name="bank_branch_ref"
+                                               class="form-control"
+                                               placeholder="Bank Branch Reference">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="text" id="nickname" name="nickname"
+                                               class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info">Add Recipient</button>
+                            </form>
+                        </div>
+                        <!--end bank account recipient form-->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--end external recipients section-->
+
         <!--query payments section-->
         <section class="muffin-section" id="payments-section">
             <div class="container">
@@ -583,11 +797,11 @@
                         </div>
 
                         <!--query outgoing payment form-->
-                        <div id="query-outgoing-payment-form" class="query-payment-form">
-                            <form action="{{ url_for('query_outgoing_payment') }}" method="post">
+                        <div id="query-till_to_till_payment" class="query-payment-form">
+                            <form action="{{ url_for('query_send_money_payment') }}" method="post">
                                 <div class="form-row">
                                     <div class="form-group col-6">
-                                        <label for="destination-type">*Resource URL:</label>
+                                        <label for="destination_type">*Resource URL:</label>
                                         <input type="text" id="resource-url" name="resource-url"
                                                class="form-control"
                                                placeholder="Resource URL">
@@ -691,7 +905,7 @@
 
                         <!--mobile wallet form-->
                         <div id="mobile-wallet-form" class="settlement-form">
-                            <form action="{{ url_for('create_settlement_mobile_account') }}" method="post">
+                            <form action="{{ url_for('create_merchant_transfer_account') }}" method="post">
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="destination">*Phone Number:</label>
@@ -721,7 +935,7 @@
 
                         <!--bank account form-->
                         <div id="bank-account-form" class="settlement-form">
-                            <form action="{{ url_for('create_settlement_bank_account') }}" method="post">
+                            <form action="{{ url_for('create_merchant_transfer_account') }}" method="post">
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="account-name">*Account Name:</label>
@@ -791,51 +1005,6 @@
                             </div>
                         </form>
                         <!--close select transfer type-->
-
-                        <!--Targeted transfer form-->
-                        <div id="targeted-transfer-form" class="transfer-form">
-                            <form action="{{ url_for('target_transfer') }}" method="post">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="destination-type">*Destination Type:</label>
-                                        <input type="text" id="destination-type" name="destination-type"
-                                               class="form-control" placeholder="Destination Type">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="destination-reference">*Destination Reference:</label>
-                                        <input type="text" id="destination-reference" name="destination-reference"
-                                               class="form-control" placeholder="Destination Reference">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="amount">*Amount:</label>
-                                        <input type="text" id="transfer-amount" name="transfer-amount"
-                                               class="form-control" placeholder="Amount">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="amount">*Callback URL:</label>
-                                        <input type="text" id="callback-url" name="callback-url"
-                                               class="form-control" placeholder="Callback URL">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Make Transfer</button>
-                            </form>
-                        </div>
-                        <!--close Target transfer form-->
-
-                        <!--Blind transfer form-->
-                        <div id="blind-transfer-form" class="transfer-form">
-                            <form action="{{ url_for('blind_transfer') }}" method="post">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="callback-url">*Callback URL:</label>
-                                        <input type="text" id="callback-url" name="callback-url"
-                                               class="form-control" placeholder="Callback URL">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info">Make Transfer</button>
-                            </form>
-                        </div>
-                        <!--close Blind transfer form-->
                     </div>
                 </div>
             </div>

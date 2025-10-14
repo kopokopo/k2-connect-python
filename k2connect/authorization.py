@@ -81,9 +81,9 @@ class TokenService(service.Service):
         data = urlencode(client_credentials_payload)
 
         # request access token and expiry duration
-        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
+        access_token_response = self._make_requests(data=data, headers=headers, method='POST', url=url)
 
-        return access_token_request
+        return access_token_response
 
     def revoke_access_token(self, access_token):
         """

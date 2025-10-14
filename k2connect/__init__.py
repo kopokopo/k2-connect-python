@@ -10,20 +10,22 @@ from k2connect import exceptions
 import k2connect
 
 from .authorization import TokenService
-from .pay import PayService
+from .k2_subscription__service import K2WebhookSubscriptionService
 from .result_processor import ResultProcessor
 from .receive_payments import ReceivePaymentsService
-from .transfers import TransferService
 from . import validation
-from .webhooks import WebhookService
+from .send_money_service import SendMoneyService
+from .stk_push_service import StkPushService
+from .transfer_account_service import TransferAccountService
 from .notifications import NotificationService
-from .polling import PollingService
-
+from .polling_service import PollingService
 
 Tokens = None
 ReceivePayments = None
-Pay = None
-Transfers = None
+SendMoney = None
+K2Stk = None
+ExternalRecipient = None
+TransferAccount = None
 Webhooks = None
 TransactionNotifications = None
 ResultHandler = None
@@ -53,23 +55,27 @@ def initialize(client_id, client_secret, base_url, api_secret=None):
                                        client_secret=client_secret,
                                        base_url=base_url)
 
+    # initialize send money service
+    globals()['SendMoney'] = lambda access_token=None: SendMoneyService(base_url=base_url, access_token=access_token)
+
+    # initialize send money service
+    globals()['K2Stk'] = lambda access_token=None: StkPushService(base_url=base_url, access_token=access_token)
+
     # initialize stk service
     globals()['ReceivePayments'] = ReceivePaymentsService(base_url=base_url)
 
-    # initialize Pay service
-    globals()['Pay'] = PayService(base_url=base_url)
-
-    # initialize transfers service
-    globals()['Transfers'] = TransferService(base_url=base_url)
-
     # initialize webhook service
-    globals()['Webhooks'] = WebhookService(base_url=base_url)
+    globals()['Webhooks'] = lambda access_token=None: K2WebhookSubscriptionService(base_url=base_url,
+                                                                                   access_token=access_token)
+
+    globals()['TransferAccount'] = lambda access_token=None: TransferAccountService(base_url=base_url,
+                                                                                    access_token=access_token)
 
     # initialize transaction notification service
     globals()['TransactionNotifications'] = NotificationService(base_url=base_url)
 
     # initialize polling service
-    globals()['Polling'] = PollingService(base_url=base_url)
+    globals()['Polling'] = lambda access_token=None: PollingService(base_url=base_url, access_token=access_token)
 
     # initialize response processor
     globals()['ResultHandler'] = ResultProcessor(base_url=base_url,
