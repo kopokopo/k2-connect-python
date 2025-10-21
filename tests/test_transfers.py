@@ -34,7 +34,7 @@ class TransferTestCase(unittest.TestCase):
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "settlement_method": 'RTS',
             "account_name": 'py_sdk_account_name',
-            "account_number": 'py_sdk_account_number',
+            "account_number": '12345678901234567890',
             "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
         }
         self.assertIsNotNone(
@@ -45,7 +45,7 @@ class TransferTestCase(unittest.TestCase):
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "settlement_method": 'EFT',
             "account_name": 'py_sdk_account_name',
-            "account_number": 'py_sdk_account_number',
+            "account_number": '12345678901234567890',
             "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
         }
         self.assertIsNotNone(
@@ -56,7 +56,7 @@ class TransferTestCase(unittest.TestCase):
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "settlement_method": 'EFT',
             "account_name": 'py_sdk_account_name',
-            "account_number": 'py_sdk_account_number',
+            "account_number": '12345678901234567890',
             "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
         }
         response = TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload)
@@ -69,7 +69,7 @@ class TransferTestCase(unittest.TestCase):
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "settlement_method": 'RTS',
             "account_name": 'py_sdk_account_name',
-            "account_number": 'py_sdk_account_number',
+            "account_number": '12345678901234567890',
             "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
         }
         response = TransferTestCase.settlement_transfer_obj.add_bank_settlement_account(test_payload)
@@ -80,7 +80,7 @@ class TransferTestCase(unittest.TestCase):
     def test_add_bank_settlement_account_for_EFT_transfer_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.bank_settlement_account("EFT", "py_sdk_account_name", "py_sdk_account_number",
+            json=json_builder.bank_settlement_account("EFT", "py_sdk_account_name", "12345678901234567890",
                                                       "633aa26c-7b7c-4091-ae28-96c0687cf886"),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.SETTLEMENT_BANK_ACCOUNTS_PATH))
@@ -89,7 +89,7 @@ class TransferTestCase(unittest.TestCase):
     def test_add_bank_settlement_account_for_RTS_transfer_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.bank_settlement_account("RTS", "py_sdk_account_name", "py_sdk_account_number",
+            json=json_builder.bank_settlement_account("RTS", "py_sdk_account_name", "12345678901234567890",
                                                       "633aa26c-7b7c-4091-ae28-96c0687cf886"),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.SETTLEMENT_BANK_ACCOUNTS_PATH))
@@ -158,7 +158,6 @@ class TransferTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "value": '10',
         }
         self.assertIsNotNone(
             TransferTestCase.settlement_transfer_obj.settle_funds(test_payload))
@@ -167,7 +166,6 @@ class TransferTestCase(unittest.TestCase):
         test_payload = {
             "access_token": TransferTestCase.ACCESS_TOKEN,
             "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "value": '10',
         }
         response = TransferTestCase.settlement_transfer_obj.settle_funds(test_payload)
         if self.assertIsNone(TransferTestCase.validate(response)) is None:
@@ -177,8 +175,7 @@ class TransferTestCase(unittest.TestCase):
     def test_successful_blind_transfer_request(self):
         response = requests.post(
             headers=TransferTestCase.header,
-            json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
-                                        json_builder.amount('KES', "3300")),
+            json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d')),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.TRANSFER_PATH))
         self.assertEqual(response.status_code, 201)
@@ -213,8 +210,8 @@ class TransferTestCase(unittest.TestCase):
         response = requests.post(
             headers=TransferTestCase.header,
             json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
-                                        json_builder.amount('KES', "3300"),
-                                        **{"destination_type": "merchant_bank_account",
+                                        **{"transfers_amount": json_builder.amount('KES', "3300"),
+                                           "destination_type": "merchant_bank_account",
                                            "destination_reference": "87bbfdcf-fb59-4d8e-b039-b85b97015a7e"}),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.TRANSFER_PATH))
@@ -249,8 +246,8 @@ class TransferTestCase(unittest.TestCase):
         response = requests.post(
             headers=TransferTestCase.header,
             json=json_builder.transfers(json_builder.links('https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d'),
-                                        json_builder.amount('KES', "3300"),
-                                        **{"destination_type": "merchant_wallet",
+                                        **{"transfers_amount": json_builder.amount('KES', "3300"),
+                                           "destination_type": "merchant_wallet",
                                            "destination_reference": "eba238ae-e03f-46f6-aed5-db357fb00f9c"}),
             data=None,
             url=TransferTestCase.settlement_transfer_obj._build_url(transfers.TRANSFER_PATH))

@@ -9,6 +9,8 @@ from k2connect import payload_decomposer
 app = Flask(__name__)
 app.debug = True
 
+ACCESS_TOKEN = "ixFJK66p2STpU6lhYSFPF8_kin31cdZ765hQWy6RUdc"
+BASE_URL = "https://staging.kopokopo.com/"
 
 @app.route('/')
 def index():
@@ -26,13 +28,13 @@ def request_token():
     environ['CLIENT_SECRET'] = request.form['client-secret']
     given_time = datetime.datetime.now()
 
-    k2connect.initialize(environ['CLIENT_ID'], environ['CLIENT_SECRET'], 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ['CLIENT_ID'], environ['CLIENT_SECRET'], BASE_URL)
     token_service = k2connect.Tokens
     access_token_request = token_service.request_access_token()
     environ['ACCESS_TOKEN'] = token_service.get_access_token(access_token_request)
 
     return render_template('token.html', client_id=environ.get('CLIENT_ID'), client_secret=environ.get('CLIENT_SECRET'),
-                           given_time=given_time, access_token=environ.get('ACCESS_TOKEN'))
+                           given_time=given_time, access_token=ACCESS_TOKEN)
 
 
 @app.route('/bank_recipient', methods=['POST'])
@@ -42,11 +44,11 @@ def bank_recipient():
     bank_branch_ref = request.form['bank-branch-ref']
     settlement_method = request.form['settlement-method']
 
-    k2connect.initialize(environ['CLIENT_ID'], environ['CLIENT_SECRET'], 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ['CLIENT_ID'], environ['CLIENT_SECRET'], BASE_URL)
     pay_service = k2connect.Pay
 
     bank_recipient_request = {
-        "access_token": environ.get('ACCESS_TOKEN'),
+        "access_token": ACCESS_TOKEN,
         "recipient_type": 'bank_account',
         "account_name": bank_account_name,
         "bank_branch_ref": bank_branch_ref,
@@ -60,26 +62,64 @@ def bank_recipient():
 
 @app.route('/mobile_recipient', methods=['POST'])
 def mobile_recipient():
-    mobile_wallet_first_name = request.form['mobile-wallet-first-name']
-    mobile_wallet_last_name = request.form['mobile-wallet-last-name']
-    mobile_wallet_network = request.form['mobile-wallet-network']
-    mobile_wallet_phone = request.form['mobile-wallet-phone']
-    mobile_wallet_email = request.form['mobile-wallet-email']
+    bank_account_number = request.form['bank-account-number']
+    bank_account_name = request.form['bank-account-name']
+    bank_branch_ref = request.form['bank-branch-ref']
+    settlement_method = request.form['settlement-method']
 
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ['CLIENT_ID'], environ['CLIENT_SECRET'], BASE_URL)
     pay_service = k2connect.Pay
 
-    mobile_recipient_request = {
-        "access_token": environ.get('ACCESS_TOKEN'),
-        "recipient_type": 'mobile_wallet',
-        "first_name": mobile_wallet_first_name,
-        "last_name": mobile_wallet_last_name,
-        "phone": mobile_wallet_phone,
-        "network": mobile_wallet_network,
-        "email": mobile_wallet_email
+    bank_recipient_request = {
+        "access_token": ACCESS_TOKEN,
+        "recipient_type": 'bank_account',
+        "account_name": bank_account_name,
+        "bank_branch_ref": bank_branch_ref,
+        "account_number": bank_account_number,
+        "settlement_method": settlement_method
     }
 
-    mobile_transaction_location = pay_service.add_pay_recipient(mobile_recipient_request)
+    bank_transaction_location = pay_service.add_pay_recipient(bank_recipient_request)
+    return render_template('pay_recipient.html', resource_location_url=bank_transaction_location)
+
+
+@app.route('/till_recipient', methods=['POST'])
+def till_recipient():
+    till_name = request.form['till-name']
+    till_number = request.form['till-number']
+
+    k2connect.initialize(environ['CLIENT_ID'], environ['CLIENT_SECRET'], BASE_URL)
+    pay_service = k2connect.Pay
+
+    till_recipient_request = {
+        "access_token": ACCESS_TOKEN,
+        "recipient_type": 'till',
+        "till_name": till_name,
+        "till_number": till_number,
+    }
+
+    bank_transaction_location = pay_service.add_pay_recipient(till_recipient_request)
+    return render_template('pay_recipient.html', resource_location_url=bank_transaction_location)
+
+
+@app.route('/paybill_recipient', methods=['POST'])
+def paybill_recipient():
+    paybill_name = request.form['paybill-name']
+    paybill_number = request.form['paybill-number']
+    paybill_account_number = request.form['paybill-account-number']
+
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+    pay_service = k2connect.Pay
+
+    paybill_recipient_request = {
+        "access_token": ACCESS_TOKEN,
+        "recipient_type": 'paybill',
+        "paybill_name": paybill_name,
+        "paybill_number": paybill_number,
+        "paybill_account_number": paybill_account_number,
+    }
+
+    mobile_transaction_location = pay_service.add_pay_recipient(paybill_recipient_request)
     return render_template('pay_recipient.html', resource_location_url=mobile_transaction_location)
 
 
@@ -88,17 +128,18 @@ def create_payment():
     destination_type = request.form['destination-type']
     destination_reference = request.form['destination-reference']
     description = request.form['description']
+    callback_url = request.form['callback-url']
     amount = request.form['amount']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     pay_service = k2connect.Pay
 
     metadata = {"sth": "metasth", "last_sth": "another"}
     pay_request = {
-        "access_token": environ.get('ACCESS_TOKEN'),
+        "access_token": ACCESS_TOKEN,
         "destination_reference": destination_reference,
         "destination_type": destination_type,
         "description": description,
-        "callback_url": 'http://127.0.0.1:5000/result/payment/outgoing',
+        "callback_url": callback_url,
         "amount": amount,
         "currency": 'KES',
         "metadata": metadata
@@ -111,10 +152,10 @@ def create_payment():
 @app.route('/query_outgoing_payment', methods=['POST'])
 def query_outgoing_payment():
     resource_url = request.form['resource-url']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     pay_service = k2connect.Pay
 
-    pay_object = pay_service.pay_transaction_status(environ.get('ACCESS_TOKEN'), resource_url)
+    pay_object = pay_service.pay_transaction_status(ACCESS_TOKEN, resource_url)
     print("Pay Object: " + json.dumps(pay_object, default=lambda o: o.__dict__))
     return render_template('payment.html', resource_location_url=pay_object)
 
@@ -127,12 +168,12 @@ def incoming_payment():
     stk_last_name = request.form['stk-last-name']
     stk_phone = request.form['stk-phone']
     stk_amount = request.form['stk-amount']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     stk_service = k2connect.ReceivePayments
 
     stk_push_request = {
-        "access_token": environ.get('ACCESS_TOKEN'),
-        "callback_url": 'http://127.0.0.1:5000/result/payment/incoming',
+        "access_token": ACCESS_TOKEN,
+        "callback_url": 'https://webhook.site/e89a08d0-13d8-49ac-95d9-6d5d06485e3e',
         "first_name": stk_first_name,
         "last_name": stk_last_name,
         "email": "daivd.j.kariuki@gmail.com",
@@ -150,36 +191,52 @@ def incoming_payment():
 def create_settlement_bank_account():
     account_name = request.form['account-name']
     account_number = request.form['account-number']
+    settlement_method = request.form['settlement-method']
     settlement_bank_id = request.form['settlement-bank-id']
     settlement_bank_branch_id = request.form['settlement-bank-branch-id']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    bank_settlement_request = {
+        "access_token": ACCESS_TOKEN,
+        "account_name": account_name,
+        "account_number": account_number,
+        "bank_branch_ref": "{}-bank_branch_ref-{}".format(settlement_bank_id, settlement_bank_branch_id),
+        "settlement_method": settlement_method
+    }
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     transfer_service = k2connect.Transfers
-    settlement_bank_location_url = transfer_service.add_bank_settlement_account(environ.get('ACCESS_TOKEN'),
-                                                                                account_name, account_number,
-                                                                                settlement_bank_id,
-                                                                                settlement_bank_branch_id)
+    settlement_bank_location_url = transfer_service.add_bank_settlement_account(bank_settlement_request)
     return render_template('settlements.html', resource_location_url=settlement_bank_location_url)
 
 
 @app.route('/settlment_wallet_accounts', methods=['POST'])
 def create_settlement_mobile_account():
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
     msisdn = request.form['msisdn']
-    network = request.form['network']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    network = "Safaricom"
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     transfer_service = k2connect.Transfers
-    settlement_mobile_location_url = transfer_service.add_mobile_wallet_settlement_account(environ.get('ACCESS_TOKEN'),
-                                                                                           msisdn, network)
+    mobile_settlement_request = {
+        "access_token": ACCESS_TOKEN,
+        "phone_number": msisdn,
+        "first_name": first_name,
+        "last_name": last_name,
+        "network": network,
+    }
+    settlement_mobile_location_url = transfer_service.add_mobile_wallet_settlement_account(mobile_settlement_request)
     return render_template('settlements.html', resource_location_url=settlement_mobile_location_url)
 
 
 @app.route('/blind_transfer', methods=['POST'])
 def blind_transfer():
-    blind_transfer_amount = request.form['blind-transfer-amount']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     transfer_service = k2connect.Transfers
-    transfer_location_url = transfer_service.settle_funds(environ.get('ACCESS_TOKEN'),
-                                                          'http://127.0.0.1:5000/result/payment/transfer',
-                                                          blind_transfer_amount)
+
+    request_body = {
+        "access_token": ACCESS_TOKEN,
+        "callback_url": 'https://webhook.site/e89a08d0-13d8-49ac-95d9-6d5d06485e3e'
+    }
+
+    transfer_location_url = transfer_service.settle_funds(request_body)
     return render_template('transfers.html', resource_location_url=transfer_location_url)
 
 
@@ -188,11 +245,17 @@ def target_transfer():
     destination_type = request.form['destination-type']
     destination_reference = request.form['destination-reference']
     transfer_amount = request.form['transfer-amount']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    callback_url = request.form['callback-url']
+    transfer_request = {
+        "access_token": ACCESS_TOKEN,
+        "destination_type": destination_type,
+        "destination_reference": destination_reference,
+        "callback_url": callback_url,
+        "value": transfer_amount
+    }
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     transfer_service = k2connect.Transfers
-    transfer_location_url = transfer_service.settle_funds(environ.get('ACCESS_TOKEN'),
-                                                          'http://127.0.0.1:5000/result/payment/transfer',
-                                                          transfer_amount, destination_type, destination_reference)
+    transfer_location_url = transfer_service.settle_funds(transfer_request)
     return render_template('transfers.html', resource_location_url=transfer_location_url)
 
 
@@ -201,16 +264,16 @@ def subscription():
     webhook_event = request.form['select-webhook-type']
     scope = request.form['scope']
     scope_reference = request.form['scope-reference']
-    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), 'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     webhook_service = k2connect.Webhooks
 
     webhook_request = {
-        "access_token": environ.get('ACCESS_TOKEN'),
+        "access_token": ACCESS_TOKEN,
         "event_type": webhook_event,
-        "webhook_endpoint": 'http://127.0.0.1:5000/result/webhook',
+        "webhook_endpoint": 'https://webhook.site/e89a08d0-13d8-49ac-95d9-6d5d06485e3e',
         "scope": scope
     }
-    if webhook_event in ['b2b_transaction_received', 'buygoods_transaction_received', 'buygoods_transaction_reversed']:
+    if scope == 'till':
         webhook_request.update({"scope_reference": scope_reference})
 
     webhook_sub = webhook_service.create_subscription(webhook_request)
@@ -220,7 +283,7 @@ def subscription():
 @app.route('/result/webhook', methods=['POST'])
 def process_webhook():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
-                         'http://127.0.0.1:3000/', environ.get('API_SECRET'))
+                         BASE_URL, environ.get('API_SECRET'))
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
@@ -245,8 +308,8 @@ def process_webhook():
 
 @app.route('/result/payment/outgoing', methods=['POST'])
 def process_pay():
-    k2connect.initialize('16D80-Mm-WzRyxbCmUl357XgkczszkLtw5fZc8A17j4', 'OgHgvFGjL2UUcgqHW08he6P-aE8zrRvngdPDuU6Uz0o',
-                         'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
+                         BASE_URL)
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
@@ -256,8 +319,8 @@ def process_pay():
 
 @app.route('/result/payment/incoming', methods=['POST'])
 def process_stk():
-    k2connect.initialize('16D80-Mm-WzRyxbCmUl357XgkczszkLtw5fZc8A17j4', 'OgHgvFGjL2UUcgqHW08he6P-aE8zrRvngdPDuU6Uz0o',
-                         'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
+                         BASE_URL)
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)
@@ -267,8 +330,8 @@ def process_stk():
 
 @app.route('/result/payment/transfer', methods=['POST'])
 def process_transfer():
-    k2connect.initialize('16D80-Mm-WzRyxbCmUl357XgkczszkLtw5fZc8A17j4', 'OgHgvFGjL2UUcgqHW08he6P-aE8zrRvngdPDuU6Uz0o',
-                         'http://127.0.0.1:3000/')
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
+                         BASE_URL)
     result_handler = k2connect.ResultHandler
     processed_payload = result_handler.process(request)
     decomposed_result = payload_decomposer.decompose(processed_payload)

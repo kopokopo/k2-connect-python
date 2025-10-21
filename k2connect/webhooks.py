@@ -61,11 +61,9 @@ class WebhookService(service.Service):
             scope_reference = kwargs['scope_reference']
 
         # event types
-        event_types_to_check = ['b2b_transaction_received', 'buygoods_transaction_received',
-                                'buygoods_transaction_reversed', 'm2m_transaction_received',
-                                'settlement_transfer_completed', 'customer_created']
-        till_scope_event_types = ['b2b_transaction_received', 'buygoods_transaction_received',
-                                  'buygoods_transaction_reversed']
+        till_scope_event_types = ['b2b_transaction_received', 'buygoods_transaction_received', 'buygoods_transaction_reversed']
+        company_scope_event_types = ['settlement_transfer_completed', 'm2m_transaction_received', 'customer_created']
+        event_types_to_check = till_scope_event_types + company_scope_event_types
 
         # build subscription url
         subscription_url = self._build_url(WEBHOOK_SUBSCRIPTION_PATH)
@@ -88,18 +86,19 @@ class WebhookService(service.Service):
             raise exceptions.InvalidArgumentError('Event type not recognized by k2-connect')
 
         if any(check in event_type for check in till_scope_event_types):
-            if scope != 'till':
+            if scope not in ['till', 'company']:
                 raise exceptions.InvalidArgumentError('Invalid scope for given event type.')
-            if 'scope_reference' not in kwargs or kwargs['scope_reference'] is None:
+            if ('scope_reference' not in kwargs or kwargs['scope_reference'] is None) and scope != 'company':
                 raise exceptions.InvalidArgumentError('Scope reference not given.')
 
-        if not any(check in event_type for check in till_scope_event_types):
-            scope_reference = None
+        if any(check in event_type for check in company_scope_event_types):
             if scope != 'company':
                 raise exceptions.InvalidArgumentError('Invalid scope for given event type.')
             if 'scope_reference' in kwargs:
                 raise exceptions.InvalidArgumentError('Invalid scope reference for given event type.')
 
+        if scope == 'company':
+            scope_reference = None
         # validate webhook endpoint
         validation.validate_url(webhook_endpoint)
 

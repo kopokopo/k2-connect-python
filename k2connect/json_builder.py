@@ -432,8 +432,7 @@ def pay(destination_reference,
     return payment_json_object
 
 
-def transfers(transfer_links, transfers_amount,
-              **kwargs):
+def transfers(transfer_links, **kwargs):
     """
     Returns JSON formatted containing information about a transfer.
     :param transfers_amount: Amount to be transferred.
@@ -445,7 +444,14 @@ def transfers(transfer_links, transfers_amount,
     :return: str
     """
     # validate string arguments
-    validation.validate_string_arguments(*transfer_links, *transfers_amount)
+    if transfer_links is not None:
+        validation.validate_string_arguments(*transfer_links)
+    
+    if 'transfers_amount' in kwargs:
+        transfers_amount = kwargs['transfers_amount']
+        validation.validate_string_arguments(*transfers_amount)
+    else:
+        transfers_amount = None
 
     if 'destination_type' not in kwargs:
         destination_type = None
