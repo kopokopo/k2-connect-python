@@ -9,7 +9,6 @@ from k2connect import payload_decomposer
 app = Flask(__name__)
 app.debug = True
 
-ACCESS_TOKEN = "ixFJK66p2STpU6lhYSFPF8_kin31cdZ765hQWy6RUdc"
 BASE_URL = "https://staging.kopokopo.com/"
 
 @app.route('/')
@@ -34,7 +33,7 @@ def request_token():
     environ['ACCESS_TOKEN'] = token_service.get_access_token(access_token_request)
 
     return render_template('token.html', client_id=environ.get('CLIENT_ID'), client_secret=environ.get('CLIENT_SECRET'),
-                           given_time=given_time, access_token=ACCESS_TOKEN)
+                           given_time=given_time, access_token=environ.get('ACCESS_TOKEN'))
 
 
 @app.route('/bank_recipient', methods=['POST'])
@@ -48,7 +47,7 @@ def bank_recipient():
     pay_service = k2connect.Pay
 
     bank_recipient_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "recipient_type": 'bank_account',
         "account_name": bank_account_name,
         "bank_branch_ref": bank_branch_ref,
@@ -71,7 +70,7 @@ def mobile_recipient():
     pay_service = k2connect.Pay
 
     bank_recipient_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "recipient_type": 'bank_account',
         "account_name": bank_account_name,
         "bank_branch_ref": bank_branch_ref,
@@ -92,7 +91,7 @@ def till_recipient():
     pay_service = k2connect.Pay
 
     till_recipient_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "recipient_type": 'till',
         "till_name": till_name,
         "till_number": till_number,
@@ -112,7 +111,7 @@ def paybill_recipient():
     pay_service = k2connect.Pay
 
     paybill_recipient_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "recipient_type": 'paybill',
         "paybill_name": paybill_name,
         "paybill_number": paybill_number,
@@ -135,7 +134,7 @@ def create_payment():
 
     metadata = {"sth": "metasth", "last_sth": "another"}
     pay_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "destination_reference": destination_reference,
         "destination_type": destination_type,
         "description": description,
@@ -155,7 +154,7 @@ def query_outgoing_payment():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     pay_service = k2connect.Pay
 
-    pay_object = pay_service.pay_transaction_status(ACCESS_TOKEN, resource_url)
+    pay_object = pay_service.pay_transaction_status(environ.get('ACCESS_TOKEN'), resource_url)
     print("Pay Object: " + json.dumps(pay_object, default=lambda o: o.__dict__))
     return render_template('payment.html', resource_location_url=pay_object)
 
@@ -172,7 +171,7 @@ def incoming_payment():
     stk_service = k2connect.ReceivePayments
 
     stk_push_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "callback_url": 'https://webhook.site/e89a08d0-13d8-49ac-95d9-6d5d06485e3e',
         "first_name": stk_first_name,
         "last_name": stk_last_name,
@@ -195,7 +194,7 @@ def create_settlement_bank_account():
     settlement_bank_id = request.form['settlement-bank-id']
     settlement_bank_branch_id = request.form['settlement-bank-branch-id']
     bank_settlement_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "account_name": account_name,
         "account_number": account_number,
         "bank_branch_ref": "{}-bank_branch_ref-{}".format(settlement_bank_id, settlement_bank_branch_id),
@@ -216,7 +215,7 @@ def create_settlement_mobile_account():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     transfer_service = k2connect.Transfers
     mobile_settlement_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "phone_number": msisdn,
         "first_name": first_name,
         "last_name": last_name,
@@ -232,7 +231,7 @@ def blind_transfer():
     transfer_service = k2connect.Transfers
 
     request_body = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "callback_url": 'https://webhook.site/e89a08d0-13d8-49ac-95d9-6d5d06485e3e'
     }
 
@@ -247,7 +246,7 @@ def target_transfer():
     transfer_amount = request.form['transfer-amount']
     callback_url = request.form['callback-url']
     transfer_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "destination_type": destination_type,
         "destination_reference": destination_reference,
         "callback_url": callback_url,
@@ -268,7 +267,7 @@ def subscription():
     webhook_service = k2connect.Webhooks
 
     webhook_request = {
-        "access_token": ACCESS_TOKEN,
+        "access_token": environ.get('ACCESS_TOKEN'),
         "event_type": webhook_event,
         "webhook_endpoint": 'https://webhook.site/e89a08d0-13d8-49ac-95d9-6d5d06485e3e',
         "scope": scope
