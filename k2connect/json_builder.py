@@ -387,51 +387,6 @@ def webhook_subscription(event_type,
                                    }
     return webhook_subscription_object
 
-
-def pay(destination_reference,
-        destination_type,
-        payment_amount,
-        description,
-        payment_links,
-        payment_metadata):
-    """
-    Return JSON formatted str containing information about a transfer.
-    :param destination_reference: reference for the pay_recipient account.
-    :type destination_reference : str
-    :param destination_type: Differentiate between mobile and bank account type for recipient
-    :type destination_type : str
-    :param payment_amount: A JSON formatted str containing the currency
-    and the amount to be transferred.
-    :type payment_amount: str
-    :param description: Description or purpose of payment.
-    :type description: str
-    :param payment_metadata: A JSON formatted str with a maximum of 5
-    key-value pairs.
-    :type payment_metadata: str
-    :param payment_links:A JSON formatted str containing a call back URL.
-    :type payment_links: str
-    :return: str
-    """
-
-    # validate string arguments
-    validation.validate_string_arguments(*destination_reference,
-                                         *destination_type,
-                                         *payment_amount,
-                                         *description,
-                                         *payment_links,
-                                         *payment_metadata)
-
-    payment_json_object = {
-        "destination_reference": destination_reference,
-        "destination_type": destination_type,
-        "amount": payment_amount,
-        "description": description,
-        "metadata": payment_metadata,
-        "_links": payment_links
-    }
-    return payment_json_object
-
-
 def transfers(transfer_links, **kwargs):
     """
     Returns JSON formatted containing information about a transfer.
