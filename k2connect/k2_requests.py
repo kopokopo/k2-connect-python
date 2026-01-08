@@ -113,7 +113,7 @@ class Requests:
             status_code = response.status_code
 
             if 200 <= status_code <= 300:
-                if urlparse(url).path == '/oauth/token' or method == 'GET':
+                if 'oauth' in urlparse(url).path or method == 'GET':
                     return response.json()
                 response_location = response.headers.get('location')
                 return response_location

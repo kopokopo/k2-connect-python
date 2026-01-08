@@ -128,7 +128,7 @@ class TokenService(service.Service):
         headers = dict(self._headers)
 
         # add content-type
-        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        headers['Content-Type'] = 'application/json'
 
         # define client credentials payload
         client_credentials_payload = {
@@ -137,11 +137,8 @@ class TokenService(service.Service):
             'token': access_token,
         }
 
-        # url-encode payload
-        data = urlencode(client_credentials_payload)
-
         # request access token and expiry duration
-        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
+        access_token_request = self._make_requests(payload=client_credentials_payload, headers=headers, method='POST', url=url)
 
         return access_token_request
 
@@ -157,19 +154,11 @@ class TokenService(service.Service):
         # redefine headers for token request
         headers = dict(self._headers)
 
-        # add content-type
-        headers['Content-Type'] = 'application/x-www-form-urlencoded'
-        headers['access_token'] = access_token
-
-        # define client credentials payload
-        client_credentials_payload = {
-        }
-
-        # url-encode payload
-        data = urlencode(client_credentials_payload)
+        # add access_token
+        headers['Authorization'] = "Bearer " + access_token
 
         # request access token and expiry duration
-        access_token_request = self._make_requests(data=data, headers=headers, method='POST', url=url)
+        access_token_request = self._make_requests(headers=headers, method='GET', url=url)
 
         return access_token_request
 
