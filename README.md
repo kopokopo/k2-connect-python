@@ -481,6 +481,49 @@ polling_resource_location_url = polling_service.initiate_polling_request(request
 request_status = polling_service.polling_request_status(polling_resource_location_url)
 ```
 
+#### Payment links service
+
+Payment links allow you to create and share payment requests with customers. This service allows you to create, view and cancel payment links
+
+* amount: The amount of payment being requested `REQUIRED`
+* tillNumber: The till number to which the payment is to be made `REQUIRED`
+* callbackUrl: Url that the result will be posted to `REQUIRED`
+* paymentReference: This is a unique reference that you can use to track the payment link `OPTIONAL`
+* note: An additional note to be seen by the customer when they click the payment link. You can include the payment reason `OPTIONAL`
+* paymentLinkReference: This is the unique reference generated for a created payment link. It is required to view the status or cancel the payment link 
+
+```python
+import k2connect
+
+# initialize service
+payment_links_service = k2connect.PaymentLinks(access_token=access_token)
+
+# create a payment link
+request_payload = {
+    "currency": "KES",
+    "amount": 20000,
+    "till_number": "65328",
+    "payment_reference": "UNIQUE_REFERENCE",
+    "note": "Payment for TV sold",
+    "callback_url": "https://callback_to_your_app.your_application.com",
+}
+payment_link_resource_location_url = payment_links_service.create_payment_link(request_payload)
+
+# view payment link
+request_body = {
+    "payment-link-reference": "payment-link-reference"
+}
+payment_link_resource = payment_links_service.fetch_payment_link(request_body)
+
+# cancel payment link
+request_body = {
+    "payment-link-reference": "payment-link-reference"
+}
+payment_links_service.cancel_payment_link(request_body)
+```
+
+
+
 For more information, please
 read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
 
