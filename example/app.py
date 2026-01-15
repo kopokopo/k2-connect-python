@@ -55,6 +55,48 @@ def send_money():
     return render_template('send_money.html', resource_location_url=send_money_location)
 
 
+@app.route('/create_payment_link', methods=['POST'])
+def create_payment_link():
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+    payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
+    payment_link_request = {
+        "currency": "KES",
+        "amount": request.form["amount"],
+        "till_number": request.form["till-number"],
+        "payment_reference": request.form["payment-reference"],
+        "note": request.form["payment-link-note"],
+        "callback_url": CALLBACK_URL,
+        "metadata": {"key": "value"},
+    }
+
+    create_payment_link_location = payment_links_service.create_payment_link(payment_link_request)
+    return render_template('send_money.html', resource_location_url=create_payment_link_location)
+
+
+@app.route('/fetch_payment_link', methods=['GET'])
+def view_payment_link():
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+    payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
+    request_body = {
+        "payment-link-reference": request.args.get("payment-link-reference")
+    }
+    fetch_payment_link_location = payment_links_service.fetch_payment_link(request_body)
+    formatted_json_response = json.dumps(fetch_payment_link_location, indent=2)
+
+    return render_template('send_money.html', resource_location_url=formatted_json_response)
+
+
+@app.route('/cancel_payment_link', methods=['POST'])
+def cancel_payment_link():
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+    payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
+    request_body = {
+        "payment-link-reference": request.form["payment-link-reference"]
+    }
+    fetch_payment_link_location = payment_links_service.cancel_payment_link(request_body)
+    return render_template('send_money.html', resource_location_url=fetch_payment_link_location)
+
+
 @app.route('/add_external_recipient', methods=['POST'])
 def add_external_recipient():
     external_recipient_request = _build_external_recipient_request()

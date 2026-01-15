@@ -92,6 +92,44 @@
                     }
                 });
             }).change();
+            /*change payment link form*/
+            $("#create-payment-link-form").change(function () {
+                $(this).find("option:selected").each(function () {
+                    let optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".payment-links-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else {
+                        $(".payment-links-form").hide();
+                    }
+                });
+            }).change();
+
+            /*change view payment link form*/
+            $("#view-payment-link-form").change(function () {
+                $(this).find("option:selected").each(function () {
+                    let optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".payment-links-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else {
+                        $(".payment-links-form").hide();
+                    }
+                });
+            }).change();
+
+              /*cancel payment link form*/
+            $("#cancel-payment-link-form").change(function () {
+                $(this).find("option:selected").each(function () {
+                    let optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".payment-links-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else {
+                        $(".payment-links-form").hide();
+                    }
+                });
+            }).change();
         });
     </script>
 </head>
@@ -873,6 +911,111 @@
             </div>
         </section>
         <!--close webhooks section-->
+
+        <!--payment links section-->
+        <section class="muffin-section" id="payment_links-section">
+            <div class="container">
+
+                <!--payment links sections header-->
+                <div class="section-header">
+                    <h2>Payment Links</h2>
+                </div>
+                <!--close payment links sections header-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="sub-section-header">
+                            <h5>Create a payment link</h5>
+                        </div>
+
+                        <form id="payment-links" method="post" action="{{ url_for('create_payment_link') }}">
+                            <div id="create-payment-link-form" class="payment-links-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>
+                                        <input type="text" id="payment-link-amount" name="amount" class="form-control"
+                                               placeholder="Amount">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="till-number">*Till Number:</label>
+                                        <input type="text" id="till-number" name="till-number" class="form-control"
+                                               placeholder="Till Number">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="payment-reference">*Payment Reference:</label>
+                                        <input type="text" id="payment-reference" name="payment-reference"
+                                               class="form-control" placeholder="Payment Reference">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="payment-link-note">Note:</label>
+                                        <input type="text" id="payment-link-note" name="payment-link-note"
+                                               class="form-control" placeholder="Note">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="callback-url">Callback URL:</label>
+                                        <input type="text" id="payment-link-callback-url" name="callback-url"
+                                               class="form-control" placeholder="Callback URL">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Create Payment Link</button>
+                        </form>
+                        <!--close payment links form-->
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="sub-section-header">
+                            <h5>View Payment link</h5>
+                        </div>
+                        <form id="view-payment-link" method="get" action="{{ url_for('view_payment_link') }}">
+                            <div id="view-payment-link-form" class="payment-links-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="payment-link-reference">*Reference:</label>
+                                        <input type="text" id="payment-link-reference" name="payment-link-reference"
+                                               class="form-control"
+                                               placeholder="Reference">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Fetch Payment Link</button>
+                        </form>
+                        <!--close view payment links form-->
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="sub-section-header">
+                            <h5>Cancel Payment link</h5>
+                        </div>
+                        <form id="cancel-payment-link" method="post" action="{{ url_for('cancel_payment_link') }}">
+                            <div id="cancel-payment-link-form" class="payment-links-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="payment-link-reference">*Reference:</label>
+                                        <input type="text" id="payment-link-reference" name="payment-link-reference"
+                                               class="form-control"
+                                               placeholder="Reference">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Cancel Payment Link</button>
+                        </form>
+                        <!--close cancel payment links form-->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!--close payment links section-->
 
         <!--settlements section-->
         <section class="muffin-section" id="settlements-section">
