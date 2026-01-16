@@ -97,6 +97,34 @@ def cancel_payment_link():
     return render_template('send_money.html', resource_location_url=fetch_payment_link_location)
 
 
+@app.route('/initiate_reversal', methods=['POST'])
+def initiate_reversal():
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+    reversals_service = k2connect.Reversals(access_token=environ.get('ACCESS_TOKEN'))
+    reversal_request = {
+        "transaction_reference": request.form["transaction-reference"],
+        "reason": request.form["reversal-reason"],
+        "callback_url": CALLBACK_URL,
+        "metadata": {"key": "value"},
+    }
+
+    initiate_reversal_location = reversals_service.initiate_reversal(reversal_request)
+    return render_template('send_money.html', resource_location_url=initiate_reversal_location)
+
+
+@app.route('/fetch_reversal', methods=['GET'])
+def fetch_reversal():
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+    reversals_service = k2connect.Reversals(access_token=environ.get('ACCESS_TOKEN'))
+    request_body = {
+        "reversal-reference": request.args.get("reversal-reference"),
+    }
+    fetch_payment_link_location = reversals_service.fetch_reversal(request_body)
+    formatted_json_response = json.dumps(fetch_payment_link_location, indent=2)
+
+    return render_template('send_money.html', resource_location_url=formatted_json_response)
+
+
 @app.route('/add_external_recipient', methods=['POST'])
 def add_external_recipient():
     external_recipient_request = _build_external_recipient_request()
