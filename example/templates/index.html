@@ -81,6 +81,31 @@
                     }
                 });
             }).change();
+            /*change initiate reversal form*/
+            $("#initiate-reversal-form").change(function () {
+                $(this).find("option:selected").each(function () {
+                    let optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".reversals-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else {
+                        $(".reversals-form").hide();
+                    }
+                });
+            }).change();
+
+            /*change view reversal form*/
+            $("#view-reversal-form").change(function () {
+                $(this).find("option:selected").each(function () {
+                    let optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".reversals-form").not("#" + optionValue).hide();
+                        $("#" + optionValue).show();
+                    } else {
+                        $(".reversals-form").hide();
+                    }
+                });
+            }).change();
             /*change webhook scope*/
             $("#select-subscription-type-form").change(function () {
                 $(this).find("option:selected").each(function () {
@@ -1013,6 +1038,73 @@
                     </div>
                 </div>
 
+            </div>
+        </section>
+        <!--close payment links section-->
+
+        <!--reversals section-->
+        <section class="muffin-section" id="reversals-section">
+            <div class="container">
+
+                <div class="section-header">
+                    <h2>Reversals</h2>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="sub-section-header">
+                            <h5>Initiate a reversal</h5>
+                        </div>
+
+                        <form id="payment-links" method="post" action="{{ url_for('initiate_reversal') }}">
+                            <div id="initiate-reversal-form" class="reversals-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="transaction-reference">*Transaction Reference:</label>
+                                        <input type="text" id="transaction-reference" name="transaction-reference"
+                                               class="form-control" placeholder="Transaction Reference">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="reversal-reason">Reason:</label>
+                                        <input type="text" id="reversal-reason" name="reversal-reason"
+                                               class="form-control" placeholder="Reason">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="callback-url">Callback URL:</label>
+                                        <input type="text" id="payment-link-callback-url" name="callback-url"
+                                               class="form-control" placeholder="Callback URL">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Initiate Reversal</button>
+                        </form>
+                        <!--close initiate reversal form-->
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="sub-section-header">
+                            <h5>View Reversal</h5>
+                        </div>
+                        <form id="view-payment-link" method="get" action="{{ url_for('view_reversal') }}">
+                            <div id="view-reversal-form" class="reversal-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="reversal-reference">*Reference:</label>
+                                        <input type="text" id="reversal-reference" name="reversal-reference"
+                                               class="form-control"
+                                               placeholder="Reference">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Fetch Reversal</button>
+                        </form>
+                        <!--close view reversal form-->
+                    </div>
+                </div>
             </div>
         </section>
         <!--close payment links section-->

@@ -1,6 +1,3 @@
-from example.app import access_tokenfrom example.app import access_tokenfrom example.app import send_moneyfrom example.app import access_tokenfrom example.app import access_tokenfrom
-example.app import access_tokenfrom example.app import send_money
-
 # k2-connect-python
 
 [![PyPI](https://img.shields.io/pypi/v/k2-connect?style=for-the-badge)](https://pypi.org/project/k2-connect/)
@@ -462,7 +459,7 @@ URL which is returned by the `create_polling_request` method by default.
 The `polling_request_status()` method is used to check an polling request status.
 
 ```python
-import os
+import k2connect
 
 # initialize service
 polling_service = k2connect.Polling(access_token=access_token)
@@ -523,6 +520,37 @@ payment_links_service.cancel_payment_link(request_body)
 ```
 
 
+
+#### Reversal service
+
+This service allows you to initiate a reversal for a transaction and view its status
+
+* transactionReference: The external reference of the transaction to be reversed `REQUIRED`
+* reason: The reason for reversing the transaction `REQUIRED`
+* callbackUrl: Url that the result will be posted to `REQUIRED`
+* reversalReference: This is the unique reference generated for an initiated reversal. It is required to view the status
+  of the reversal
+
+```python
+import k2connect
+
+# initialize service
+reversal_service = k2connect.Reversals(access_token=access_token)
+
+# initiating a reversal request
+request_payload = {
+    "transaction_reference": "CX83943KH",
+    "reason": "Wrong payment",
+    "callback_url": "your_url",
+}
+reversal_resource_location_url = reversal_service.initiate_reversal(request_payload)
+
+# view reversal
+request_body = {
+    "reversal-reference": "reversal-reference"
+}
+payment_link_resource = reversal_service.fetch_payment_link(request_body)
+```
 
 For more information, please
 read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
