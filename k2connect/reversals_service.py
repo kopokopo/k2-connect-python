@@ -24,7 +24,7 @@ class ReversalsService(BaseService):
                                   url=reversal_url,
                                   payload=reversal_payload)
 
-    def fetch_reversal(self, kwargs):
+    def get_status(self, kwargs):
         fetch_reversal_url = (
             "{}/{}".format(self._build_url(ReversalRequest.endpoint()), kwargs['reversal-reference']))
 

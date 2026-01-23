@@ -22,7 +22,7 @@ class TransferAccountService(BaseService):
                                   url=transfer_url,
                                   payload=transfer_account_request_payload)
 
-    def _build_transfer_account_request(self, request):
+    def _build_transfer_account_request(self, **request):
         request_type = request.get("type")
 
         request_classes = {

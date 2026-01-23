@@ -24,7 +24,7 @@ class PaymentLinksService(BaseService):
                                   url=payment_links_url,
                                   payload=payment_link_payload)
 
-    def fetch_payment_link(self, kwargs):
+    def get_status(self, kwargs):
         fetch_payment_link_url = (
             "{}/{}".format(self._build_url(PaymentLinkRequest.endpoint()), kwargs["payment-link-reference"]))
         headers = dict(self._headers)

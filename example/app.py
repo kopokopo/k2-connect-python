@@ -9,7 +9,7 @@ from k2connect import payload_decomposer
 app = Flask(__name__)
 app.debug = True
 
-BASE_URL = "https://staging.kopokopo.com/"
+BASE_URL = "https://sandbox.kopokopo.com/"
 CALLBACK_URL = "https://webhook.site/a1f866a4-284c-46cb-ad76-83df81b0c053"
 
 
@@ -65,7 +65,7 @@ def create_payment_link():
         "till_number": request.form["till-number"],
         "payment_reference": request.form["payment-reference"],
         "note": request.form["payment-link-note"],
-        "callback_url": CALLBACK_URL,
+        "callback_url": request.form["payment-link-callback-url"],
         "metadata": {"key": "value"},
     }
 
@@ -80,7 +80,7 @@ def view_payment_link():
     request_body = {
         "payment-link-reference": request.args.get("payment-link-reference")
     }
-    fetch_payment_link_location = payment_links_service.fetch_payment_link(request_body)
+    fetch_payment_link_location = payment_links_service.get_status(request_body)
     formatted_json_response = json.dumps(fetch_payment_link_location, indent=2)
 
     return render_template('send_money.html', resource_location_url=formatted_json_response)
@@ -119,7 +119,7 @@ def fetch_reversal():
     request_body = {
         "reversal-reference": request.args.get("reversal-reference"),
     }
-    fetch_payment_link_location = reversals_service.fetch_reversal(request_body)
+    fetch_payment_link_location = reversals_service.get_status(request_body)
     formatted_json_response = json.dumps(fetch_payment_link_location, indent=2)
 
     return render_template('send_money.html', resource_location_url=formatted_json_response)
@@ -149,23 +149,23 @@ def query_send_money_payment():
 def create_merchant_transfer_account():
     transfer_account_request = _build_transfer_account_request()
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
-    transfer_service = k2connect.TransferAccount(access_token=access_token)
+    transfer_service = k2connect.TransferAccount(access_token=environ.get('ACCESS_TOKEN'))
     transfer_account_location_url = transfer_service.add_transfer_account(transfer_account_request)
     return render_template('settlements.html', resource_location_url=transfer_account_location_url)
 
 
 @app.route('/subscription', methods=['POST'])
 def subscription():
-    webhook_event = request.form['select-webhook-type']
     scope = request.form['scope']
     scope_reference = request.form['scope-reference']
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
-    webhook_service = k2connect.Webhooks(access_token=environ.get('ACCESS_TOKEN'), )
+    webhook_service = k2connect.Webhooks(access_token=environ.get('ACCESS_TOKEN'))
 
     webhook_request = {
-        "event_type": webhook_event,
-        "url": CALLBACK_URL,
-        "scope": scope
+        "event_type": request.form['select-webhook-type'],
+        "url": request.form['callback-url'],
+        "scope": scope,
+        "scope_reference": scope_reference,
     }
     if scope == 'till':
         webhook_request.update({"scope_reference": scope_reference})
@@ -329,14 +329,14 @@ def _build_external_recipient_request():
 
 
 def _build_transfer_account_request():
-    transfer_account_type = request.form['recipient_type']
+    transfer_account_type = request.form["transfer_recipient_type"]
     if transfer_account_type == "merchant_bank_account":
         return {
             "type": transfer_account_type,
-            "account_name": request.form["account_name"],
-            "account_number": request.form["account_number"],
-            "bank_branch_ref": request.form["bank_branch_ref"],
-            "settlement_method": request.form["settlement_method"],
+            "account_name": request.form["account-name"],
+            "account_number": request.form["account-number"],
+            "bank_branch_ref": request.form["settlement-bank-branch-ref"],
+            "settlement_method": request.form["settlement-method"],
             "nickname": request.form["nickname"],
         }
     elif transfer_account_type == "merchant_wallet":

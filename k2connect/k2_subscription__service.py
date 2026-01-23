@@ -22,7 +22,3 @@ class K2WebhookSubscriptionService(BaseService):
                                   method='POST',
                                   url=webhook_subscription_url,
                                   payload=webhook_subscription_request_payload)
-
-    # @staticmethod
-    # def send_money_location(response):
-    #     return service.k2_requests.get_location(response)
