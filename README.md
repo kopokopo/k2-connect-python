@@ -53,11 +53,11 @@ One can access the following k2connect services:
 
 - [TokensService](#token-service)
 - [SendMoneyService](#send-money-service)
-- [StkPushService](#stk-push-service)
-- [TransferAccountService](#transfer-account-service)
-- [ReceivePaymentsService](#receive-payments-service)
+- [PaymentLinks](#payment-links-service)
+- [ReversalService](#reversal-service)
+- [IncomingPaymentsService](#incoming-payments-service)
 - [TransferService](#transfers-service)
-- [WebhookService](#webhook-service)
+- [WebhookService](#webhook-subscription-service)
 - [NotificationService](#notification-service)
 - [PollingService](#polling-service)
 
@@ -200,19 +200,19 @@ Code example of send money to a transfer account;
 ```python
 ```
 
-#### Receive payments service
+#### Incoming payments service
 
-The receive payments service allows you to create requests for incoming payments over a specific channel and receive the
-payments
-to your account. You can also check the status of your payment requests and access the payment request through a URL.
+The incoming payments service allows you to create requests for incoming payments over a specific channel and receive
+the
+payments to your account. You can also check the status of your payment requests and access the payment request through
+a URL.
 
-In order to create a payment request, the `create_payment_request()` method is used. This method can be passed the
+In order to create a payment request, the `create_incoming_payment()` method is used. This method can be passed the
 following arguments:
 
-* bearer_token `REQUIRED`
-* callback_url `REQUIRED`
 * first_name `REQUIRED`
 * last_name `REQUIRED`
+* callback_url `REQUIRED`
 * payment_channel `REQUIRED`
 * phone `REQUIRED`
 * till_number `REQUIRED`
@@ -220,47 +220,32 @@ following arguments:
 * currency='KES' `REQUIRED`
 * metadata `OPTIONAL`. Maximum 5 dictionaries/hashes/key-value pairs.
 
-Note: the currency argument is set to `KES` as the default currency since that is the only ISO currency currently
-supported. It may however,
-be overridden by passing a different currency value in its place. If you do not wish to override the `KES` currency you
-can simply avoid
-passing it as an argument.
-
-The method also creates the provision for optional `email` information to be passed in the key worded argument form,
-for instance:
-
-`email='mycool@email.domain'`
-
-Furthermore, the `create_payment_request()` allows you to add metadata information passed in the form of a maximum of 5
-key worded arguments.  
-The URL required for checking a payment request status is returned by default with the `create_payment_request` method.
+The status of a payment request can be checked through the `view_incoming_payment()` method and passing the reference of
+the payment.
 
 ```python
-import os
+import k2connect
 
-# get the access token
-BEARER_TOKEN = os.getenv('MY_BEARER_TOKEN')
+incoming_payments_service = k2connect.IncomingPaymentsService
 
-# create an instance of the receive payments service
-receive_payments_service = k2connect.ReceivePayments
-
-# create a payment request
+# create an incoming request
 request_payload = {
-    "access_token": 'ACCESS_TOKEN',
-    "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
-    "first_name": "python_first_name",
-    "last_name": "python_last_name",
-    "email": "daivd.j.kariuki@gmail.com",
     "payment_channel": "MPESA",
-    "phone_number": "+254911222536",
     "till_number": "K112233",
-    "amount": "10",
-    "metadata": {"hey": 'there', "mister": 'angelo'}
+    "subscriber": {
+        "first_name": "python_first_name",
+        "last_name": "python_last_name",
+        "email": "daivd.j.kariuki@gmail.com",
+        "phone_number": "+254911222536",
+    },
+    "amount": {
+        "currency": "KES",
+        "value": 10
+    },
+    "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+    "metadata": {"key": "value"}
 }
-mpesa_payment_location = receive_payments_service.create_payment_request(request_payload)
-
-# get payment request status
-payment_request_status = receive_payments_service.payment_request_status(access_token, mpesa_payment_location)
+mpesa_payment_location = incoming_payments_service.create_incoming_payment(request_payload)
 ```
 
 #### Transfers service
