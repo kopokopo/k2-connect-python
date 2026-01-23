@@ -29,9 +29,6 @@ class MerchantBankTransferAccount(TransferAccountRequest):
         if not self.settlement_method:
             self.errors.append("settlement_method is required")
 
-        if self.settlement_method not in ["EFT", "RTS"]:
-            self.errors.append("settlement_method must be EFT or RTS")
-
         if self.errors:
             raise ValidationError(self.errors)
 
@@ -45,4 +42,4 @@ class MerchantBankTransferAccount(TransferAccountRequest):
         }
 
     def endpoint(self):
-        return "settlement_bank_account"
+        return "api/v2/merchant_bank_accounts"

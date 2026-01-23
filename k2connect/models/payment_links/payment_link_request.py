@@ -34,11 +34,11 @@ class PaymentLinkRequest:
         if self.amount is None:
             raise ValueError("amount is required")
 
+        if self.currency is None:
+            raise ValueError("currency is required")
+
         if self.till_number is None:
             raise ValueError("till_number is required")
 
-        if self.payment_reference is None:
-            raise ValueError("payment_reference is required")
-
-        if self.note is None:
-            raise ValueError("note is required")
+        if self.callback_url is None:
+            raise ValueError("callback_url is required")

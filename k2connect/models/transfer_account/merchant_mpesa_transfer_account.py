@@ -27,17 +27,20 @@ class MerchantMpesaTransferAccount(TransferAccountRequest):
         if not self.phone_number:
             self.errors.append("phone_number is required.")
 
+        if not self.network:
+            self.errors.append("network is required.")
+
         if self.errors:
             raise ValidationError(self.errors)
 
     def request_payload(self):
         return {
-            "nickname": self.nickname,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "phone_number": self.phone_number,
             "network": self.network,
+            "nickname": self.nickname,
         }
 
     def endpoint(self):
-        return "settlement_merchant_wallet"
+        return "api/v2/merchant_wallets"

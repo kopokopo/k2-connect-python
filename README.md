@@ -56,7 +56,7 @@ One can access the following k2connect services:
 - [PaymentLinks](#payment-links-service)
 - [ReversalService](#reversal-service)
 - [IncomingPaymentsService](#incoming-payments-service)
-- [TransferService](#transfers-service)
+- [TransferAccountService](#transfers-account-service)
 - [WebhookService](#webhook-subscription-service)
 - [NotificationService](#notification-service)
 - [PollingService](#polling-service)
@@ -110,7 +110,7 @@ send_money_request = {
             "favourite": False
         }
     ],
-    "callback_url": 'MY_CALLBACK_URL',
+    "callback_url": "https://callback_to_your_app.your_application.com",
     "source_identifier": None,
     "currency": "KES"
 }
@@ -226,7 +226,7 @@ the payment.
 ```python
 import k2connect
 
-incoming_payments_service = k2connect.IncomingPaymentsService
+incoming_payments_service = k2connect.IncomingPaymentsService(access_token=access_token)
 
 # create an incoming request
 request_payload = {
@@ -242,116 +242,73 @@ request_payload = {
         "currency": "KES",
         "value": 10
     },
-    "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
+    "callback_url": "https://callback_to_your_app.your_application.com",
     "metadata": {"key": "value"}
 }
 mpesa_payment_location = incoming_payments_service.create_incoming_payment(request_payload)
 ```
 
-#### Transfers service
+#### Transfers account service
 
-The transfer service enables you to create verified transfer accounts for both mobile and bank accounts with respective
-`add_transfer_account()` methods. The method takes the following arguments:
+The Transfer Accounts service allows you to create verified transfer accounts for both bank accounts and mobile wallets.
+These accounts can then be used as recipients for payouts and transfers. Depending on the account type, different
+parameters are required.
 
-Common for both:
+**Bank Transfer Account**
 
-* bearer_token `REQUIRED`
+Use this option to create a verified merchant bank account.
 
-For `add_bank_settlement_account`:
+Required parameters:
 
-* type `REQUIRED`
-* account_name `REQUIRED`
-* account_number `REQUIRED`
-* bank_branch_ref `REQUIRED`
-* settlement_method `REQUIRED` either `RTS` or `EFT`
-* nickname `OPTIONAL`
+* `type` – Must be set to **merchant_bank_account**
+* `account_name` – Name of the bank account holder
+* `account_number` – Bank account number
+* `bank_branch_ref` – Reference for the bank branch
+* `settlement_method` – Settlement method; one of RTS or EFT
 
-For `add_mobile_wallet_settlement_account` recipient:
+Optional parameters:
+* `nickname` - A friendly name of the account
 
-* type `REQUIRED`
-* first_name `REQUIRED`
-* last_name `REQUIRED`
-* phone_number `REQUIRED`
-* email `OPTIONAL`
-* network: `REQUIRED` supported networks are `Safaricom`
 
-The transfer service enables you to transfer funds to these pre-approved settlement accounts. To settle funds the
-`settle_funds()` is used. It enables you to make two types of transfer
-transactions, a blind settlement and a targeted settlement. A blind transaction is made with the `destination` argument
-set to `None`, in the event that an ID for the destination of funds
-is provided then a targeted transfer is made to that destination. The method takes the following arguments:
+**M-Pesa Transfer Account**
 
-* bearer_token `REQUIRED`
-* transfer_value `REQUIRED`
-* transfer_currency = 'KES' `REQUIRED`
-* destination_type `OPTIONAL`
-* destination_reference `OPTIONAL`
+Required parameters:
 
-Note: the currency argument is set to `KES` as the default currency since that is the only ISO currency currently
-supported. It may however,
-be overridden by passing a different currency value in its place. If you do not wish to override the `KES` currency you
-can simply avoid
-passing it as an argument.
+* `type` - must be set to **merchant_wallet**
+* `first_name` - Recipient's first name
+* `last_name` - Recipient's last name
+* `phone_number` - Recipient's phone number
+* `network` - Mobile network; currently supported: **Safaricom**
 
-You can check a transfer transaction's status by querying the transaction resource's location
-URL which is returned by the `settle_funds` method by default.  
-The `transfer_transaction_status()` method is then used to check a transfer transaction status.
+Optional parameters:
+* `email` – Recipient’s email address 
+* `nickname` – A friendly name for the account
 
 ```python
-# initialize the transfer service
 import k2connect
 
-transfer_service = k2connect.Transfers
+transfer_service = k2connect.TransferAccount(access_token=access_token)
 
-# create verified settlement bank account
+# create verified bank transfer account
 request_payload = {
     "settlement_method": 'RTS',
     "account_name": 'py_sdk_account_name',
     "account_number": 'py_sdk_account_number',
     "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
 }
-settlement_account = transfer_service.add_bank_settlement_account(request_payload)
-# create verified settlement mobile account
+bank_transfer_account_location = transfer_service.add_transfer_account(request_payload)
+# https://sandbox.kopokopo.com/api/v2/merchant_bank_accounts/b794421d-6038-45dc-b088-8c8764977aba
+
+# create verified mpesa transfer account
 request_payload = {
     "first_name": 'py_sdk_first_name',
     "last_name": 'py_sdk_last_name',
     "phone_number": '+254911222538',
     "network": 'Safaricom'
 }
-settlement_account = transfer_service.add_mobile_wallet_settlement_account(request_payload)
-
-# settle funds (blind transfer)
-request_payload = {
-    "callback_url": 'url',
-    "value": '10',
-}
-transfer_transaction = transfer_service.settle_funds(request_payload)
-
-# settle funds (targeted transfer to a merchant_wallet)
-request_payload = {
-    "access_token": 'ACCESS_TOKEN',
-    "destination_type": 'merchant_bank_account',
-    "destination_reference": '87bbfdcf-fb59-4d8e-b039-b85b97015a7e',
-    "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-    "value": '10',
-}
-transfer_transaction_mobile_location = transfer_service.settle_funds(request_payload)
-
-# settle funds (targeted transfer to a merchant_wallet)
-request_payload = {
-    "destination_type": 'merchant_wallet',
-    "destination_reference": 'eba238ae-e03f-46f6-aed5-db357fb00f9c',
-    "callback_url": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-    "value": '10',
-}
-transfer_transaction_bank_location = transfer_service.settle_funds(request_payload)
-
-# get transfer transaction status
-transfer_transaction_status = transfer_service.transfer_transaction_status(access_token,
-                                                                           transfer_transaction_mobile_location or transfer_transaction_bank_location)
+mpesa_transfer_account_location = transfer_service.add_transfer_account(request_payload)
+# https://sandbox.kopokopo.com/api/v2/merchant_wallets/3a1163c7-dfb9-4f05-bf35-73b69db89bae
 ```
-
-##### The destination_reference number corresponding to a settlement account must exist before you can settle_funds to it.
 
 #### Webhook subscription service
 
@@ -373,10 +330,10 @@ The following events are supported:
 * customer_created
 
 ```python
-import os
+import k2connect
 
 # initialize service
-webhook_service = k2connect.Webhooks
+webhook_service = k2connect.Webhooks(access_token=access_token)
 
 request_payload = {
     "event_type": 'buygoods_transaction_received',
@@ -416,7 +373,7 @@ notification_service = k2connect.Notifications
 # create transaction sms notifications
 request_payload = {
     "access_token": 'ACCESS_TOKEN',
-    "callback_url": 'callback_url',
+    "callback_url": "https://callback_to_your_app.your_application.com",
     "webhook_event_reference": "d81312b9-4c0e-4347-971f-c3d5b14bdbe4",
     "message": 'Alleluia',
 }
@@ -425,6 +382,9 @@ notification_resource_location_url = notification_service.send_transaction_sms_n
 # get request status
 request_status = notification_service.transaction_notification_status(access_token, notification_resource_location_url)
 ```
+
+For more information, please
+read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
 
 #### Polling service
 
@@ -455,7 +415,7 @@ request_payload = {
     "scope_reference": "112233",
     "from_time": "2021-07-09T08:50:22+03:00",
     "to_time": "2021-07-10T18:00:22+03:00",
-    "callback_url": "callback_url",
+    "callback_url": "https://callback_to_your_app.your_application.com",
 }
 polling_resource_location_url = polling_service.initiate_polling_request(request_payload)
 
@@ -465,14 +425,18 @@ request_status = polling_service.polling_request_status(polling_resource_locatio
 
 #### Payment links service
 
-Payment links allow you to create and share payment requests with customers. This service allows you to create, view and cancel payment links
+Payment links allow you to create and share payment requests with customers. This service allows you to create, view and
+cancel payment links
 
 * amount: The amount of payment being requested `REQUIRED`
+* currency: The currency for the amount. Currently, only `KES` is supported `REQUIRED`
 * tillNumber: The till number to which the payment is to be made `REQUIRED`
 * callbackUrl: Url that the result will be posted to `REQUIRED`
 * paymentReference: This is a unique reference that you can use to track the payment link `OPTIONAL`
-* note: An additional note to be seen by the customer when they click the payment link. You can include the payment reason `OPTIONAL`
-* paymentLinkReference: This is the unique reference generated for a created payment link. It is required to view the status or cancel the payment link 
+* note: An additional note to be seen by the customer when they click the payment link. You can include the payment
+  reason `OPTIONAL`
+* paymentLinkReference: This is the unique reference generated for a created payment link. It is required to view the
+  status or cancel the payment link
 
 ```python
 import k2connect
@@ -495,7 +459,7 @@ payment_link_resource_location_url = payment_links_service.create_payment_link(r
 request_body = {
     "payment-link-reference": "payment-link-reference"
 }
-payment_link_resource = payment_links_service.fetch_payment_link(request_body)
+payment_link_resource = payment_links_service.get_status(request_body)
 
 # cancel payment link
 request_body = {
@@ -503,8 +467,6 @@ request_body = {
 }
 payment_links_service.cancel_payment_link(request_body)
 ```
-
-
 
 #### Reversal service
 
@@ -526,19 +488,17 @@ reversal_service = k2connect.Reversals(access_token=access_token)
 request_payload = {
     "transaction_reference": "CX83943KH",
     "reason": "Wrong payment",
-    "callback_url": "your_url",
+    "callback_url": "https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d",
 }
 reversal_resource_location_url = reversal_service.initiate_reversal(request_payload)
+# https://sandbox.kopokopo.com/api/v2/reversals/247b1bd8-f5a0-4b71-a898-f62f67b8ae1c
 
-# view reversal
+# get reversal status
 request_body = {
-    "reversal-reference": "reversal-reference"
+    "reversal-reference": "247b1bd8-f5a0-4b71-a898-f62f67b8ae1c"
 }
-payment_link_resource = reversal_service.fetch_payment_link(request_body)
+reversal_resource = reversal_service.get_status(request_body)
 ```
-
-For more information, please
-read [Transaction Notification Docs](https://api-docs.kopokopo.com/#transaction-sms-notifications)
 
 #### Result processor
 

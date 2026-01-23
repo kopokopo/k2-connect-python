@@ -22,7 +22,3 @@ class StkPushService(BaseService):
                                   method='POST',
                                   url=incoming_payments_url,
                                   payload=stk_push_request_payload)
-
-    # @staticmethod
-    # def send_money_location(response):
-    #     return service.k2_requests.get_location(response)

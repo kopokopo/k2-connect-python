@@ -349,7 +349,6 @@
                                     <option value="external_mpesa_wallet_payment">External M-Pesa Wallet Payment
                                     <option value="paybill_payment">Paybill Payment</option>
                                     <option value="bank_payment">External Bank Payment</option>
-                                    <!--                                    <option value="incoming-payment-form">Incoming Payment</option>-->
                                 </select>
                             </div>
                         </form>
@@ -926,6 +925,13 @@
                                                class="form-control"
                                                placeholder="Scope Reference">
                                     </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="callback-url">*Callback URL:</label>
+                                        <input type="text" id="callback-url" name="callback-url"
+                                               class="form-control"
+                                               placeholder="Callback URL">
+                                    </div>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-info">Create Subscription</button>
@@ -962,13 +968,20 @@
                                     </div>
 
                                     <div class="form-group col-6">
+                                        <label for="payment-link-currency">*Currency:</label>
+                                        <input type="text" id="payment-link-currency" name="payment-link-currency"
+                                               class="form-control"
+                                               placeholder="Currency">
+                                    </div>
+
+                                    <div class="form-group col-6">
                                         <label for="till-number">*Till Number:</label>
                                         <input type="text" id="till-number" name="till-number" class="form-control"
                                                placeholder="Till Number">
                                     </div>
 
                                     <div class="form-group col-6">
-                                        <label for="payment-reference">*Payment Reference:</label>
+                                        <label for="payment-reference">Payment Reference:</label>
                                         <input type="text" id="payment-reference" name="payment-reference"
                                                class="form-control" placeholder="Payment Reference">
                                     </div>
@@ -980,8 +993,9 @@
                                     </div>
 
                                     <div class="form-group col-6">
-                                        <label for="callback-url">Callback URL:</label>
-                                        <input type="text" id="payment-link-callback-url" name="callback-url"
+                                        <label for="payment-link-callback-url">*Callback URL:</label>
+                                        <input type="text" id="payment-link-callback-url"
+                                               name="payment-link-callback-url"
                                                class="form-control" placeholder="Callback URL">
                                     </div>
                                 </div>
@@ -1072,7 +1086,7 @@
 
                                     <div class="form-group col-6">
                                         <label for="callback-url">Callback URL:</label>
-                                        <input type="text" id="payment-link-callback-url" name="callback-url"
+                                        <input type="text" id="callback-url" name="callback-url"
                                                class="form-control" placeholder="Callback URL">
                                     </div>
                                 </div>
@@ -1089,7 +1103,7 @@
                         <div class="sub-section-header">
                             <h5>View Reversal</h5>
                         </div>
-                        <form id="view-payment-link" method="get" action="{{ url_for('view_reversal') }}">
+                        <form id="view-payment-link" method="get" action="{{ url_for('fetch_reversal') }}">
                             <div id="view-reversal-form" class="reversal-form">
                                 <div class="form-row">
                                     <div class="form-group col-6">
@@ -1142,15 +1156,17 @@
                         <div id="mobile-wallet-form" class="settlement-form">
                             <form action="{{ url_for('create_merchant_transfer_account') }}" method="post">
                                 <div class="form-row">
+                                    <input type="hidden" id="transfer_recipient_type" name="transfer_recipient_type"
+                                           value="merchant_wallet">
                                     <div class="form-group col-6">
-                                        <label for="destination">*Phone Number:</label>
-                                        <input type="text" id="msisdn" name="msisdn" class="form-control"
+                                        <label for="phone_number">*Phone Number:</label>
+                                        <input type="text" id="phone_number" name="phone_number" class="form-control"
                                                placeholder="Phone Number">
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="amount">*Amount:</label>
+                                        <label for="network">*Network:</label>
                                         <input type="text" id="network" name="network" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Network">
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="amount">*First name:</label>
@@ -1162,6 +1178,16 @@
                                         <input type="text" id="last_name" name="last_name" class="form-control"
                                                placeholder="Last name">
                                     </div>
+                                    <div class="form-group col-6">
+                                        <label for="email">Email:</label>
+                                        <input type="email" id="email" name="email" class="form-control"
+                                               placeholder="Email">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="nickname">Nickname:</label>
+                                        <input type="nickname" id="nickname" name="nickname" class="form-control"
+                                               placeholder="Nickname">
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Create Settlement Account</button>
                             </form>
@@ -1172,6 +1198,8 @@
                         <div id="bank-account-form" class="settlement-form">
                             <form action="{{ url_for('create_merchant_transfer_account') }}" method="post">
                                 <div class="form-row">
+                                    <input type="hidden" id="transfer_recipient_type" name="transfer_recipient_type"
+                                           value="merchant_bank_account">
                                     <div class="form-group col-6">
                                         <label for="account-name">*Account Name:</label>
                                         <input type="text" id="account-name" name="account-name" class="form-control"
@@ -1185,21 +1213,24 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
-                                        <label for="settlement-bank-id">*Bank ID:</label>
-                                        <input type="text" id="settlement-bank-id" name="settlement-bank-id"
-                                               class="form-control" placeholder="Bank ID">
+                                        <label for="settlement-bank-branch-ref">*Bank Branch Reference:</label>
+                                        <input type="text" id="settlement-bank-branch-ref"
+                                               name="settlement-bank-branch-ref" class="form-control"
+                                               placeholder="Bank Branch Reference">
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="settlement-bank-branch-id">Bank Branch ID:</label>
-                                        <input type="text" id="settlement-bank-branch-id"
-                                               name="settlement-bank-branch-id" class="form-control"
-                                               placeholder="Bank Branch ID">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="settlement-method">Settlement method:</label>
+                                        <label for="settlement-method">*Settlement method:</label>
                                         <input type="text" id="settlement-method"
                                                name="settlement-method" class="form-control"
                                                placeholder="Settlement method">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="settlement-bank-branch-ref">*Nickname:</label>
+                                        <input type="text" id="nickname"
+                                               name="nickname" class="form-control"
+                                               placeholder="Nickname">
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Create Settlement Account</button>

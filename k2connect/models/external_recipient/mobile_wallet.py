@@ -37,5 +37,6 @@ class MobileWallet(ExternalRecipient):
             "last_name": self.last_name,
             "phone_number": self.phone_number,
             "email": self.email,
+            "nickname": self.nickname,
             "network": self.network,
         }
