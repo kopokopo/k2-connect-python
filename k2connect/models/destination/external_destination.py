@@ -20,9 +20,9 @@ class ExternalDestination(ABC):
     def validate(self):
         if not self.type:
             raise ValidationError("Field 'type' must be present.")
-        if self.amount is None:
+        if not self.amount:
             raise ValidationError("Field 'amount' must be present.")
-        if self.description is None:
+        if not self.description:
             raise ValidationError("Field 'description' must be present.")
 
     @abc.abstractmethod

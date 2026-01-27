@@ -31,14 +31,14 @@ class PaymentLinkRequest:
         }
 
     def validate(self):
-        if self.amount is None:
+        if not self.amount:
             raise ValueError("amount is required")
 
-        if self.currency is None:
+        if not self.currency:
             raise ValueError("currency is required")
 
-        if self.till_number is None:
+        if not self.till_number:
             raise ValueError("till_number is required")
 
-        if self.callback_url is None:
+        if not self.callback_url:
             raise ValueError("callback_url is required")
