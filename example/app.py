@@ -60,7 +60,7 @@ def create_payment_link():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
     payment_link_request = {
-        "currency": "KES",
+        "currency": request.form["payment-link-currency"],
         "amount": request.form["amount"],
         "till_number": request.form["till-number"],
         "payment_reference": request.form["payment-reference"],

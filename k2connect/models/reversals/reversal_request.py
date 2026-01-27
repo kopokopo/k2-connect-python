@@ -32,7 +32,7 @@ class ReversalRequest:
         if not self.transaction_reference:
             self.errors.append("transaction_reference is required.")
 
-        if self.reason is None:
+        if not self.reason:
             self.errors.append("reason is required.")
 
         if self.errors:

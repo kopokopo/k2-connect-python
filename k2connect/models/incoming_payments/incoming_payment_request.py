@@ -53,7 +53,7 @@ class IncomingPaymentRequest:
         if not self.till_number:
             raise ValueError("till_number is required")
 
-        if self.subscriber.phone_number is None:
+        if not self.subscriber.phone_number:
             raise ValueError("subscriber phone_number is required")
 
         if not self.callback_url:

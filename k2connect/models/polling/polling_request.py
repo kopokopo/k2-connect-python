@@ -32,16 +32,16 @@ class PollingRequest:
         }
 
     def validate(self):
-        if self.from_time is None:
+        if not self.from_time:
             raise ValueError("from_time is required")
 
-        if self.to_time is None:
+        if not self.to_time:
             raise ValueError("to_time is required")
 
-        if self.callback_url is None:
+        if not self.callback_url:
             raise ValueError("callback_url is required")
 
-        if self.scope is None:
+        if not self.scope:
             raise ValueError("scope is required")
 
         if self.scope not in {"till", "company"}:

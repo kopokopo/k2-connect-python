@@ -26,13 +26,13 @@ class WebhookSubscriptionRequest:
         }
 
     def validate(self):
-        if self.event_type is None:
+        if not self.event_type:
             raise ValueError("event_type is required")
 
-        if self.scope is None:
+        if not self.scope:
             raise ValueError("scope is required")
 
-        if self.url is None:
+        if not self.url:
             raise ValueError("url is required")
 
         if self.event_type not in {"buygoods_transaction_received", "b2b_transaction_received",
