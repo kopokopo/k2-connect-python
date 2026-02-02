@@ -6,9 +6,10 @@ from urlvalidator import ValidationError
 @dataclass
 class WebhookSubscriptionRequest:
     event_type: str
-    url: str
+    webhook_uri: str
     scope: str
     scope_reference: str
+    enable_daraja_payload: bool = False
 
     def __post_init__(self):
         self.validate()
@@ -20,7 +21,7 @@ class WebhookSubscriptionRequest:
     def request_payload(self):
         return {
             "event_type": self.event_type,
-            "url": self.url,
+            "url": self.webhook_uri,
             "scope": self.scope,
             "scope_reference": self.scope_reference,
         }
@@ -32,8 +33,8 @@ class WebhookSubscriptionRequest:
         if not self.scope:
             raise ValueError("scope is required")
 
-        if not self.url:
-            raise ValueError("url is required")
+        if not self.webhook_uri:
+            raise ValueError("webhook_uri is required")
 
         if self.event_type not in {"buygoods_transaction_received", "b2b_transaction_received",
                                    "settlement_transfer_completed", "customer_created", "buygoods_transaction_reversed",

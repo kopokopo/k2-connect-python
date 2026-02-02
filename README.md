@@ -337,9 +337,10 @@ webhook_service = k2connect.Webhooks(access_token=access_token)
 
 request_payload = {
     "event_type": 'buygoods_transaction_received',
-    "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
+    "webhook_uri": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
     "scope": 'till',
-    "scope_reference": '112233'
+    "scope_reference": '112233',
+    "enable_daraja_payload": True
 }
 
 # create webhook subscription

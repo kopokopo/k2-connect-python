@@ -163,7 +163,7 @@ def subscription():
 
     webhook_request = {
         "event_type": request.form['select-webhook-type'],
-        "url": request.form['callback-url'],
+        "webhook_uri": request.form['callback-url'],
         "scope": scope,
         "scope_reference": scope_reference,
     }
