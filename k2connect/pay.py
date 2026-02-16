@@ -7,7 +7,7 @@ for the pay transaction's status.
 from k2connect import service, json_builder, exceptions, validation
 
 # PAY Service paths
-ADD_PAY_PATH = "api/v1/pay_recipients"
+ADD_PAY_PATH = "api/v1/external_recipients"
 SEND_PAY_PATH = "api/v1/payments"
 
 # PAY recipient types
