@@ -11,7 +11,7 @@ class ExternalRecipientRequest:
 
     @staticmethod
     def endpoint():
-        return "api/v2/pay_recipients"
+        return "api/v2/external_recipients"
 
     def request_body(self):
         return self._build_request().request_body()
