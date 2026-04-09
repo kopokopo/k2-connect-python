@@ -24,12 +24,14 @@ class MobileWallet(ExternalRecipient):
         if not self.phone_number:
             raise ValidationError("Field 'phone_number' must be present.")
 
+        self._validate_phone_number(self.phone_number)
+
     @staticmethod
     def _validate_phone_number(phone_number: str):
-        if len(phone_number) is 12 and not phone_number.startswith("2547"):
-            raise ValidationError("Invalid phone number format. Valid phone format: 2547XXXXXXXX")
-        if len(phone_number) is 10 and not phone_number.startswith("07"):
-            raise ValidationError("Invalid phone number format. Valid phone format: 07XXXXXXXX")
+        if len(phone_number) is 12 and not phone_number.startswith("254"):
+            raise ValidationError("Invalid phone number format. Valid phone format: 254XXXXXXXXX")
+        if len(phone_number) is 10 and not phone_number.startswith("0"):
+            raise ValidationError("Invalid phone number format. Valid phone format: 0XXXXXXXXX")
 
     def payload(self):
         return {
