@@ -152,17 +152,19 @@ Send to **External Paybill Recipient**
 - type: 'paybill' `REQUIRED`
 - paybill_number `REQUIRED`
 - paybill_account_number `REQUIRED`
-- paybill_name `OPTIONAL`
+- amount `REQUIRED`
 - description `REQUIRED`
 - nickname `OPTIONAL`
+- favourite `OPTIONAL`
 
 Send to **External Till Recipient**
 
 - type: 'till' `REQUIRED`
 - till_number `REQUIRED`
-- till_name `OPTIONAL`
+- amount `REQUIRED`
 - description `REQUIRED`
 - nickname `OPTIONAL`
+- favourite `OPTIONAL`
 
 Send to **My Mobile Phone**
 
