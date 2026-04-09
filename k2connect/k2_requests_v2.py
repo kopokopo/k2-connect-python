@@ -12,7 +12,7 @@ class K2Requests:
             'Accept': 'application/vnd.kopokopo.v4.hal+json',
             'Content-Type': 'application/json',
             'User-Agent': 'Kopokopo-Python-SDK',
-            'Authorization': f"Bearer #{access_token}"
+            'Authorization': f"Bearer {access_token}"
         }
 
     @staticmethod
