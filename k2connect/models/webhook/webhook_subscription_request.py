@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from urlvalidator import ValidationError
 
+DARAJA_PAYLOAD_SUPPORTED_EVENTS = ["buygoods_transaction_received", "b2b_transaction_received"]
 
 @dataclass
 class WebhookSubscriptionRequest:
@@ -24,6 +25,7 @@ class WebhookSubscriptionRequest:
             "url": self.webhook_uri,
             "scope": self.scope,
             "scope_reference": self.scope_reference,
+            "enable_daraja_payload": self.enable_daraja_payload,
         }
 
     def validate(self):
@@ -47,3 +49,6 @@ class WebhookSubscriptionRequest:
 
         if self.scope == "till" and not self.scope_reference:
             raise ValidationError("Field 'scope_reference' must be present when scope is 'till'.")
+
+        if self.enable_daraja_payload and self.event_type not in DARAJA_PAYLOAD_SUPPORTED_EVENTS:
+            raise ValidationError(f"Can only enable daraja_payloads for {', '.join(DARAJA_PAYLOAD_SUPPORTED_EVENTS)} webhooks.")
