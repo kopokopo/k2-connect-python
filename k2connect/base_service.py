@@ -10,4 +10,4 @@ class BaseService(K2Requests):
         return self.base_url + url_path
 
     def query_resource(self, resource_url):
-        return self._query_transaction_status(headers=self._headers, query_url=self._build_url(resource_url))
+        return self._query_transaction_status(headers=self._headers, query_url=resource_url)

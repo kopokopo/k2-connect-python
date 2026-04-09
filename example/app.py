@@ -142,7 +142,8 @@ def query_send_money_payment():
     send_money_service = k2connect.SendMoney(access_token=environ.get('ACCESS_TOKEN'))
 
     send_money_resource_location = send_money_service.query_resource(resource_url)
-    return render_template('payment.html', resource_location_url=send_money_resource_location)
+    formatted_json_response = json.dumps(send_money_resource_location, indent=2)
+    return render_template('send_money.html', resource_location_url=formatted_json_response)
 
 
 @app.route('/merchant_transfer_account', methods=['POST'])
