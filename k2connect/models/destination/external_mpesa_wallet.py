@@ -25,9 +25,9 @@ class ExternalMpesaWallet(ExternalDestination):
 
     @staticmethod
     def _validate_phone_number(phone_number: str):
-        if len(phone_number) is 12 and not phone_number.startswith("254"):
+        if len(phone_number) == 12 and not phone_number.startswith("254"):
             raise ValidationError("Invalid phone number format. Valid phone format: 254XXXXXXXXX")
-        if len(phone_number) is 10 and not phone_number.startswith("0"):
+        if len(phone_number) == 10 and not phone_number.startswith("0"):
             raise ValidationError("Invalid phone number format. Valid phone format: 0XXXXXXXXX")
 
     def payload(self) -> dict:
