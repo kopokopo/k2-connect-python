@@ -319,8 +319,12 @@ The webhook service allows you to create subscriptions to events that occur on t
 it takes the following arguments:
 
 * event_type `REQUIRED`
-* webhook_endpoint `REQUIRED`
-* client_secret `REQUIRED`
+* webhook_uri `REQUIRED`
+* scope `REQUIRED`: is `till` if event_type is a buygoods_transaction_received, buygoods_transaction_reversed, b2b_transaction_received, card_transaction_received, card_transaction_voided or card_transaction_reversed, otherwise `company`
+* scope_reference: is `REQUIRED` if scope is till and is the till number of the till specified
+* enable_daraja_payload: `OPTIONAL`. By default, it is set to `false`
+
+Note: Daraja payload is supported for `buygoods_transaction_received` and `b2b_transaction_received`
 
 The following events are supported:
 
@@ -346,7 +350,7 @@ request_payload = {
 }
 
 # create webhook subscription
-customer_created_subscription = webhook_service.create_subscription(request_payload)
+buygoods_transaction_received_subscription = webhook_service.create_subscription(request_payload)
 ```
 
 #### Notification service

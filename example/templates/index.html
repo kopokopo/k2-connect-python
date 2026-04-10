@@ -896,42 +896,54 @@
 
                         <!--close webhooks subscription form-->
                         <form id="select-subscription-type-form" method="post" action="{{ url_for('subscription') }}">
-                            <div class="form-group">
-                                <label for="select-webhook-type"> Webhook Type: </label>
-                                <select class="custom-select " id="select-webhook-type" name="select-webhook-type"
-                                        style="width: 100%">
-                                    <option selected>Select Webhook type...</option>
-                                    <option value="buygoods_transaction_received">Buygoods Transaction Received</option>
-                                    <option value="buygoods_transaction_reversed">Buygoods Transaction Reversed</option>
-                                    <option value="settlement_transfer_completed">Settlement Transfer</option>
-                                    <option value="customer_created">Customer Created</option>
-                                    <option value="b2b_transaction_received">External Till to Till</option>
-                                    <option value="m2m_transaction_received">Merchant to Merchant</option>
-                                </select>
-                            </div>
                             <div class="form-row">
+                                <div class="form-group col-8">
+                                    <label for="select-webhook-type"> Webhook Type: </label>
+                                    <select class="custom-select " id="select-webhook-type" name="select-webhook-type"
+                                            style="width: 100%">
+                                        <option selected>Select Webhook type...</option>
+                                        <option value="buygoods_transaction_received">Buygoods Transaction Received
+                                        </option>
+                                        <option value="buygoods_transaction_reversed">Buygoods Transaction Reversed
+                                        </option>
+                                        <option value="settlement_transfer_completed">Settlement Transfer</option>
+                                        <option value="customer_created">Customer Created</option>
+                                        <option value="b2b_transaction_received">External Till to Till</option>
+                                        <option value="m2m_transaction_received">Merchant to Merchant</option>
+                                    </select>
+                                </div>
                                 <div class="form-group col-6">
                                     <label for="scope">*Scope:</label>
-                                    <input type="text" id="scope" name="scope"
-                                           class="form-control"
-                                           placeholder="Scope">
+                                    <select id="scope" name="scope" class="custom-select">
+                                        <option value="">Select scope</option>
+                                        <option value="company">Company</option>
+                                        <option value="till">Till</option>
+                                    </select>
                                 </div>
-                            </div>
-                            <div id="scope-details-form" class="scope-details-form">
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="scope-reference">*Scope Reference:</label>
-                                        <input type="text" id="scope-reference" name="scope-reference"
-                                               class="form-control"
-                                               placeholder="Scope Reference">
-                                    </div>
 
-                                    <div class="form-group col-6">
-                                        <label for="callback-url">*Callback URL:</label>
-                                        <input type="text" id="callback-url" name="callback-url"
-                                               class="form-control"
-                                               placeholder="Callback URL">
-                                    </div>
+                                <div class="form-group col-6">
+                                    <label for="enable-daraja-payload">*Enable Daraja Payload:</label>
+                                    <select id="enable-daraja-payload"
+                                            name="enable-daraja-payload"
+                                            class="custom-select">
+                                        <option value="">Select option</option>
+                                        <option value="true">True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="scope-reference">*Scope Reference:</label>
+                                    <input type="text" id="scope-reference" name="scope-reference"
+                                           class="form-control"
+                                           placeholder="Scope Reference">
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="callback-url">*Callback URL:</label>
+                                    <input type="text" id="callback-url" name="callback-url"
+                                           class="form-control"
+                                           placeholder="Callback URL">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-info">Create Subscription</button>

@@ -167,6 +167,7 @@ def subscription():
         "webhook_uri": request.form['callback-url'],
         "scope": scope,
         "scope_reference": scope_reference,
+        "enable_daraja_payload": request.form['enable-daraja-payload'],
     }
     if scope == 'till':
         webhook_request.update({"scope_reference": scope_reference})
