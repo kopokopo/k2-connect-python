@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from typing import Optional
 
 
@@ -27,6 +27,12 @@ class IncomingPaymentRequest:
     metadata: dict = field(default_factory=dict)
 
     def __post_init__(self):
+        if isinstance(self.subscriber, dict):
+            self.subscriber = Subscriber(**self.subscriber)
+
+        if isinstance(self.amount, dict):
+            self.amount = Amount(**self.amount)
+
         self.errors = []
         self.validate()
 
@@ -38,9 +44,9 @@ class IncomingPaymentRequest:
         return {
             "payment_channel": self.payment_channel,
             "till_number": self.till_number,
-            "subscriber": self.subscriber.__dict__,
+            "subscriber": asdict(self.subscriber),
             "metadata": self.metadata,
-            "amount": self.amount.__dict__,
+            "amount": asdict(self.amount),
             "_links": {
                 "callback_url": self.callback_url,
             },

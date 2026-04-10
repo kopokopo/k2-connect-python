@@ -228,7 +228,7 @@ the payment.
 ```python
 import k2connect
 
-incoming_payments_service = k2connect.IncomingPaymentsService(access_token=access_token)
+incoming_payments_service = k2connect.IncomingPayments(access_token=access_token)
 
 # create an incoming request
 request_payload = {
