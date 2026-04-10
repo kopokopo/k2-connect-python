@@ -14,9 +14,6 @@ class ReversalsService(BaseService):
 
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         reversal_request = ReversalRequest(**kwargs)
         reversal_payload = reversal_request.request_body()
         return self._send_request(headers=headers,
@@ -29,9 +26,6 @@ class ReversalsService(BaseService):
             "{}/{}".format(self._build_url(ReversalRequest.endpoint()), kwargs['reversal-reference']))
 
         headers = dict(self._headers)
-
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
 
         return self._send_request(headers=headers,
                                   method='GET',

@@ -13,9 +13,6 @@ class K2WebhookSubscriptionService(BaseService):
 
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         webhook_subscription_request = WebhookSubscriptionRequest(**kwargs)
         webhook_subscription_request_payload = webhook_subscription_request.request_payload()
         return self._send_request(headers=headers,

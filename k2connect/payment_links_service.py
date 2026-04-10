@@ -14,9 +14,6 @@ class PaymentLinksService(BaseService):
 
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         payment_link_request = PaymentLinkRequest(**kwargs)
         payment_link_payload = payment_link_request.request_body()
         return self._send_request(headers=headers,
@@ -29,9 +26,6 @@ class PaymentLinksService(BaseService):
             "{}/{}".format(self._build_url(PaymentLinkRequest.endpoint()), kwargs["payment-link-reference"]))
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         return self._send_request(headers=headers,
                                   method='GET',
                                   url=fetch_payment_link_url)
@@ -41,9 +35,6 @@ class PaymentLinksService(BaseService):
             "{}/{}/cancel".format(self._build_url(PaymentLinkRequest.endpoint()), kwargs["payment-link-reference"]))
 
         headers = dict(self._headers)
-
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
 
         return self._send_request(headers=headers,
                                   method='POST',
