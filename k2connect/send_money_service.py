@@ -15,9 +15,6 @@ class SendMoneyService(BaseService):
 
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         send_money_request = SendMoneyRequest(**kwargs)
         send_money_payload = send_money_request.request_body()
         return self._send_request(headers=headers,
@@ -29,9 +26,6 @@ class SendMoneyService(BaseService):
         add_recipient_url = self._build_url(ExternalRecipientRequest.endpoint())
 
         headers = dict(self._headers)
-
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
 
         external_recipient_request = ExternalRecipientRequest(**kwargs)
         external_recipient_payload = external_recipient_request.request_body()

@@ -11,9 +11,6 @@ class TransferAccountService(BaseService):
     def add_transfer_account(self, kwargs):
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         transfer_account_request = self._build_transfer_account_request(**kwargs)
         transfer_url = self._build_url(transfer_account_request.endpoint())
         transfer_account_request_payload = transfer_account_request.request_payload()

@@ -13,9 +13,6 @@ class StkPushService(BaseService):
 
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         stk_push_request = StkPushRequest(**kwargs)
         stk_push_request_payload = stk_push_request.request_body()
         return self._send_request(headers=headers,

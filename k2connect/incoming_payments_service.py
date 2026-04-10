@@ -10,9 +10,6 @@ class IncomingPaymentsService(BaseService):
     def create_incoming_payment(self, kwargs):
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         incoming_payment_request = IncomingPaymentRequest(**kwargs)
         incoming_payment_url = self._build_url(IncomingPaymentRequest.endpoint())
         incoming_payment_request_payload = incoming_payment_request.request_payload()
@@ -23,9 +20,6 @@ class IncomingPaymentsService(BaseService):
 
     def view_incoming_payment(self, kwargs):
         headers = dict(self._headers)
-
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
 
         incoming_payment_url = "{}/{}".format(self._build_url(IncomingPaymentRequest.endpoint()),
                                               kwargs["incoming_payment_reference"])

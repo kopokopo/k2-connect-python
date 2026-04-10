@@ -14,9 +14,6 @@ class PollingService(BaseService):
 
         headers = dict(self._headers)
 
-        if self._access_token:
-            headers['Authorization'] = f"Bearer {self._access_token}"
-
         polling_request = PollingRequest(**kwargs)
         polling_payload = polling_request.request_payload()
         return self._send_request(headers=headers,
