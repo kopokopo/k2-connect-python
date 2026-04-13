@@ -19,7 +19,7 @@ class ExternalRecipient(ABC):
     def request_body(self):
         return {
             "type": self.type,
-            "pay_recipient": self.payload()
+            "external_recipient": self.payload()
         }
 
     @abstractmethod
