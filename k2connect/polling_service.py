@@ -6,7 +6,7 @@ from k2connect.models.polling.polling_request import PollingRequest
 
 class PollingService(BaseService):
     def __init__(self, base_url, access_token=None):
-        super(PollingService, self).__init__(base_url)
+        super(PollingService, self).__init__(base_url, access_token)
         self._access_token = access_token
 
     def initiate_polling_request(self, kwargs):

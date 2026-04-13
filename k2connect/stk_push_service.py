@@ -5,7 +5,7 @@ from k2connect.models.stk_push.stk_push_request import StkPushRequest
 class StkPushService(BaseService):
 
     def __init__(self, base_url, access_token=None):
-        super(StkPushService, self).__init__(base_url)
+        super(StkPushService, self).__init__(base_url, access_token)
         self._access_token = access_token
 
     def initiate_request(self, kwargs):

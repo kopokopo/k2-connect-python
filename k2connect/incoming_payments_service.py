@@ -4,7 +4,7 @@ from k2connect.models.incoming_payments.incoming_payment_request import Incoming
 
 class IncomingPaymentsService(BaseService):
     def __init__(self, base_url, access_token):
-        super(IncomingPaymentsService, self).__init__(base_url)
+        super(IncomingPaymentsService, self).__init__(base_url, access_token)
         self._access_token = access_token
 
     def create_incoming_payment(self, kwargs):
