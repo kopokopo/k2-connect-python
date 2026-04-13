@@ -5,7 +5,7 @@ from k2connect.models.transfer_account.merchant_mpesa_transfer_account import Me
 
 class TransferAccountService(BaseService):
     def __init__(self, base_url, access_token):
-        super(TransferAccountService, self).__init__(base_url)
+        super(TransferAccountService, self).__init__(base_url, access_token)
         self._access_token = access_token
 
     def add_transfer_account(self, kwargs):
