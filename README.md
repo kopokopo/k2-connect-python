@@ -192,16 +192,6 @@ To query the most recent status of an outgoing payment request:
 
 A HTTP Response will be returned in a JSON Payload, accessible with the k2_response_body variable.
 
-Code example of send money to an external recipient;
-
-```python
-```
-
-Code example of send money to a transfer account;
-
-```python
-```
-
 #### Incoming payments service
 
 The incoming payments service allows you to create requests for incoming payments over a specific channel and receive
@@ -293,20 +283,24 @@ transfer_service = k2connect.TransferAccount(access_token=access_token)
 
 # create verified bank transfer account
 request_payload = {
+    "type": "merchant_bank_account",
     "settlement_method": 'RTS',
     "account_name": 'py_sdk_account_name',
     "account_number": 'py_sdk_account_number',
-    "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886'
+    "bank_branch_ref": '633aa26c-7b7c-4091-ae28-96c0687cf886',
+    "nickname": 'nickname',
 }
 bank_transfer_account_location = transfer_service.add_transfer_account(request_payload)
 # https://sandbox.kopokopo.com/api/v2/merchant_bank_accounts/b794421d-6038-45dc-b088-8c8764977aba
 
 # create verified mpesa transfer account
 request_payload = {
+    "type": "merchant_wallet",
     "first_name": 'py_sdk_first_name',
     "last_name": 'py_sdk_last_name',
     "phone_number": '+254911222538',
-    "network": 'Safaricom'
+    "network": 'Safaricom',
+    "nickname": 'nickname',
 }
 mpesa_transfer_account_location = transfer_service.add_transfer_account(request_payload)
 # https://sandbox.kopokopo.com/api/v2/merchant_wallets/3a1163c7-dfb9-4f05-bf35-73b69db89bae
@@ -331,7 +325,6 @@ The following events are supported:
 * b2b_transaction_received
 * buygoods_transaction_received
 * buygoods_transaction_reversed
-* m2m_transaction_received
 * settlement_transfer_completed
 * customer_created
 

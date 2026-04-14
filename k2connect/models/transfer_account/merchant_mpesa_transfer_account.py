@@ -10,7 +10,6 @@ class MerchantMpesaTransferAccount(TransferAccountRequest):
     first_name: str
     last_name: str
     phone_number: str
-    email: str
     network: str
 
     def __post_init__(self):
