@@ -191,8 +191,6 @@ def process_webhook():
         print("Sending Till: ", decomposed_result.sending_till)
     elif decomposed_result.topic == "buygoods_transaction_reversed":
         print("First Name: ", decomposed_result.first_name)
-    elif decomposed_result.topic == "m2m_transaction_received":
-        print("Sending Merchant: ", decomposed_result.sending_merchant)
     elif decomposed_result.topic == "customer_created":
         print("First Name: ", decomposed_result.first_name)
     elif decomposed_result.topic == "settlement_transfer_completed":

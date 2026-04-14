@@ -74,16 +74,6 @@ class WebhooksTestCase(unittest.TestCase):
             url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
         self.assertEqual(response.status_code, 201)
 
-    def test_create_m2m_transaction_received_webhook_subscription_request_succeeds(self):
-        response = requests.post(
-            headers=WebhooksTestCase.header,
-            json=json_builder.webhook_subscription("m2m_transaction_received",
-                                                   "https://webhook.site/dcbdce14-dd4f-4493-be2c-ad3526354fa8",
-                                                   'company'),
-            data=None,
-            url=WebhooksTestCase.webhook_obj._build_url(webhooks.WEBHOOK_SUBSCRIPTION_PATH),)
-        self.assertEqual(response.status_code, 201)
-
     # Test that module successfully creates and sends the request
     def test_create_buygoods_webhook_succeeds(self):
         test_payload = {
@@ -128,15 +118,6 @@ class WebhooksTestCase(unittest.TestCase):
         test_payload = {
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'settlement_transfer_completed',
-            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "scope": 'company'
-        }
-        self.assertIsNotNone(webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload))
-
-    def test_create_m2m_transaction_received_webhook_succeeds(self):
-        test_payload = {
-            "access_token": WebhooksTestCase.ACCESS_TOKEN,
-            "event_type": 'm2m_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "scope": 'company'
         }
@@ -190,16 +171,6 @@ class WebhooksTestCase(unittest.TestCase):
         test_payload = {
             "access_token": WebhooksTestCase.ACCESS_TOKEN,
             "event_type": 'settlement_transfer_completed',
-            "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
-            "scope": 'company'
-        }
-        response = webhooks.WebhookService(base_url=SAMPLE_BASE_URL).create_subscription(test_payload)
-        self.assertIsNone(WebhooksTestCase.validate(response))
-
-    def test_m2m_webhook_subscription_returns_resource_url(self):
-        test_payload = {
-            "access_token": WebhooksTestCase.ACCESS_TOKEN,
-            "event_type": 'm2m_transaction_received',
             "webhook_endpoint": 'https://webhook.site/52fd1913-778e-4ee1-bdc4-74517abb758d',
             "scope": 'company'
         }
