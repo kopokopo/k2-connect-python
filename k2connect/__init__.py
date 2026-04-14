@@ -16,7 +16,6 @@ from . import validation
 from .send_money_service import SendMoneyService
 from .payment_links_service import PaymentLinksService
 from .reversals_service import ReversalsService
-from .stk_push_service import StkPushService
 from .transfer_account_service import TransferAccountService
 from .notifications import NotificationService
 from .polling_service import PollingService
@@ -26,7 +25,6 @@ ReceivePayments = None
 SendMoney = None
 PaymentLinks = None
 Reversals = None
-K2Stk = None
 ExternalRecipient = None
 TransferAccount = None
 IncomingPayments = None
@@ -68,9 +66,6 @@ def initialize(client_id, client_secret, base_url, api_secret=None):
 
     # initialize reversals service
     globals()['Reversals'] = lambda access_token=None: ReversalsService(base_url=base_url, access_token=access_token)
-
-    # initialize send money service
-    globals()['K2Stk'] = lambda access_token=None: StkPushService(base_url=base_url, access_token=access_token)
 
     # initialize stk service
     globals()['IncomingPayments'] = lambda access_token=None: IncomingPaymentsService(base_url=base_url,
