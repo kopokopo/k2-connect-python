@@ -6,13 +6,13 @@ from typing import Optional
 from urlvalidator import ValidationError
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ExternalDestination(ABC):
     type: str
     amount: float
     description: str
-    nickname: Optional[str]
-    favourite: Optional[bool]
+    nickname: Optional[str] = None
+    favourite: Optional[bool] = None
 
     def __post_init__(self):
         self.validate()
