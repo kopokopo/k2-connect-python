@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Optional
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TransferAccountRequest(ABC):
     type: str
-    nickname: str
+    nickname: Optional[str] = None
 
     @abstractmethod
     def request_payload(self):

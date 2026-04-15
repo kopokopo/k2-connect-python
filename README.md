@@ -133,8 +133,6 @@ Send to **External Mobile Recipient**
 - amount `REQUIRED`
 - description `REQUIRED`
 - network `REQUIRED`
-- first_name `OPTIONAL`
-- last_name `OPTIONAL`
 - nickname `OPTIONAL`
 
 Send to **External Bank account Recipient**
@@ -273,7 +271,6 @@ Required parameters:
 * `network` - Mobile network; currently supported: **Safaricom**
 
 Optional parameters:
-* `email` – Recipient’s email address 
 * `nickname` – A friendly name for the account
 
 ```python
