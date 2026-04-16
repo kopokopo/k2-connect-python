@@ -343,6 +343,7 @@
                                 <label for="select-payment-type"> Payment Type: </label>
                                 <select class="custom-select " id="select-payment-type" style="width: 100%">
                                     <option selected>Select payment type...</option>
+                                    <option value="my_accounts">My Accounts</option>
                                     <option value="merchant_wallet_payment">Merchant M-Pesa Wallet Payment</option>
                                     <option value="merchant_bank_payment">Merchant Bank Payment</option>
                                     <option value="till_to_till_payment">Till to Till Payment</option>
@@ -353,6 +354,16 @@
                             </div>
                         </form>
                         <!--select payment type-->
+
+                        <!--my accounts form-->
+                        <div id="my_accounts" class="payment-form">
+                            <form action="{{ url_for('send_money') }}" method="post">
+                                <input type="hidden" id="destination_type" name="destination_type"
+                                       value="my_accounts">
+                                <button type="submit" class="btn btn-info">Send Money</button>
+                            </form>
+                        </div>
+                        <!--end my accounts form-->
 
                         <!--merchant wallet payment form-->
                         <div id="merchant_wallet_payment" class="payment-form">
@@ -1249,38 +1260,6 @@
         </section>
         <!--close settlements section-->
 
-        <!--transfers section-->
-        <section class="muffin-section" id="transfers-section">
-            <div class="container">
-
-                <!--transfers sections header-->
-                <div class="section-header">
-                    <h2>Transfers</h2>
-                </div>
-                <!--close transfers sections header-->
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="sub-section-header">
-                            <h5>Make Transfer</h5>
-                        </div>
-
-                        <!--select transfer type-->
-                        <form id="select-transfers-type-form">
-                            <div class="form-group">
-                                <label for="select-transfer-type">Transfer Type: </label>
-                                <select class="custom-select " id="select-transfer-type" style="width: 100%">
-                                    <option selected>Transfer type...</option>
-                                    <option value="blind-transfer-form">Blind Transfer</option>
-                                    <option value="targeted-transfer-form">Targeted Transfer</option>
-                                </select>
-                            </div>
-                        </form>
-                        <!--close select transfer type-->
-                    </div>
-                </div>
-            </div>
-        </section>
         <!--close payments section-->
     </div>
 </div>

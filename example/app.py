@@ -45,7 +45,7 @@ def send_money():
     destination_request = _build_send_money_request()
 
     send_money_request = {
-        "destinations": [destination_request],
+        "destinations": destination_request,
         "callback_url": CALLBACK_URL,
         "source_identifier": None,
         "currency": "KES"
@@ -234,7 +234,7 @@ def process_transfer():
 def _build_send_money_request():
     destination_type = request.form["destination_type"]
     if destination_type == "mobile_wallet":
-        return {
+        return [{
             "type": destination_type,
             "nickname": request.form["nickname"],
             "phone_number": request.form["phone_number"],
@@ -242,9 +242,9 @@ def _build_send_money_request():
             "amount": request.form["amount"],
             "description": request.form["description"],
             "favourite": False
-        }
+        }]
     elif destination_type == "bank_account":
-        return {
+        return [{
             "type": destination_type,
             "nickname": request.form["nickname"],
             "account_name": request.form["account_name"],
@@ -253,9 +253,9 @@ def _build_send_money_request():
             "amount": request.form["amount"],
             "description": request.form["description"],
             "favourite": False
-        }
+        }]
     elif destination_type == "paybill":
-        return {
+        return [{
             "type": destination_type,
             "nickname": request.form["nickname"],
             "paybill_number": request.form["paybill_number"],
@@ -263,28 +263,30 @@ def _build_send_money_request():
             "amount": request.form["amount"],
             "description": request.form["description"],
             "favourite": False
-        }
+        }]
     elif destination_type == "till":
-        return {
+        return [{
             "type": destination_type,
             "nickname": request.form["nickname"],
             "till_number": request.form["till_number"],
             "amount": request.form["amount"],
             "description": request.form["description"],
             "favourite": False
-        }
+        }]
     elif destination_type == "merchant_wallet":
-        return {
+        return [{
             "type": request.form["destination_type"],
             "reference": request.form["reference"],
             "amount": request.form["amount"],
-        }
+        }]
     elif destination_type == "merchant_bank_account":
-        return {
+        return [{
             "type": request.form["destination_type"],
             "reference": request.form["reference"],
             "amount": request.form["amount"],
-        }
+        }]
+    elif destination_type == "my_accounts":
+        return None
     else:
         raise ValueError("Invalid destination type")
 
