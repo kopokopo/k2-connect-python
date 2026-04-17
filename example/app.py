@@ -345,7 +345,6 @@ def _build_transfer_account_request():
             "first_name": request.form["first_name"],
             "last_name": request.form["last_name"],
             "phone_number": request.form["phone_number"],
-            "email": request.form["email"],
             "network": request.form["network"],
             "nickname": request.form["nickname"],
         }
