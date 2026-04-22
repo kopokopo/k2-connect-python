@@ -291,6 +291,7 @@ def process_webhook():
     # get first name
     if decomposed_result.topic == "buygoods_transaction_received":
         print("First Name: ", decomposed_result.first_name)
+        print("Hashed Phone Number: ", decomposed_result.hashed_phone_number)
     elif decomposed_result.topic == "b2b_transaction_received":
         print("Sending Till: ", decomposed_result.sending_till)
     elif decomposed_result.topic == "buygoods_transaction_reversed":
