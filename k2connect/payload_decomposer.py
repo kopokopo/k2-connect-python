@@ -124,6 +124,9 @@ def webhook_decompose(decomposer, result_topic, payload_dictionary, resource_pay
         # decomposer.middle_name = resource_payload_nest['sender_middle_name']
         decomposer.last_name = resource_payload_nest['sender_last_name']
 
+    if result_topic == BUYGOODS_TRANSACTION_RECEIVED:
+        decomposer.hashed_phone_number = resource_payload_nest['hashed_sender_phone']
+
     # decompose all values that have similar links structures
     if result_topic == BUYGOODS_TRANSACTION_REVERSED \
             or result_topic == BUYGOODS_TRANSACTION_RECEIVED \
