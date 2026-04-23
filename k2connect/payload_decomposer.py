@@ -21,6 +21,7 @@ TRANSFER = 'settlement_transfer'
 BUYGOODS_TRANSACTION_REVERSED = 'buygoods_transaction_reversed'
 CUSTOMER_CREATED = 'customer_created'
 SETTLEMENT_TRANSFER_COMPLETED = 'settlement_transfer_completed'
+DARAJA_PAYLOAD = 'daraja_payload'
 
 
 def decompose(json_payload):
@@ -61,7 +62,7 @@ def decompose(json_payload):
     decomposer = k2_model.K2Model()
 
     # Webhooks
-    if 'data' not in payload_dictionary:
+    if 'data' not in payload_dictionary and 'TransactionType' not in payload_dictionary:
         result_topic = payload_dictionary['topic']
         decomposer.topic = result_topic
         webhook_event_nest = payload_dictionary['event']
@@ -70,6 +71,10 @@ def decompose(json_payload):
         links_payload_nest = payload_dictionary['_links']
         decomposer.result_type = webhook_result_type
         webhook_decompose(decomposer, result_topic, payload_dictionary, resource_payload_nest, links_payload_nest)
+    # Daraja Webhooks
+    elif 'TransactionType' in payload_dictionary:
+        decomposer.topic = DARAJA_PAYLOAD
+        daraja_decompose(decomposer, payload_dictionary)
     elif 'data' in payload_dictionary:
         # Payments
         data_payload_nest = payload_dictionary['data']
@@ -209,3 +214,19 @@ def payment_decompose(decomposer, data_payload_nest, payments_result_type, payme
     # decompose all values that are in the PAY service (OUTGOING PAYMENTS)
     if payments_result_type == CREATE_PAYMENT:
         decomposer.metadata = payments_attributes_payload_nest['metadata']
+
+
+def daraja_decompose(decomposer, payload_dictionary):
+    decomposer.transaction_type = payload_dictionary.get('TransactionType')
+    decomposer.transaction_id = payload_dictionary.get('TransID')
+    decomposer.transaction_time = payload_dictionary.get('TransTime')
+    decomposer.transaction_amount = payload_dictionary.get('TransAmount')
+    decomposer.business_short_code = payload_dictionary.get('BusinessShortCode')
+    decomposer.bill_ref_number = payload_dictionary.get('BillRefNumber')
+    decomposer.invoice_number = payload_dictionary.get('InvoiceNumber')
+    decomposer.org_account_balance = payload_dictionary.get('OrgAccountBalance')
+    decomposer.third_party_transaction_id = payload_dictionary.get('ThirdPartyTransId')
+    decomposer.msisdn = payload_dictionary.get('MSISDN')
+    decomposer.first_name = payload_dictionary.get('FirstName')
+    decomposer.middle_name = payload_dictionary.get('MiddleName')
+    decomposer.last_name = payload_dictionary.get('LastName')
