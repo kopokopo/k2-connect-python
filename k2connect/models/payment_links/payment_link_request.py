@@ -26,8 +26,10 @@ class PaymentLinkRequest:
             "till_number": self.till_number,
             "payment_reference": self.payment_reference,
             "note": self.note,
-            "callback_url": self.callback_url,
             "metadata": self.metadata,
+            "_links": {
+                "callback_url": self.callback_url,
+            },
         }
 
     def validate(self):
