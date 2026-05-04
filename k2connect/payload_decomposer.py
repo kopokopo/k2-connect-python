@@ -20,7 +20,6 @@ TRANSFER = 'settlement_transfer'
 # TODO: Pending
 BUYGOODS_TRANSACTION_REVERSED = 'buygoods_transaction_reversed'
 CUSTOMER_CREATED = 'customer_created'
-MERCHANT_TO_MERCHANT_TRANSACTION_RECEIVED = 'm2m_transaction_received'
 SETTLEMENT_TRANSFER_COMPLETED = 'settlement_transfer_completed'
 
 
@@ -90,7 +89,6 @@ def webhook_decompose(decomposer, result_topic, payload_dictionary, resource_pay
             or result_topic == BUYGOODS_TRANSACTION_RECEIVED \
             or result_topic == BUYGOODS_TRANSACTION_REVERSED \
             or result_topic == CUSTOMER_CREATED \
-            or result_topic == MERCHANT_TO_MERCHANT_TRANSACTION_RECEIVED \
             or result_topic == SETTLEMENT_TRANSFER_COMPLETED:
         decomposer.id = payload_dictionary['id']
         decomposer.created_at = payload_dictionary['created_at']
@@ -98,14 +96,12 @@ def webhook_decompose(decomposer, result_topic, payload_dictionary, resource_pay
     if result_topic == B2B_TRANSACTION_RECEIVED \
             or result_topic == BUYGOODS_TRANSACTION_RECEIVED \
             or result_topic == BUYGOODS_TRANSACTION_REVERSED \
-            or result_topic == CUSTOMER_CREATED \
-            or result_topic == MERCHANT_TO_MERCHANT_TRANSACTION_RECEIVED:
+            or result_topic == CUSTOMER_CREATED:
         decomposer.resourceId = resource_payload_nest['id']
 
     # decompose status value that are similar in TRANSACTIONS
     if result_topic == BUYGOODS_TRANSACTION_RECEIVED \
             or result_topic == B2B_TRANSACTION_RECEIVED \
-            or result_topic == MERCHANT_TO_MERCHANT_TRANSACTION_RECEIVED \
             or result_topic == BUYGOODS_TRANSACTION_REVERSED \
             or result_topic == SETTLEMENT_TRANSFER_COMPLETED:
         decomposer.status = resource_payload_nest['status']
@@ -128,13 +124,15 @@ def webhook_decompose(decomposer, result_topic, payload_dictionary, resource_pay
         # decomposer.middle_name = resource_payload_nest['sender_middle_name']
         decomposer.last_name = resource_payload_nest['sender_last_name']
 
+    if result_topic == BUYGOODS_TRANSACTION_RECEIVED:
+        decomposer.hashed_phone_number = resource_payload_nest['hashed_sender_phone']
+
     # decompose all values that have similar links structures
     if result_topic == BUYGOODS_TRANSACTION_REVERSED \
             or result_topic == BUYGOODS_TRANSACTION_RECEIVED \
             or result_topic == SETTLEMENT_TRANSFER_COMPLETED \
             or result_topic == CUSTOMER_CREATED \
-            or result_topic == B2B_TRANSACTION_RECEIVED \
-            or result_topic == MERCHANT_TO_MERCHANT_TRANSACTION_RECEIVED:
+            or result_topic == B2B_TRANSACTION_RECEIVED:
         decomposer.links_self = links_payload_nest['self']
         decomposer.links_resource = links_payload_nest['resource']
 
@@ -146,10 +144,6 @@ def webhook_decompose(decomposer, result_topic, payload_dictionary, resource_pay
     if result_topic == B2B_TRANSACTION_RECEIVED:
         decomposer.sending_till = resource_payload_nest['sending_till']
         decomposer.till_number = resource_payload_nest['till_number']
-
-    # decompose unique to merchant to merchant transaction received
-    if result_topic == MERCHANT_TO_MERCHANT_TRANSACTION_RECEIVED:
-        decomposer.sending_merchant = resource_payload_nest['sending_merchant']
 
     # decompose unique to customer created
     if result_topic == CUSTOMER_CREATED:

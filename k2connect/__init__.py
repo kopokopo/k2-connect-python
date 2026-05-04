@@ -4,31 +4,35 @@ It takes a client id, secret and base url and initializes all k2connect
 services as with appropriate required arguments.
 """
 # TODO: Remember to remove http from validation
-# TODO: David-dev branch is the one that is behind use the development branch which is the updated one
 from k2connect import exceptions
 
 import k2connect
 
 from .authorization import TokenService
-from .pay import PayService
+from .incoming_payments_service import IncomingPaymentsService
+from .k2_subscription__service import K2WebhookSubscriptionService
 from .result_processor import ResultProcessor
-from .receive_payments import ReceivePaymentsService
-from .transfers import TransferService
 from . import validation
-from .webhooks import WebhookService
+from .send_money_service import SendMoneyService
+from .payment_links_service import PaymentLinksService
+from .reversals_service import ReversalsService
+from .transfer_account_service import TransferAccountService
 from .notifications import NotificationService
-from .polling import PollingService
-
+from .polling_service import PollingService
 
 Tokens = None
 ReceivePayments = None
-Pay = None
-Transfers = None
+SendMoney = None
+PaymentLinks = None
+Reversals = None
+ExternalRecipient = None
+TransferAccount = None
+IncomingPayments = None
 Webhooks = None
 TransactionNotifications = None
 ResultHandler = None
 Polling = None
-__version__ = '1.2.0'
+__version__ = '2.0.0'
 
 
 def initialize(client_id, client_secret, base_url, api_secret=None):
@@ -53,23 +57,32 @@ def initialize(client_id, client_secret, base_url, api_secret=None):
                                        client_secret=client_secret,
                                        base_url=base_url)
 
+    # initialize send money service
+    globals()['SendMoney'] = lambda access_token=None: SendMoneyService(base_url=base_url, access_token=access_token)
+
+    # Initialize payment links service
+    globals()['PaymentLinks'] = lambda access_token=None: PaymentLinksService(base_url=base_url,
+                                                                              access_token=access_token)
+
+    # initialize reversals service
+    globals()['Reversals'] = lambda access_token=None: ReversalsService(base_url=base_url, access_token=access_token)
+
     # initialize stk service
-    globals()['ReceivePayments'] = ReceivePaymentsService(base_url=base_url)
-
-    # initialize Pay service
-    globals()['Pay'] = PayService(base_url=base_url)
-
-    # initialize transfers service
-    globals()['Transfers'] = TransferService(base_url=base_url)
+    globals()['IncomingPayments'] = lambda access_token=None: IncomingPaymentsService(base_url=base_url,
+                                                                                      access_token=access_token)
 
     # initialize webhook service
-    globals()['Webhooks'] = WebhookService(base_url=base_url)
+    globals()['Webhooks'] = lambda access_token=None: K2WebhookSubscriptionService(base_url=base_url,
+                                                                                   access_token=access_token)
+
+    globals()['TransferAccount'] = lambda access_token=None: TransferAccountService(base_url=base_url,
+                                                                                    access_token=access_token)
 
     # initialize transaction notification service
     globals()['TransactionNotifications'] = NotificationService(base_url=base_url)
 
     # initialize polling service
-    globals()['Polling'] = PollingService(base_url=base_url)
+    globals()['Polling'] = lambda access_token=None: PollingService(base_url=base_url, access_token=access_token)
 
     # initialize response processor
     globals()['ResultHandler'] = ResultProcessor(base_url=base_url,
