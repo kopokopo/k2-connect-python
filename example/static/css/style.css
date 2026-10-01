@@ -186,3 +186,43 @@ a:hover, a:focus {
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 
 @media only screen and (min-width: 1200px) {}
+
+/*Flash messages*/
+.flash-messages {
+	position: fixed;
+	top: 0;
+	right: 20px;              /* anchor to the top-right corner */
+	left: auto;               /* override the old left pin */
+	width: fit-content;       /* shrink-wrap to the message */
+	max-width: calc(100% - 40px);   /* never exceed viewport */
+	z-index: 1100;
+	padding: 15px 0 0 0;
+	pointer-events: none;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;    /* stack multiple alerts to the right */
+}
+
+.flash-messages .alert {
+	pointer-events: auto;
+	width: fit-content;       /* matches your working change */
+	max-width: 100%;
+	margin-bottom: .75rem;
+	padding-right: 3rem;      /* reserve room for the X */
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+}
+
+.flash-messages .alert .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	padding: 0 .75rem;
+	display: flex;
+	align-items: center;
+	opacity: .6;
+}
+
+.flash-messages .alert .close:hover {
+	opacity: 1;
+}

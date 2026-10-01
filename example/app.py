@@ -1,15 +1,20 @@
 import json
 
-from flask import Flask, render_template, request
+from flask import Flask, flash, redirect, render_template, request, url_for
+from decorators import generate_k2_token, handle_k2_errors
 import k2connect
 import datetime
 from os import environ
 from k2connect import payload_decomposer
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = "your-secret-key-here"
 app.debug = True
 
-BASE_URL = "https://sandbox.kopokopo.com/"
+BASE_URL = environ.get('BASE_URL')
 CALLBACK_URL = "https://webhook.site/a1f866a4-284c-46cb-ad76-83df81b0c053"
 
 
@@ -24,6 +29,7 @@ def access_token():
 
 
 @app.route('/request_token', methods=['POST'])
+@handle_k2_errors(anchor="token-section")
 def request_token():
     environ['CLIENT_ID'] = request.form['client-id']
     environ['CLIENT_SECRET'] = request.form['client-secret']
@@ -33,12 +39,13 @@ def request_token():
     token_service = k2connect.Tokens
     access_token_response = token_service.request_access_token()
     environ['ACCESS_TOKEN'] = token_service.get_access_token(access_token_response)
-
     return render_template('token.html', client_id=environ.get('CLIENT_ID'), client_secret=environ.get('CLIENT_SECRET'),
                            given_time=given_time, access_token=environ.get('ACCESS_TOKEN'))
 
 
 @app.route('/send_money', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def send_money():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     send_money_service = k2connect.SendMoney(access_token=environ.get('ACCESS_TOKEN'))
@@ -56,6 +63,8 @@ def send_money():
 
 
 @app.route('/create_payment_link', methods=['POST'])
+@handle_k2_errors(anchor="payment_links-section")
+@generate_k2_token
 def create_payment_link():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
@@ -74,6 +83,8 @@ def create_payment_link():
 
 
 @app.route('/fetch_payment_link', methods=['GET'])
+@handle_k2_errors(anchor="payment_links-section")
+@generate_k2_token
 def view_payment_link():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
@@ -87,6 +98,8 @@ def view_payment_link():
 
 
 @app.route('/cancel_payment_link', methods=['POST'])
+@handle_k2_errors(anchor="payment_links-section")
+@generate_k2_token
 def cancel_payment_link():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     payment_links_service = k2connect.PaymentLinks(access_token=environ.get('ACCESS_TOKEN'))
@@ -98,6 +111,8 @@ def cancel_payment_link():
 
 
 @app.route('/initiate_reversal', methods=['POST'])
+@handle_k2_errors(anchor="reversals-section")
+@generate_k2_token
 def initiate_reversal():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     reversals_service = k2connect.Reversals(access_token=environ.get('ACCESS_TOKEN'))
@@ -112,7 +127,40 @@ def initiate_reversal():
     return render_template('send_money.html', resource_location_url=initiate_reversal_location)
 
 
+@app.route('/initiate_stk_push', methods=['POST'])
+@handle_k2_errors(anchor="stk_push-section")
+@generate_k2_token
+def initiate_stk_push():
+    k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
+
+    incoming_payments_service = k2connect.IncomingPayments(access_token=environ.get('ACCESS_TOKEN'))
+
+    print("sdfsdfsdfsdf: {}".format(environ.get('ACCESS_TOKEN')))
+    incoming_payment_request = {
+        "payment_channel": "M-PESA",
+        "till_number": request.form["till-number"],
+        "subscriber": {
+            "first_name": request.form["first-name"],
+            "last_name": request.form["last-name"],
+            "email": request.form["email"],
+            "phone_number": request.form["phone"],
+        },
+        "amount": {
+            "currency": "KES",
+            "value": request.form["amount"]
+        },
+        "callback_url": CALLBACK_URL,
+        "metadata": {"key": "value"}
+    }
+
+    incoming_payments_location = incoming_payments_service.create_incoming_payment(incoming_payment_request)
+
+    return render_template('send_money.html', resource_location_url=incoming_payments_location)
+
+
 @app.route('/fetch_reversal', methods=['GET'])
+@handle_k2_errors(anchor="reversals-section")
+@generate_k2_token
 def fetch_reversal():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
     reversals_service = k2connect.Reversals(access_token=environ.get('ACCESS_TOKEN'))
@@ -126,6 +174,8 @@ def fetch_reversal():
 
 
 @app.route('/add_external_recipient', methods=['POST'])
+@handle_k2_errors(anchor="mobile_wallet_recipient")
+@generate_k2_token
 def add_external_recipient():
     external_recipient_request = _build_external_recipient_request()
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
@@ -136,6 +186,8 @@ def add_external_recipient():
 
 
 @app.route('/query_send_money_payment', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def query_send_money_payment():
     resource_url = request.form['resource-url']
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
@@ -147,6 +199,8 @@ def query_send_money_payment():
 
 
 @app.route('/merchant_transfer_account', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def create_merchant_transfer_account():
     transfer_account_request = _build_transfer_account_request()
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'), BASE_URL)
@@ -156,6 +210,8 @@ def create_merchant_transfer_account():
 
 
 @app.route('/subscription', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def subscription():
     scope = request.form['scope']
     scope_reference = request.form['scope-reference']
@@ -177,6 +233,8 @@ def subscription():
 
 
 @app.route('/result/webhook', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def process_webhook():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
                          BASE_URL, environ.get('API_SECRET'))
@@ -201,6 +259,8 @@ def process_webhook():
 
 
 @app.route('/result/payment/outgoing', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def process_pay():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
                          BASE_URL)
@@ -211,6 +271,8 @@ def process_pay():
 
 
 @app.route('/result/payment/incoming', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def process_stk():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
                          BASE_URL)
@@ -221,6 +283,8 @@ def process_stk():
 
 
 @app.route('/result/payment/transfer', methods=['POST'])
+@handle_k2_errors(anchor="payments-section")
+@generate_k2_token
 def process_transfer():
     k2connect.initialize(environ.get('CLIENT_ID'), environ.get('CLIENT_SECRET'),
                          BASE_URL)

@@ -10,3 +10,4 @@ k2_connect.egg-info
 k2client/__pycache__/
 venv
 example/test_k2connect
+.vscode
