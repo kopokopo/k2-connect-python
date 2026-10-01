@@ -160,6 +160,20 @@
 </head>
 <body>
 <div id="wrapper">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages container-fluid pt-3">
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category if category in ['success','danger','warning','info'] else 'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
         <!--dashboard logo-->
@@ -182,6 +196,10 @@
             <!--payments-->
             <li>
                 <a href="#payments-section">Payments</a>
+            </li>
+            <!--stk push-->
+            <li>
+                <a href="#stk_push-section">STK push</a>
             </li>
             <!--webhooks-->
             <li>
@@ -250,13 +268,13 @@
                             <div class="form-group">
                                 <label for="client-id">Client ID</label>
                                 <input class="form-control" id="client-id" name="client-id" placeholder="Your ID"
-                                       type="text">
+                                       type="text" required>
                             </div>
                             <!--client secret-->
                             <div class="form-group">
                                 <label for="client-secret">Client secret</label>
                                 <input class="form-control" id="client-secret" name="client-secret"
-                                       placeholder="Your client secret" type="password">
+                                       placeholder="Your client secret" type="password" required>
                             </div>
                             <!--request access token-->
                             <button class="btn btn-info" id="request-access-token-button" type="submit">Request Access
@@ -375,14 +393,14 @@
                                         <label for="reference">*Reference:</label>
                                         <input type="text" id="reference" name="reference"
                                                class="form-control"
-                                               placeholder="Reference">
+                                               placeholder="Reference" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Send Money</button>
@@ -401,14 +419,14 @@
                                         <label for="reference">*Reference:</label>
                                         <input type="text" id="reference" name="reference"
                                                class="form-control"
-                                               placeholder="Reference">
+                                               placeholder="Reference" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Send Money</button>
@@ -425,14 +443,14 @@
                                         <label for="till_number">*Till Number:</label>
                                         <input type="text" id="till_number" name="till_number"
                                                class="form-control"
-                                               placeholder="Till Number">
+                                               placeholder="Till Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="description">*Description:</label>
                                         <input type="text" id="description" name="description"
                                                class="form-control"
-                                               placeholder="Description">
+                                               placeholder="Description" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -446,7 +464,7 @@
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Send Money</button>
@@ -471,21 +489,21 @@
                                         <label for="phone_number">*Phone Number:</label>
                                         <input type="text" id="phone_number" name="phone_number"
                                                class="form-control"
-                                               placeholder="Phone Number">
+                                               placeholder="Phone Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="network">*Network:</label>
                                         <input type="text" id="network" name="network"
                                                class="form-control"
-                                               placeholder="Network">
+                                               placeholder="Network" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="description">*Description:</label>
                                         <input type="text" id="description" name="description"
                                                class="form-control"
-                                               placeholder="Description">
+                                               placeholder="Description" required>
                                     </div>
 
 
@@ -494,7 +512,7 @@
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Send Money</button>
@@ -511,14 +529,14 @@
                                         <label for="nickname">*Paybill Number:</label>
                                         <input type="text" id="paybill_number" name="paybill_number"
                                                class="form-control"
-                                               placeholder="Paybill Number">
+                                               placeholder="Paybill Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="nickname">*Paybill Account Number:</label>
                                         <input type="text" id="paybill_account_number" name="paybill_account_number"
                                                class="form-control"
-                                               placeholder="Paybill Account Number">
+                                               placeholder="Paybill Account Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -533,14 +551,14 @@
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="description">*Description:</label>
                                         <input type="text" id="description" name="description"
                                                class="form-control"
-                                               placeholder="Description">
+                                               placeholder="Description" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Send Money</button>
@@ -558,21 +576,21 @@
                                         <label for="nickname">*Account Name:</label>
                                         <input type="text" id="account_name" name="account_name"
                                                class="form-control"
-                                               placeholder="Account Name">
+                                               placeholder="Account Name" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="nickname">*Account Number:</label>
                                         <input type="text" id="account_number" name="account_number"
                                                class="form-control"
-                                               placeholder="Account Number">
+                                               placeholder="Account Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="nickname">*Bank Branch Reference:</label>
                                         <input type="text" id="bank_branch_ref" name="bank_branch_ref"
                                                class="form-control"
-                                               placeholder="Bank Branch Reference">
+                                               placeholder="Bank Branch Reference" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -587,14 +605,14 @@
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="description">*Description:</label>
                                         <input type="text" id="description" name="description"
                                                class="form-control"
-                                               placeholder="Description">
+                                               placeholder="Description" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Send Money</button>
@@ -609,43 +627,43 @@
                                     <div class="form-group col-6">
                                         <label for="payment-channel">*Payment Channel:</label>
                                         <input type="text" id="payment-channel" name="payment-channel"
-                                               class="form-control" placeholder="Payment Channel">
+                                               class="form-control" placeholder="Payment Channel" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="till-identifier">*Till Number:</label>
                                         <input type="text" id="till-identifier" name="till-identifier"
-                                               class="form-control" placeholder="Till Number">
+                                               class="form-control" placeholder="Till Number" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="stk-first-name">*First Name:</label>
                                         <input type="text" id="stk-first-name" name="stk-first-name"
-                                               class="form-control" placeholder="First Name">
+                                               class="form-control" placeholder="First Name" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="stk-last-name">*Last Name:</label>
                                         <input type="text" id="stk-last-name" name="stk-last-name" class="form-control"
-                                               placeholder="Last Name">
+                                               placeholder="Last Name" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="stk-phone">*Phone Number:</label>
                                         <input type="text" id="stk-phone" name="stk-phone" class="form-control"
-                                               placeholder="Phone Number">
+                                               placeholder="Phone Number" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="stk-amount">*Amount:</label>
                                         <input type="text" id="stk-amount" name="stk-amount" class="form-control"
-                                               placeholder="Amount Value">
+                                               placeholder="Amount Value" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="callback-url">*Callback URL:</label>
                                         <input type="text" id="callback-url" name="callback-url" class="form-control"
-                                               placeholder="Callback URL">
+                                               placeholder="Callback URL" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Create Payment</button>
@@ -696,21 +714,21 @@
                                         <label for="first_name">*First Name:</label>
                                         <input type="text" id="first_name" name="first_name"
                                                class="form-control"
-                                               placeholder="First Name">
+                                               placeholder="First Name" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Last Name:</label>
                                         <input type="text" id="last_name" name="last_name"
                                                class="form-control"
-                                               placeholder="Last Name">
+                                               placeholder="Last Name" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Phone Number:</label>
                                         <input type="text" id="phone_number" name="phone_number"
                                                class="form-control"
-                                               placeholder="+2547XXXXXXXXX">
+                                               placeholder="+2547XXXXXXXXX" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -750,14 +768,14 @@
                                         <label for="till_name">*Till Name:</label>
                                         <input type="text" id="till_name" name="till_name"
                                                class="form-control"
-                                               placeholder="Till Name">
+                                               placeholder="Till Name" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Till Number:</label>
                                         <input type="text" id="till_number" name="till_number"
                                                class="form-control"
-                                               placeholder="Till Number">
+                                               placeholder="Till Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -781,21 +799,21 @@
                                         <label for="paybill_name">*Paybill Name:</label>
                                         <input type="text" id="paybill_name" name="paybill_name"
                                                class="form-control"
-                                               placeholder="Paybill Name">
+                                               placeholder="Paybill Name" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Paybill Number:</label>
                                         <input type="text" id="paybill_number" name="paybill_number"
                                                class="form-control"
-                                               placeholder="Paybill Number">
+                                               placeholder="Paybill Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Paybill Account Number:</label>
                                         <input type="text" id="paybill_account_number" name="paybill_account_number"
                                                class="form-control"
-                                               placeholder="Paybill Account Number">
+                                               placeholder="Paybill Account Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -819,21 +837,21 @@
                                         <label for="account_name">*Account Name:</label>
                                         <input type="text" id="account_name" name="account_name"
                                                class="form-control"
-                                               placeholder="Account Name">
+                                               placeholder="Account Name" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Account Number:</label>
                                         <input type="text" id="account_number" name="account_number"
                                                class="form-control"
-                                               placeholder="Account Number">
+                                               placeholder="Account Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="last_name">*Bank Branch Reference:</label>
                                         <input type="text" id="bank_branch_ref" name="bank_branch_ref"
                                                class="form-control"
-                                               placeholder="Bank Branch Reference">
+                                               placeholder="Bank Branch Reference" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -877,7 +895,7 @@
                                         <label for="destination_type">*Resource URL:</label>
                                         <input type="text" id="resource-url" name="resource-url"
                                                class="form-control"
-                                               placeholder="Resource URL">
+                                               placeholder="Resource URL" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Query Payment</button>
@@ -911,7 +929,7 @@
                                 <div class="form-group col-8">
                                     <label for="select-webhook-type"> Webhook Type: </label>
                                     <select class="custom-select " id="select-webhook-type" name="select-webhook-type"
-                                            style="width: 100%">
+                                            style="width: 100%" required>
                                         <option selected>Select Webhook type...</option>
                                         <option value="buygoods_transaction_received">Buygoods Transaction Received
                                         </option>
@@ -924,7 +942,7 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="scope">*Scope:</label>
-                                    <select id="scope" name="scope" class="custom-select">
+                                    <select id="scope" name="scope" class="custom-select" required>
                                         <option value="">Select scope</option>
                                         <option value="company">Company</option>
                                         <option value="till">Till</option>
@@ -935,7 +953,7 @@
                                     <label for="enable-daraja-payload">*Enable Daraja Payload:</label>
                                     <select id="enable-daraja-payload"
                                             name="enable-daraja-payload"
-                                            class="custom-select">
+                                            class="custom-select" required>
                                         <option value="">Select option</option>
                                         <option value="true">True</option>
                                         <option value="false">False</option>
@@ -946,14 +964,14 @@
                                     <label for="scope-reference">*Scope Reference:</label>
                                     <input type="text" id="scope-reference" name="scope-reference"
                                            class="form-control"
-                                           placeholder="Scope Reference">
+                                           placeholder="Scope Reference" required>
                                 </div>
 
                                 <div class="form-group col-6">
                                     <label for="callback-url">*Callback URL:</label>
                                     <input type="text" id="callback-url" name="callback-url"
                                            class="form-control"
-                                           placeholder="Callback URL">
+                                           placeholder="Callback URL" required>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-info">Create Subscription</button>
@@ -986,20 +1004,20 @@
                                     <div class="form-group col-6">
                                         <label for="amount">*Amount:</label>
                                         <input type="text" id="payment-link-amount" name="amount" class="form-control"
-                                               placeholder="Amount">
+                                               placeholder="Amount" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="payment-link-currency">*Currency:</label>
                                         <input type="text" id="payment-link-currency" name="payment-link-currency"
                                                class="form-control"
-                                               placeholder="Currency">
+                                               placeholder="Currency" required>
                                     </div>
 
                                     <div class="form-group col-6">
                                         <label for="till-number">*Till Number:</label>
                                         <input type="text" id="till-number" name="till-number" class="form-control"
-                                               placeholder="Till Number">
+                                               placeholder="Till Number" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -1018,7 +1036,7 @@
                                         <label for="payment-link-callback-url">*Callback URL:</label>
                                         <input type="text" id="payment-link-callback-url"
                                                name="payment-link-callback-url"
-                                               class="form-control" placeholder="Callback URL">
+                                               class="form-control" placeholder="Callback URL" required>
                                     </div>
                                 </div>
                             </div>
@@ -1041,7 +1059,7 @@
                                         <label for="payment-link-reference">*Reference:</label>
                                         <input type="text" id="payment-link-reference" name="payment-link-reference"
                                                class="form-control"
-                                               placeholder="Reference">
+                                               placeholder="Reference" required>
                                     </div>
                                 </div>
                             </div>
@@ -1064,7 +1082,7 @@
                                         <label for="payment-link-reference">*Reference:</label>
                                         <input type="text" id="payment-link-reference" name="payment-link-reference"
                                                class="form-control"
-                                               placeholder="Reference">
+                                               placeholder="Reference" required>
                                     </div>
                                 </div>
                             </div>
@@ -1077,6 +1095,70 @@
             </div>
         </section>
         <!--close payment links section-->
+
+        <!-- STK push section -->
+         <section class="muffin-section" id="stk_push-section">
+            <div class="container">
+
+                <div class="section-header">
+                    <h2>STK push</h2>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                                                
+                        <div class="sub-section-header">
+                            <h5>Initiate an STK push request</h5>
+                        </div>
+
+                        <form id="reversals" method="post" action="{{ url_for('initiate_stk_push') }}">
+                            <div id="initiate_stk_push-form" class="reversals-form">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="till-number">*Till Number:</label>
+                                        <input type="text" id="till-number" name="till-number"
+                                               class="form-control" placeholder="Till number" required>
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="first-name">First Name:</label>
+                                        <input type="text" id="first-name" name="first-name"
+                                               class="form-control" placeholder="First name">
+                                    </div>
+
+
+                                    <div class="form-group col-6">
+                                        <label for="last-name">Last Name:</label>
+                                        <input type="text" id="last-name" name="last-name"
+                                               class="form-control" placeholder="Last name">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="email-address">Email Address:</label>
+                                        <input type="text" id="email-address" name="email"
+                                               class="form-control" placeholder="Email">
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="phone-number">*Phone Number:</label>
+                                        <input type="text" id="phone-number" name="phone"
+                                               class="form-control" placeholder="+2547XXXXXXXXX" required>
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <label for="amount">*Amount:</label>                                        
+                                        <input type="number" id="amount" name="amount" class="form-control"
+                                               placeholder="Amount" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Initiate STK Push</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+         </section>
+        <!-- close STK push section -->
 
         <!--reversals section-->
         <section class="muffin-section" id="reversals-section">
@@ -1097,7 +1179,7 @@
                                     <div class="form-group col-6">
                                         <label for="transaction-reference">*Transaction Reference:</label>
                                         <input type="text" id="transaction-reference" name="transaction-reference"
-                                               class="form-control" placeholder="Transaction Reference">
+                                               class="form-control" placeholder="Transaction Reference" required>
                                     </div>
 
                                     <div class="form-group col-6">
@@ -1132,7 +1214,7 @@
                                         <label for="reversal-reference">*Reference:</label>
                                         <input type="text" id="reversal-reference" name="reversal-reference"
                                                class="form-control"
-                                               placeholder="Reference">
+                                               placeholder="Reference" required>
                                     </div>
                                 </div>
                             </div>
@@ -1165,7 +1247,7 @@
                         <form id="select-settlements-account-type-form">
                             <div class="form-group">
                                 <label for="select-settlement-account-type"> Settlement Account Type: </label>
-                                <select class="custom-select " id="select-settlement-account-type" style="width: 100%">
+                                <select class="custom-select " id="select-settlement-account-type" style="width: 100%" required>
                                     <option selected>Settlement Account type...</option>
                                     <option value="mobile-wallet-form">Mobile Wallet</option>
                                     <option value="bank-account-form">Bank Account</option>
@@ -1183,22 +1265,22 @@
                                     <div class="form-group col-6">
                                         <label for="phone_number">*Phone Number:</label>
                                         <input type="text" id="phone_number" name="phone_number" class="form-control"
-                                               placeholder="Phone Number">
+                                               placeholder="Phone Number" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="network">*Network:</label>
                                         <input type="text" id="network" name="network" class="form-control"
-                                               placeholder="Network">
+                                               placeholder="Network" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="amount">*First name:</label>
                                         <input type="text" id="first_name" name="first_name" class="form-control"
-                                               placeholder="First name">
+                                               placeholder="First name" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="amount">*Last name:</label>
                                         <input type="text" id="last_name" name="last_name" class="form-control"
-                                               placeholder="Last name">
+                                               placeholder="Last name" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="nickname">Nickname:</label>
@@ -1220,12 +1302,12 @@
                                     <div class="form-group col-6">
                                         <label for="account-name">*Account Name:</label>
                                         <input type="text" id="account-name" name="account-name" class="form-control"
-                                               placeholder="Account Name">
+                                               placeholder="Account Name" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="account-number">*Account Number:</label>
                                         <input type="text" id="account-number" name="account-number"
-                                               class="form-control" placeholder="Account Number">
+                                               class="form-control" placeholder="Account Number" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -1233,13 +1315,13 @@
                                         <label for="settlement-bank-branch-ref">*Bank Branch Reference:</label>
                                         <input type="text" id="settlement-bank-branch-ref"
                                                name="settlement-bank-branch-ref" class="form-control"
-                                               placeholder="Bank Branch Reference">
+                                               placeholder="Bank Branch Reference" required>
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="settlement-method">*Settlement method:</label>
                                         <input type="text" id="settlement-method"
                                                name="settlement-method" class="form-control"
-                                               placeholder="Settlement method">
+                                               placeholder="Settlement method" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -1247,7 +1329,7 @@
                                         <label for="settlement-bank-branch-ref">*Nickname:</label>
                                         <input type="text" id="nickname"
                                                name="nickname" class="form-control"
-                                               placeholder="Nickname">
+                                               placeholder="Nickname" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-info">Create Settlement Account</button>
