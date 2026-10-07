@@ -135,7 +135,6 @@ def initiate_stk_push():
 
     incoming_payments_service = k2connect.IncomingPayments(access_token=environ.get('ACCESS_TOKEN'))
 
-    print("sdfsdfsdfsdf: {}".format(environ.get('ACCESS_TOKEN')))
     incoming_payment_request = {
         "payment_channel": "M-PESA",
         "till_number": request.form["till-number"],
